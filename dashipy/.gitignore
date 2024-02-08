@@ -1,0 +1,17 @@
+# Logs
+*.log
+
+# Artifacts
+dist
+build
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
