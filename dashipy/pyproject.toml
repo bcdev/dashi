@@ -1,0 +1,10 @@
+[build-system]
+requires = [
+    "setuptools",
+    "some-build-toolkit",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dashipy"
+dynamic = ["version"]
