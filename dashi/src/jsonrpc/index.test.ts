@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vitest";
 import { JsonRpcRequest, newJsonRpc } from "./index";
-import { JsonValue } from "./types.ts";
 
 const baseUrl = "https://test-jsonrcp/";
 
