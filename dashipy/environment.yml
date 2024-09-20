@@ -1,0 +1,15 @@
+name: plotly-tornado
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - dash
+  - plotly
+  - tornado
+  # Coding
+  - black
+  - flake8
+  # Testing
+  - pytest
+  - pytest-cov
+  - requests-mock
