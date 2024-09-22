@@ -1,9 +1,8 @@
-name: plotly-tornado
+name: dashi
 channels:
   - conda-forge
 dependencies:
   - python
-  - dash
   - plotly
   - tornado
   # Coding

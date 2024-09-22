@@ -53,11 +53,12 @@ exclude = [
 
 [project.optional-dependencies]
 dev = [
-  "flake8>=3.7",
-  "pytest>=4.4",
-  "pytest-cov>=2.6",
-  "requests-mock>=1.8",
+  "black",
+  "flake8",
+  "pytest",
+  "pytest-cov",
+  "requests-mock",
 ]
 
 [project.urls]
-Source = "https://github.com/bcdev/plotly-tornado"
+Source = "https://github.com/bcdev/dashi"

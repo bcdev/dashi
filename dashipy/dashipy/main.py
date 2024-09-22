@@ -1,14 +1,15 @@
 import asyncio
-import math
-import random
 import json
-import traceback
 
 import tornado
+import tornado.web
+import tornado.log
+
+from dashipy.panel import get_panel
+from dashipy.panel import update_panel
 
 
-class RegionHandler(tornado.web.RequestHandler):
-    regions = dict()
+class PanelHandler(tornado.web.RequestHandler):
 
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
@@ -19,49 +20,28 @@ class RegionHandler(tornado.web.RequestHandler):
             "authorization,content-type",
         )
 
-    def write_error(self, status_code: int, **kwargs):
-        valid_json_types = str, int, float, bool, type(None)
-        error_info = {
-            k: v for k, v in kwargs.items() if isinstance(v, valid_json_types)
-        }
-        error_info.update(status_code=status_code)
-        if "exc_info" in kwargs:
-            exc_type, exc_val, exc_tb = kwargs["exc_info"]
-            error_info.update(
-                exception=traceback.format_exception(exc_type, exc_val, exc_tb),
-                message=str(exc_val),
-            )
-            if isinstance(exc_val, tornado.web.HTTPError) and exc_val.reason:
-                error_info.update(reason=exc_val.reason)
-        self.finish({"error": error_info})
-
-    def get(self, region: str):
-        data = self.regions.get(region)
-        if not data:
-            data = [
-                {
-                    "name": f"Page {x}",
-                    "uv": math.floor(10000 * random.random()),
-                    "pv": math.floor(10000 * random.random()),
-                    "amt": math.floor(10000 * random.random()),
-                }
-                for x in "ABCDEFG"
-            ]
-            print(data)
-            self.regions[region] = data
+    def get(self):
+        panel = get_panel()
         self.set_header("Content-Type", "text/json")
-        self.write(json.dumps({"result": data}))
+        self.write(panel.to_dict())
+
+    def post(self):
+        event = tornado.escape.json_decode(self.request.body)
+        panel = update_panel(event)
+        # self.set_header("Content-Type", "text/json")
+        # self.write(panel.to_dict())
 
 
 def make_app():
     return tornado.web.Application(
         [
-            (r"/region/([0-9]+)", RegionHandler),
+            (r"/panel", PanelHandler),
         ]
     )
 
 
 async def main():
+    tornado.log.enable_pretty_logging()
     port = 8888
     app = make_app()
     app.listen(port)
