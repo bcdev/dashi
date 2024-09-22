@@ -6,6 +6,13 @@ import tornado.log
 
 from dashipy.context import Context
 from dashipy.panel import get_panel
+from dashipy import __version__
+
+
+class RootHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.set_header("Content-Type", "text/plain")
+        self.write(f"dashi-server {__version__}")
 
 
 class PanelHandler(tornado.web.RequestHandler):
@@ -38,6 +45,7 @@ class PanelHandler(tornado.web.RequestHandler):
 def make_app():
     app = tornado.web.Application(
         [
+            (r"/", RootHandler),
             (r"/panel", PanelHandler),
         ]
     )

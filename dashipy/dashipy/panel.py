@@ -1,5 +1,3 @@
-from typing import Any
-
 import plotly.graph_objects as go
 from plotly.graph_objs import Layout
 
@@ -16,13 +14,22 @@ def get_panel(
     fig = go.Figure(layout=Layout(title=f"DS #{selected_dataset + 1}", autosize=True))
     fig.add_trace(go.Bar(x=["A", "B", "C"], y=dataset))
 
-    box = Box(style={"display": "flex", "flexDirection": "row"})
-    box.add(Button(text="DS #1", name="selected_dataset", value=0))
-    box.add(Button(text="DS #2", name="selected_dataset", value=1))
-    box.add(Button(text="DS #3", name="selected_dataset", value=2))
-
-    panel = Panel(style={"display": "flex", "flexDirection": "column"})
-    panel.add(Plot(figure=fig))
-    panel.add(box)
-
-    return panel
+    return Panel(
+        style={"display": "flex", "flexDirection": "column"},
+        components=[
+            Plot(figure=fig),
+            Box(
+                style={
+                    "display": "flex",
+                    "flexDirection": "row",
+                    "padding": 4,
+                    "justifyContent": "center",
+                    "gap": 4,
+                },
+                components=[
+                    Button(text=f"DS #{i + 1}", name="selected_dataset", value=i)
+                    for i in range(3)
+                ],
+            ),
+        ],
+    )
