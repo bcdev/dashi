@@ -1,39 +1,28 @@
 from typing import Any
 
 import plotly.graph_objects as go
+from plotly.graph_objs import Layout
 
 from dashipy.component import Panel, Plot, Box, Button
+from dashipy.context import Context
 
 
-class Context:
-    def __init__(self):
-        self.datasets: dict[int, list[int]] = {
-            0: [10, 20, 30],
-            1: [20, 30, 10],
-            2: [30, 10, 20],
-        }
+def get_panel(
+    context: Context,
+    selected_dataset: int = 0,
+) -> Panel:
+    dataset = context.datasets[selected_dataset]
 
-
-context = Context()
-
-
-def get_panel() -> Panel:
-
-    fig = go.Figure()
-    fig.add_trace(go.Bar(x=["A", "B", "C"], y=context.datasets[0]))
+    fig = go.Figure(layout=Layout(title=f"DS #{selected_dataset + 1}", autosize=True))
+    fig.add_trace(go.Bar(x=["A", "B", "C"], y=dataset))
 
     box = Box(style={"display": "flex", "flexDirection": "row"})
-    box.add_component(Button(id="bt1", text="Data #1"))
-    box.add_component(Button(id="bt2", text="Data #2"))
-    box.add_component(Button(id="bt3", text="Data #3"))
+    box.add(Button(text="DS #1", name="selected_dataset", value=0))
+    box.add(Button(text="DS #2", name="selected_dataset", value=1))
+    box.add(Button(text="DS #3", name="selected_dataset", value=2))
 
-    panel = Panel(id="panel1", style={"display": "flex", "flexDirection": "column"})
-    panel.add_component(Plot(id="fig1", figure=fig))
-    panel.add_component(box)
+    panel = Panel(style={"display": "flex", "flexDirection": "column"})
+    panel.add(Plot(figure=fig))
+    panel.add(box)
 
     return panel
-
-
-def update_panel(event: dict[str, Any]) -> Panel | None:
-    print(event)
-    return None

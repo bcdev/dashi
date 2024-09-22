@@ -1,13 +1,22 @@
 import Plot from "react-plotly.js";
-import { EventHandler, PlotModel } from "./types";
+import { EventHandler, makeId, PlotModel } from "./model";
 
 interface DashiPlotProps extends PlotModel {
   onEvent: EventHandler;
 }
 
-function DashiPlot({ data, config, layout, id, onEvent }: DashiPlotProps) {
+function DashiPlot({
+  data,
+  config,
+  layout,
+  id,
+  name,
+  value,
+  onEvent,
+}: DashiPlotProps) {
   return (
     <Plot
+      divId={makeId("plot", id)}
       data={data}
       layout={layout}
       config={config}
@@ -17,6 +26,7 @@ function DashiPlot({ data, config, layout, id, onEvent }: DashiPlotProps) {
           componentId: id,
           eventType: "onClick",
           eventData: {
+            [name]: value,
             points: event.points,
           },
         });

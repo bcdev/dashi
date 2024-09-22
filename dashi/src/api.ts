@@ -1,4 +1,4 @@
-import { EventData, PanelModel } from "./lib/types.ts";
+import { EventData, PanelModel } from "./lib/model.ts";
 
 export interface FetchResponse<T> {
   result?: T;

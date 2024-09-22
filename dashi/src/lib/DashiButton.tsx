@@ -1,16 +1,29 @@
 import "react";
-import { ButtonModel, EventHandler } from "./types";
+import { ButtonModel, EventHandler, makeId } from "./model.ts";
 
 interface DashiButtonProps extends ButtonModel {
   onEvent: EventHandler;
 }
 
-function DashiButton({ id, style, text, disabled, onEvent }: DashiButtonProps) {
+function DashiButton({
+  name,
+  value,
+  id,
+  style,
+  text,
+  disabled,
+  onEvent,
+}: DashiButtonProps) {
   const handleClick = () =>
-    onEvent({ componentType: "button", componentId: id, eventType: "onClick" });
+    onEvent({
+      componentType: "button",
+      componentId: id,
+      eventType: "onClick",
+      eventData: { [name]: value },
+    });
   return (
     <button
-      id={"dashi." + id}
+      id={makeId("button", id)}
       style={style}
       disabled={disabled}
       onClick={handleClick}

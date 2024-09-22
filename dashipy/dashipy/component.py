@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import Any
+from typing import Any, Iterable
 
 import plotly.graph_objects
 
@@ -7,31 +7,54 @@ import plotly.graph_objects
 class Component(ABC):
     # noinspection PyShadowingBuiltins
     def __init__(
-        self, type: str, id: str | None = None, style: dict[str, Any] | None = None
+        self,
+        type: str,
+        *,
+        # Common data model
+        name: str | None = None,
+        value: Any = None,
+        # Common HTML attributes
+        id: str | None = None,
+        style: dict[str, Any] | None = None,
     ):
         self.type = type
+        self.name = name
+        self.value = value
         self.id = id
         self.style = style
 
     def to_dict(self) -> dict[str, Any]:
-        d = dict(type=self.type)
-        if self.id:
-            d["id"] = self.id
-        if self.style:
-            d["style"] = self.style
-        return d
+        attrs = "type", "name", "id", "style"
+        data = {
+            attr: getattr(self, attr)
+            for attr in attrs
+            if getattr(self, attr) is not None
+        }
+        # "value is included only if "name" is given
+        if "name" in data:
+            data["value"] = self.value
+        return data
 
 
 class Container(Component, ABC):
 
     # noinspection PyShadowingBuiltins
     def __init__(
-        self, type: str, id: str | None = None, style: dict[str, Any] | None = None
+        self,
+        type: str,
+        *,
+        components: Iterable[Component] | None = None,
+        # Common data model
+        name: str | None = None,
+        value: Any = None,
+        # Common HTML attributes
+        id: str | None = None,
+        style: dict[str, Any] | None = None,
     ):
-        super().__init__("panel", id=id, style=style)
-        self.components = []
+        super().__init__(type, name=name, value=value, id=id, style=style)
+        self.components = list(components or [])
 
-    def add_component(self, component: Component):
+    def add(self, component: Component):
         self.components.append(component)
 
     def to_dict(self) -> dict[str, Any]:
@@ -44,21 +67,34 @@ class Container(Component, ABC):
 class Panel(Container):
 
     # noinspection PyShadowingBuiltins
-    def __init__(self, id: str, style: dict[str, Any] | None = None):
-        super().__init__("panel", id, style=style)
+    def __init__(
+        self,
+        *,
+        components: Iterable[Component] | None = None,
+        # Common HTML attributes
+        id: str | None = None,
+        style: dict[str, Any] | None = None,
+    ):
+        super().__init__("panel", components=components, id=id, style=style)
 
 
 class Box(Container):
 
-    # noinspection PyShadowingBuiltins
-    def __init__(self, id: str | None = None, style: dict[str, Any] | None = None):
-        super().__init__("box", id, style=style)
+    def __init__(
+        self,
+        *,
+        components: Iterable[Component] | None = None,
+        # Common HTML attributes
+        id: str | None = None,
+        style: dict[str, Any] | None = None,
+    ):
+        super().__init__("box", components=components, id=id, style=style)
 
 
 class Plot(Component):
 
-    def __init__(self, id: str, figure: plotly.graph_objects.Figure):
-        super().__init__("plot", id)
+    def __init__(self, figure: plotly.graph_objects.Figure):
+        super().__init__("plot")
         self.figure = figure
 
     def to_dict(self) -> dict[str, Any]:
@@ -70,8 +106,18 @@ class Plot(Component):
 
 class Button(Component):
 
-    def __init__(self, id: str, text: str, style: dict[str, Any] | None = None):
-        super().__init__("button", id, style=style)
+    def __init__(
+        self,
+        *,
+        text: str,
+        # Common data model
+        name: str,
+        value: Any,
+        # Common HTML attributes
+        id: str | None = None,
+        style: dict[str, Any] | None = None,
+    ):
+        super().__init__("button", name=name, value=value, id=id, style=style)
         self.text = text
 
     def to_dict(self) -> dict[str, Any]:

@@ -1,7 +1,6 @@
 import { JSX, useEffect, useState } from "react";
 import "./App.css";
-import DashiPlot from "./lib/DashiPlot.tsx";
-import { EventHandler, PanelModel } from "./lib/types.ts";
+import { EventHandler, PanelModel } from "./lib/model.ts";
 import { fetchPanelInit, fetchPanelUpdate, FetchResponse } from "./api.ts";
 import DashiPanel from "./lib/DashiPanel.tsx";
 
@@ -28,7 +27,14 @@ function App() {
   let panelComponent: JSX | undefined;
   if (result) {
     const { type, ...panelProps } = result;
-    panelComponent = <DashiPanel {...panelProps} onEvent={handleEvent} />;
+    panelComponent = (
+      <DashiPanel
+        width={500}
+        height={300}
+        {...panelProps}
+        onEvent={handleEvent}
+      />
+    );
   } else if (error) {
     panelComponent = <div>Error: {error}</div>;
   } else {
@@ -37,7 +43,7 @@ function App() {
 
   return (
     <>
-      <h1>Plotly-React Demo</h1>
+      <h2>Dashi Demo</h2>
       {panelComponent}
     </>
   );
