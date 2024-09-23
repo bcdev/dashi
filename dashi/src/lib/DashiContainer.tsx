@@ -10,7 +10,8 @@ export interface DashiContainerProps extends Omit<ContainerModel, "type"> {
 function DashiContainer({ components, onEvent }: DashiContainerProps) {
   return (
     <>
-      {components.map(({ type: componentType, ...props }, key) => {
+      {components.map(({ type: componentType, ...props }, index) => {
+        const key = props.id || index;
         if (componentType === "plot") {
           return (
             <DashiPlot
