@@ -43,14 +43,14 @@ function App() {
   if (panelsResponse.result) {
     const panelIds = panelsResponse.result.panels;
     panelSelector = (
-      <div>
+      <div style={{ padding: 5 }}>
         {panelIds.map((panelId) => (
           <div key={panelId}>
             <input
               type="checkbox"
               checked={Boolean(panelVisibilities[panelId])}
               value={panelId}
-              onClick={(e) => {
+              onChange={(e) => {
                 setPanelVisibilities({
                   ...panelVisibilities,
                   [panelId]: e.currentTarget.checked,
