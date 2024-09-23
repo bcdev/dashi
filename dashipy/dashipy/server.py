@@ -1,11 +1,13 @@
 import asyncio
+import importlib
+from typing import Callable, Any
 
 import tornado
 import tornado.web
 import tornado.log
+import yaml
 
 from dashipy.context import Context
-from dashipy.panel import get_panel
 from dashipy import __version__
 
 
@@ -26,30 +28,44 @@ class PanelHandler(tornado.web.RequestHandler):
             "authorization,content-type",
         )
 
+    # GET /panels
     def get(self):
-        context: Context = self.settings["context"]
-        panel = get_panel(context)
-        self.set_header("Content-Type", "text/json")
-        self.write(panel.to_dict())
+        self.write_panels({})
 
+    # POST /panels
     def post(self):
-        context: Context = self.settings["context"]
         event = tornado.escape.json_decode(self.request.body)
-        print(event)
-        event_data = event.get("eventData") or {}
-        panel = get_panel(context, **event_data)
+        self.write_panels(event.get("eventData") or {})
+
+    def write_panels(self, params: dict[str, Any]):
+        context: Context = self.settings["context"]
+        panels: list[Callable] = self.settings["panels"]
         self.set_header("Content-Type", "text/json")
-        self.write(panel.to_dict())
+        self.write({k: v(context, **params).to_dict() for k, v in panels})
 
 
 def make_app():
+    # Read config
+    with open("my-config.yaml") as f:
+        server_config = yaml.load(f, yaml.SafeLoader)
+
+    # Parse panel factories
+    panels = []
+    for function_ref in server_config.get("panels", []):
+        module_name, function_name = function_ref.split(":", maxsplit=2)
+        module = importlib.import_module(module_name)
+        function = getattr(module, function_name)
+        panels.append(function)
+
+    # Create app
     app = tornado.web.Application(
         [
             (r"/", RootHandler),
-            (r"/panel", PanelHandler),
+            (r"/panels", PanelHandler),
         ]
     )
     app.settings["context"] = Context()
+    app.settings["panels"] = panels
     return app
 
 
@@ -58,7 +74,7 @@ async def main():
     port = 8888
     app = make_app()
     app.listen(port)
-    print(f"Listening http://127.0.0.1:{port}...")
+    print(f"Listening on http://127.0.0.1:{port}...")
     shutdown_event = asyncio.Event()
     await shutdown_event.wait()
 

@@ -1,0 +1,5 @@
+panels:
+  - id: panel_1
+    code: "my_panels:get_panel_1"
+  - id: panel_2
+    code: "my_panels:get_panel_2"
