@@ -5,7 +5,7 @@ from dashipy.lib import Panel, Plot, Box, Button
 from dashipy.context import Context
 
 
-def get_panel_1(
+def render_panel_1(
     context: Context,
     selected_dataset: int = 0,
 ) -> Panel:
@@ -36,7 +36,7 @@ def get_panel_1(
     )
 
 
-def get_panel_2(
+def render_panel_2(
     context: Context,
     selected_dataset: int = 0,
 ) -> Panel:

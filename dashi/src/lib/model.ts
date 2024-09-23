@@ -32,12 +32,16 @@ export interface PlotModel extends ComponentModel {
   config: Partial<Config>;
 }
 
+export interface BoxModel extends ContainerModel {
+  type: "box";
+}
+
 export interface PanelModel extends ContainerModel {
   type: "panel";
 }
 
-export interface BoxModel extends ContainerModel {
-  type: "box";
+export interface Panels {
+  panels: string[];
 }
 
 export interface EventData<T = object> {
@@ -47,7 +51,12 @@ export interface EventData<T = object> {
   eventData?: T;
 }
 
+export interface PanelEventData<T = object> extends EventData<T> {
+  panelId: string;
+}
+
 export type EventHandler<T = object> = (data: EventData<T>) => void;
+export type PanelEventHandler<T = object> = (data: PanelEventData<T>) => void;
 
 export function makeId(type: ComponentType, id: string | undefined) {
   if (typeof id === "string" && id !== "") {
