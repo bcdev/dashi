@@ -1,7 +1,7 @@
 import { BoxModel, EventHandler, makeId } from "./model.ts";
 import DashiContainer from "./DashiContainer.tsx";
 
-interface DashiBoxProps extends BoxModel {
+export interface DashiBoxProps extends Omit<BoxModel, "type"> {
   onEvent: EventHandler;
 }
 

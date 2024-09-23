@@ -11,7 +11,6 @@ export interface ComponentModel {
   // HTML attributes
   id?: string;
   style?: CSSProperties;
-  disabled?: boolean;
 }
 
 export interface ContainerModel extends ComponentModel {
@@ -23,6 +22,7 @@ export interface ButtonModel extends ComponentModel {
   name: string;
   value: unknown;
   text: string;
+  disabled?: boolean;
 }
 
 export interface PlotModel extends ComponentModel {
@@ -40,14 +40,14 @@ export interface BoxModel extends ContainerModel {
   type: "box";
 }
 
-export interface EventData<T = {}> {
+export interface EventData<T = object> {
   componentType: ComponentType;
   componentId?: string;
   eventType: string;
   eventData?: T;
 }
 
-export type EventHandler<T = {}> = (data: EventData<T>) => void;
+export type EventHandler<T = object> = (data: EventData<T>) => void;
 
 export function makeId(type: ComponentType, id: string | undefined) {
   if (typeof id === "string" && id !== "") {

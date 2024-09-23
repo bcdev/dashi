@@ -1,7 +1,7 @@
 import Plot from "react-plotly.js";
 import { EventHandler, makeId, PlotModel } from "./model";
 
-interface DashiPlotProps extends PlotModel {
+export interface DashiPlotProps extends Omit<PlotModel, "type"> {
   onEvent: EventHandler;
 }
 
@@ -26,7 +26,7 @@ function DashiPlot({
           componentId: id,
           eventType: "onClick",
           eventData: {
-            [name]: value,
+            [name || "value"]: value,
             points: event.points,
           },
         });

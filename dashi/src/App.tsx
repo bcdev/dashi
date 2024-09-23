@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import "./App.css";
 import { EventHandler, PanelModel } from "./lib/model.ts";
 import { fetchPanelInit, fetchPanelUpdate, FetchResponse } from "./api.ts";
@@ -24,8 +24,9 @@ function App() {
   console.info("panelModelResponse:", panelModelResponse);
 
   const { result, error } = panelModelResponse;
-  let panelComponent: JSX | undefined;
+  let panelComponent: ReactElement | undefined;
   if (result) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { type, ...panelProps } = result;
     panelComponent = (
       <DashiPanel

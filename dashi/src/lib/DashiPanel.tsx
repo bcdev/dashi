@@ -1,7 +1,7 @@
 import { EventHandler, makeId, PanelModel } from "./model";
 import DashiContainer from "./DashiContainer";
 
-interface DashiPanelProps extends PanelModel {
+export interface DashiPanelProps extends Omit<PanelModel, "type"> {
   width: number;
   height: number;
   onEvent: EventHandler;

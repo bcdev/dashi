@@ -1,7 +1,7 @@
 import "react";
 import { ButtonModel, EventHandler, makeId } from "./model.ts";
 
-interface DashiButtonProps extends ButtonModel {
+export interface DashiButtonProps extends Omit<ButtonModel, "type"> {
   onEvent: EventHandler;
 }
 

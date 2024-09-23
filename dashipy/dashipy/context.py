@@ -5,6 +5,3 @@ class Context:
             1: [20, 30, 10],
             2: [30, 10, 20],
         }
-
-
-context = Context()
