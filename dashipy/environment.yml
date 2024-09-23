@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python
   # Dependencies
+  - pandas
   - plotly
   - pyaml
   - tornado

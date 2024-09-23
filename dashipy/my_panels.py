@@ -1,3 +1,4 @@
+import plotly.express as pe
 import plotly.graph_objects as go
 from plotly.graph_objs import Layout
 
@@ -42,9 +43,9 @@ def render_panel_2(
 ) -> Panel:
     dataset = context.datasets[selected_dataset]
 
-    fig = go.Figure(layout=Layout(title=f"DS #{selected_dataset + 1}", autosize=True))
-    fig.add_trace(go.Line(x=[-1.0, 0.0, 1.0], y=dataset))
-    plot = Plot(figure=fig)
+    plot = Plot(
+        pe.line(x=[-1.0, 0.0, 1.0], y=dataset, title=f"DS #{selected_dataset + 1}")
+    )
 
     buttons = [
         Button(text=f"DS #{i + 1}", name="selected_dataset", value=i)
