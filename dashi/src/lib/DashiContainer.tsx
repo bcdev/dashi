@@ -1,7 +1,13 @@
-import { ContainerModel, EventHandler } from "./model";
-import DashiPlot, { DashiPlotProps } from "./DashiPlot";
-import DashiButton, { DashiButtonProps } from "./DashiButton";
-import DashiBox, { DashiBoxProps } from "./DashiBox";
+import {
+  BoxModel,
+  ButtonModel,
+  ContainerModel,
+  EventHandler,
+  PlotModel,
+} from "./model";
+import DashiPlot from "./DashiPlot";
+import DashiButton from "./DashiButton";
+import DashiBox from "./DashiBox";
 
 export interface DashiContainerProps extends Omit<ContainerModel, "type"> {
   onEvent: EventHandler;
@@ -10,31 +16,23 @@ export interface DashiContainerProps extends Omit<ContainerModel, "type"> {
 function DashiContainer({ components, onEvent }: DashiContainerProps) {
   return (
     <>
-      {components.map(({ type: componentType, ...props }, index) => {
-        const key = props.id || index;
-        if (componentType === "plot") {
+      {components.map(({ type, ...model }, index) => {
+        const key = model.id || index;
+        if (type === "plot") {
           return (
-            <DashiPlot
-              key={key}
-              {...(props as DashiPlotProps)}
-              onEvent={onEvent}
-            />
+            <DashiPlot key={key} {...(model as PlotModel)} onEvent={onEvent} />
           );
-        } else if (componentType === "button") {
+        } else if (type === "button") {
           return (
             <DashiButton
               key={key}
-              {...(props as DashiButtonProps)}
+              {...(model as ButtonModel)}
               onEvent={onEvent}
             />
           );
-        } else if (componentType === "box") {
+        } else if (type === "box") {
           return (
-            <DashiBox
-              key={key}
-              {...(props as DashiBoxProps)}
-              onEvent={onEvent}
-            />
+            <DashiBox key={key} {...(model as BoxModel)} onEvent={onEvent} />
           );
         }
       })}
