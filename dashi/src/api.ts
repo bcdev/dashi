@@ -1,24 +1,27 @@
-import { EventData, PanelModel } from "./lib/model.ts";
+import { PanelEventData, PanelModel, Panels } from "./lib/model.ts";
 
 export interface FetchResponse<T> {
   result?: T;
   error?: string;
 }
 
-const API_URL = `http://localhost:8888/panel`;
-
-export async function fetchPanelInit(): Promise<FetchResponse<PanelModel>> {
-  return fetchJson(API_URL);
+export async function fetchPanels(): Promise<FetchResponse<Panels>> {
+  return fetchJson("http://localhost:8888/panels");
 }
 
-export async function fetchPanelUpdate(
-  event: EventData,
+export async function fetchPanel(
+  panelId: string,
+  event?: PanelEventData,
 ): Promise<FetchResponse<PanelModel>> {
-  return fetchJson(API_URL, {
-    method: "post",
-    headers: {},
-    body: JSON.stringify(event),
-  });
+  const url = `http://localhost:8888/panels/${panelId}`;
+  if (event) {
+    return fetchJson(url, {
+      method: "post",
+      body: JSON.stringify(event),
+    });
+  } else {
+    return fetchJson(url);
+  }
 }
 
 export async function fetchJson<T>(
