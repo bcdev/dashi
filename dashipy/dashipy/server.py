@@ -41,15 +41,15 @@ class PanelsHandler(RequestHandler):
 class PanelRendererHandler(RequestHandler):
     # GET /panels/{panel_id}
     def get(self, panel_id: str):
-        self.render_panels(panel_id, {})
+        self.render_panel(panel_id, {})
 
-    # POST /panels/{panelId}
+    # POST /panels/{panel_id}
     def post(self, panel_id: str):
         event = tornado.escape.json_decode(self.request.body)
         panel_props = event.get("eventData") or {}
-        self.render_panels(panel_id, panel_props)
+        self.render_panel(panel_id, panel_props)
 
-    def render_panels(self, panel_id: str, panel_props: dict[str, Any]):
+    def render_panel(self, panel_id: str, panel_props: dict[str, Any]):
         context: Context = self.settings["context"]
         panels: dict[str, Callable] = self.settings["panels"]
         panel_renderer = panels.get(panel_id)
