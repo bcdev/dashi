@@ -1,0 +1,3 @@
+panels:
+  - my_panels.render_panel_1
+  - my_panels.render_panel_2
