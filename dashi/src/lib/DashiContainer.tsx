@@ -2,12 +2,14 @@ import {
   BoxModel,
   ButtonModel,
   ContainerModel,
+  DropdownModel,
   EventHandler,
   PlotModel,
 } from "./model";
 import DashiPlot from "./DashiPlot";
 import DashiButton from "./DashiButton";
 import DashiBox from "./DashiBox";
+import DashiDropdown from "./DashiDropdown.tsx";
 
 export interface DashiContainerProps extends Omit<ContainerModel, "type"> {
   onEvent: EventHandler;
@@ -21,6 +23,14 @@ function DashiContainer({ components, onEvent }: DashiContainerProps) {
         if (type === "plot") {
           return (
             <DashiPlot key={key} {...(model as PlotModel)} onEvent={onEvent} />
+          );
+        } else if (type === "dropdown") {
+          return (
+            <DashiDropdown
+              key={key}
+              {...(model as DropdownModel)}
+              onEvent={onEvent}
+            />
           );
         } else if (type === "button") {
           return (

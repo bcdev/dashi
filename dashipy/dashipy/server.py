@@ -9,6 +9,7 @@ import yaml
 
 from dashipy.context import Context
 from dashipy import __version__
+from dashipy.contribs import Panel
 
 
 class RequestHandler(tornado.web.RequestHandler):
@@ -51,6 +52,25 @@ class PanelRendererHandler(RequestHandler):
 
     def render_panel(self, panel_id: str, panel_props: dict[str, Any]):
         context: Context = self.settings["context"]
+        panels: dict[str, Panel] = self.settings["panels"]
+        panel: Panel = panels.get(panel_id)
+        if panel is not None:
+            self.set_header("Content-Type", "text/json")
+            self.write(panel.render(context, **panel_props).to_dict())
+        else:
+            self.set_status(404, f"panel not found: {panel_props}")
+
+
+class PanelCallbackHandler(RequestHandler):
+
+    # POST /panels/{panel_id}/callback
+    def post(self, panel_id: str):
+        event = tornado.escape.json_decode(self.request.body)
+        panel_props = event.get("eventData") or {}
+        self.render_panel(panel_id, panel_props)
+
+    def render_panel(self, panel_id: str, panel_props: dict[str, Any]):
+        context: Context = self.settings["context"]
         panels: dict[str, Callable] = self.settings["panels"]
         panel_renderer = panels.get(panel_id)
         if panel_renderer is not None:
@@ -66,19 +86,17 @@ def make_app():
         server_config = yaml.load(f, yaml.SafeLoader)
 
     # Parse panel renderers
-    panels: dict[str, Callable] = {}
-    for panel_ref in server_config.get("panels", []):
+    panels: dict[str, Panel] = {}
+    for panel_ref in server_config.get("contributions", []):
         try:
-            module_name, function_name = panel_ref.rsplit(".", maxsplit=2)
+            module_name, attr_name = panel_ref.rsplit(".", maxsplit=2)
         except (ValueError, AttributeError):
-            raise TypeError(f"panel renderer syntax error: {panel_ref!r}")
+            raise TypeError(f"contribution syntax error: {panel_ref!r}")
         module = importlib.import_module(module_name)
-        render_function = getattr(module, function_name)
-        if not callable(render_function):
-            raise TypeError(
-                f"panel renderer {panel_ref!r} does not refer to a callable"
-            )
-        panels[panel_ref.replace(".", "-").replace("_", "-").lower()] = render_function
+        panel = getattr(module, attr_name)
+        if not isinstance(panel, Panel):
+            raise TypeError(f"contribution {panel_ref!r} is not an instance of Panel")
+        panels[panel_ref.replace(".", "").replace("_", "").lower()] = panel
 
     # Create app
     app = tornado.web.Application(
@@ -86,6 +104,7 @@ def make_app():
             (r"/", RootHandler),
             (r"/panels", PanelsHandler),
             (r"/panels/([a-z0-9-]+)", PanelRendererHandler),
+            (r"/panels/([a-z0-9-]+)/callback", PanelCallbackHandler),
         ]
     )
     app.settings["context"] = Context()

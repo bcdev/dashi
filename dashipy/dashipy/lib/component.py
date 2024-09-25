@@ -9,27 +9,24 @@ class Component(ABC):
         self,
         type: str,
         *,
-        # Common data model
-        name: str | None = None,
-        value: Any = None,
         # Common HTML attributes
-        id: str | None = None,
-        style: dict[str, Any] | None = None,
+        id: str = None,
+        name: str = None,
+        value: str | int | float = None,
+        style: dict[str, Any] = None,
     ):
+        assert bool(type)
         self.type = type
+        self.id = id
         self.name = name
         self.value = value
-        self.id = id
         self.style = style
 
     def to_dict(self) -> dict[str, Any]:
-        attrs = "type", "name", "id", "style"
+        attrs = "type", "id", "name", "value", "style"
         data = {
             attr: getattr(self, attr)
             for attr in attrs
             if getattr(self, attr) is not None
         }
-        # "value is included only if "name" is given
-        if "name" in data:
-            data["value"] = self.value
         return data

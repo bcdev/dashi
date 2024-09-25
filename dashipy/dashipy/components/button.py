@@ -1,6 +1,6 @@
 from typing import Any
 
-from .component import Component
+from dashipy.lib.component import Component
 
 
 class Button(Component):
@@ -10,14 +10,13 @@ class Button(Component):
         self,
         *,
         text: str,
-        # Common data model
-        name: str,
-        value: Any,
         # Common HTML attributes
-        id: str | None = None,
-        style: dict[str, Any] | None = None,
+        id: str = None,
+        name: str = None,
+        value: str | int | float = None,
+        style: dict[str, Any] = None,
     ):
-        super().__init__("button", name=name, value=value, id=id, style=style)
+        super().__init__("button", id=id, name=name, value=value, style=style)
         self.text = text
 
     def to_dict(self) -> dict[str, Any]:

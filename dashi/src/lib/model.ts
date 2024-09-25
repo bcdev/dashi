@@ -1,15 +1,14 @@
 import { CSSProperties } from "react";
 import { Config, Layout, PlotData } from "plotly.js";
 
-export type ComponentType = "button" | "plot" | "panel" | "box";
+export type ComponentType = "button" | "dropdown" | "plot" | "panel" | "box";
 
 export interface ComponentModel {
   type: ComponentType;
-  // data model
+  // common HTML attributes
+  id?: string;
   name?: string;
   value?: unknown;
-  // HTML attributes
-  id?: string;
   style?: CSSProperties;
 }
 
@@ -17,10 +16,15 @@ export interface ContainerModel extends ComponentModel {
   components: ComponentModel[];
 }
 
+export interface DropdownModel extends ComponentModel {
+  type: "dropdown";
+  value: string | number | undefined;
+  options: Array<[string, string | number]>;
+  disabled?: boolean;
+}
+
 export interface ButtonModel extends ComponentModel {
   type: "button";
-  name: string;
-  value: unknown;
   text: string;
   disabled?: boolean;
 }

@@ -3,7 +3,7 @@ from typing import Any
 
 import plotly.graph_objects as go
 
-from .component import Component
+from dashipy.lib.component import Component
 
 
 class Plot(Component):
@@ -12,7 +12,6 @@ class Plot(Component):
     def __init__(
         self,
         figure: go.Figure,
-        # Common HTML attributes
         id: str | None = None,
     ):
         super().__init__("plot", id=id)
