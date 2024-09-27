@@ -24,7 +24,7 @@ function DashiDropdown({
       componentType: "dropdown",
       componentId: id,
       eventType: "onChange",
-      eventData: { [id || name]: newValue },
+      eventData: { [id || name || "value"]: newValue },
     });
   };
   return (

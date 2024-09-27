@@ -19,7 +19,7 @@ function DashiButton({
       componentType: "button",
       componentId: id,
       eventType: "onClick",
-      eventData: { [name]: value },
+      eventData: { [id || name || "value"]: value },
     });
   return (
     <button
