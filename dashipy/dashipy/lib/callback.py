@@ -39,6 +39,12 @@ class Output(IOBase):
 
 
 class Callback:
+    """A callback is a server-side function
+    whose 1st parameter is always a context object.
+    All other parameters must be described by
+    input objects.
+    """
+
     def __init__(
         self,
         function: Callable,
@@ -46,12 +52,17 @@ class Callback:
         inputs: list[Input],
         outputs: list[Output],
     ):
+        """Private constructor.
+        Use `from_decorator` to instantiate callback objects.
+        """
         self.function = function
         self.signature = signature
+        self.param_names = tuple(signature.parameters.keys())
         self.inputs = inputs
         self.outputs = outputs
 
-    def __call__(self, *args, **kwargs):
+    def invoke(self, context: Any, input_values: list | tuple):
+        args, kwargs = self.make_function_args(context, input_values)
         return self.function(*args, **kwargs)
 
     def to_dict(self) -> dict[str, Any]:
@@ -67,19 +78,26 @@ class Callback:
         cls,
         decorator_name: str,
         decorator_args: tuple[Any, ...],
-        function: Callable,
+        function: Any,
         outputs_allowed: bool = False,
     ) -> "Callback":
-        if not callable(function):
-            # noinspection PyUnresolvedReferences
+        try:
+            signature = inspect.signature(function)
+        except TypeError:
             raise TypeError(
                 f"decorator {decorator_name!r} must be"
                 f" used with a callable, but got"
                 f" {function.__class__.__name__!r}"
             )
 
-        signature = inspect.signature(function)
-        function_name = function.__name__
+        function_name = function.__qualname__
+
+        if len(signature.parameters) == 0:
+            raise TypeError(
+                f"function {function_name!r} decorated with"
+                f" {decorator_name!r} must have at least one"
+                f" context parameter"
+            )
 
         inputs: list[Input] = []
         outputs: list[Output] = []
@@ -101,8 +119,8 @@ class Callback:
                     f" but got {arg.__class__.__name__!r}"
                 )
 
+        num_params = len(signature.parameters) - 1
         num_inputs = len(inputs)
-        num_params = len(signature.parameters)
         delta = num_inputs - num_params
         if delta != 0:
             raise TypeError(
@@ -118,6 +136,29 @@ class Callback:
     def get_param(self, param_name: str) -> inspect.Parameter:
         return self.signature.parameters[param_name]
 
-    def make_args(self, layout_inputs: list) -> tuple[tuple, dict]:
-        # TODO
-        return (), {}
+    def make_function_args(
+        self, context: Any, values: tuple | list
+    ) -> tuple[list, dict]:
+        num_inputs = len(self.inputs)
+        num_values = len(values)
+        delta = num_inputs - num_values
+        if delta != 0:
+            raise TypeError(
+                f"too {'few' if delta < 0 else 'many'} input values"
+                f" given for function {self.function.__qualname__!r}:"
+                f" expected {num_inputs},"
+                f" but got {num_values}"
+            )
+
+        param_names = self.param_names[1:]
+        args = [context]
+        kwargs = {}
+        for i, param_value in enumerate(values):
+            param_name = param_names[i + 1]
+            param = self.signature.parameters[param_name]
+            if param.kind == param.POSITIONAL_ONLY:
+                args.append(param_value)
+            else:
+                kwargs[param_name] = param_value
+
+        return args, kwargs

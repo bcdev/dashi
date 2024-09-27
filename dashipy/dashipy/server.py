@@ -9,7 +9,7 @@ import yaml
 from dashipy import __version__
 from dashipy.context import Context
 from dashipy.contribs import Panel
-from dashipy.lib import Extension, Contribution
+from dashipy.lib import Extension, Contribution, Component
 
 DASHI_CONTEXT_KEY = "dashi.context"
 DASHI_EXTENSIONS_KEY = "dashi.extensions"
@@ -67,11 +67,11 @@ class LayoutHandler(RequestHandler):
     # POST /ext/layout/{contrib_point_name}/{contrib_index}
     def post(self, contrib_point_name: str, contrib_index: str):
         data = tornado.escape.json_decode(self.request.body)
-        layout_inputs = data.get("inputs") or []
-        self.render_layout(contrib_point_name, int(contrib_index), layout_inputs)
+        input_values = data.get("inputs") or []
+        self.render_layout(contrib_point_name, int(contrib_index), input_values)
 
     def render_layout(
-        self, contrib_point_name: str, contrib_index: int, layout_inputs: list
+        self, contrib_point_name: str, contrib_index: int, input_values: list
     ):
         settings_key = DASHI_CONTRIB_KEY_PREFIX + contrib_point_name
         try:
@@ -88,15 +88,15 @@ class LayoutHandler(RequestHandler):
             self.set_status(404, f"contribution {contrib_ref!r} not found")
             return
 
-        if contribution.layout_callback is None:
+        callback = contribution.layout_callback
+        if callback is None:
             self.set_status(400, f"contribution {contrib_ref!r} has no layout")
             return
 
         context: Context = self.settings[DASHI_CONTEXT_KEY]
 
         try:
-            args, kwargs = contribution.layout_callback.make_args(layout_inputs)
-            component = contribution.layout_callback(*(context, *args), **kwargs)
+            component = callback.invoke(context, input_values)
         except BaseException as e:
             self.set_status(400, f"contribution {contrib_ref!r}: {e}")
             return
@@ -110,9 +110,73 @@ class CallbackHandler(RequestHandler):
     # POST /ext/callback
     def post(self):
         data = tornado.escape.json_decode(self.request.body)
-        print(data)
+        # TODO: validate data
+        callback_inputs: list[dict] = data.get("callbacks") or []
+
+        context: Context = self.settings[DASHI_CONTEXT_KEY]
+
+        # TODO: assert correctness, set status code on error
+        results: list[dict] = []
+        for callback_input in callback_inputs:
+            extension_index: int = callback_input["extensionIndex"]
+            contrib_point_name: str = callback_input["contribPoint"]
+            contrib_index: int = callback_input["contribIndex"]
+            callback_index: int = callback_input["callbackIndex"]
+            input_values: list = callback_input["inputValues"]
+
+            contrib_key = DASHI_CONTRIB_KEY_PREFIX + contrib_point_name
+            contributions: list[Contribution] = self.settings[contrib_key]
+            contribution = contributions[contrib_index]
+            callback = contribution.callbacks[callback_index]
+            output_values = callback.invoke(context, input_values)
+
+            if len(callback.outputs) == 1:
+                output_values = (output_values,)
+
+            callback_outputs: list[dict] = []
+            for output_index, output in enumerate(callback.outputs):
+                output_value = output_values[output_index]
+                callback_outputs.append(
+                    {
+                        "target": output.target,
+                        "id": output.id,
+                        "property": output.property,
+                        "value": (
+                            output_value.to_dict()
+                            if isinstance(output_value, Component)
+                            else output_value
+                        ),
+                    }
+                )
+
+            results.append(
+                {
+                    "extensionIndex": extension_index,
+                    "contribPoint": contrib_point_name,
+                    "contribIndex": contrib_index,
+                    "callbackOutputs": callback_outputs,
+                }
+            )
+
         self.set_header("Content-Type", "text/json")
-        self.write({})
+        self.write({"results": results})
+
+
+def print_usage(app, port):
+    url = f"http://127.0.0.1:{port}"
+    print(f"Listening on {url}...")
+    print(f"API:")
+    print(f"- {url}/ext/extensions")
+    for k in app.settings.keys():
+        if k.startswith(DASHI_CONTRIB_KEY_PREFIX):
+            contrib_point_name = k[len(DASHI_CONTRIB_KEY_PREFIX) :]
+            print(f"- {url}/ext/contributions/{contrib_point_name}")
+    for k, v in app.settings.items():
+        if k.startswith(DASHI_CONTRIB_KEY_PREFIX):
+            contrib_point_name = k[len(DASHI_CONTRIB_KEY_PREFIX) :]
+            contributions: list[Contribution] = v
+            for i in range(len(contributions)):
+                print(f"- {url}/ext/layout/{contrib_point_name}/{i}")
 
 
 def make_app():
@@ -164,24 +228,12 @@ def load_extensions(server_config: dict) -> list[Extension]:
 
 async def main():
     tornado.log.enable_pretty_logging()
+
     port = 8888
     app = make_app()
     app.listen(port)
 
-    url = f"http://127.0.0.1:{port}"
-    print(f"Listening on {url}...")
-    print(f"API:")
-    print(f"- {url}/ext/extensions")
-    for k in app.settings.keys():
-        if k.startswith(DASHI_CONTRIB_KEY_PREFIX):
-            contrib_point_name = k[len(DASHI_CONTRIB_KEY_PREFIX) :]
-            print(f"- {url}/ext/contributions/{contrib_point_name}")
-    for k, v in app.settings.items():
-        if k.startswith(DASHI_CONTRIB_KEY_PREFIX):
-            contrib_point_name = k[len(DASHI_CONTRIB_KEY_PREFIX) :]
-            contributions: list[Contribution] = v
-            for i in range(len(contributions)):
-                print(f"- {url}/ext/layout/{contrib_point_name}/{i}")
+    print_usage(app, port)
 
     shutdown_event = asyncio.Event()
     await shutdown_event.wait()

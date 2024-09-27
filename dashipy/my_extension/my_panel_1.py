@@ -10,17 +10,17 @@ from dashipy.lib import Output, Input, Component
 panel = Panel(__name__)
 
 
-@panel.layout(Input("context"))
-def render_panel(context: Context) -> Component:
+@panel.layout()
+def render_panel(ctx: Context) -> Component:
     selected_dataset: int = 0
     plot = Plot(
         id="plot",
-        figure=make_figure(context, selected_dataset),
+        figure=make_figure(ctx, selected_dataset),
     )
     dropdown = Dropdown(
         id="selected_dataset",
         value=selected_dataset,
-        options=[(f"DS #{i + 1}", i) for i in range(len(context.datasets))],
+        options=[(f"DS #{i + 1}", i) for i in range(len(ctx.datasets))],
     )
     control_group = Box(
         style={
@@ -42,12 +42,11 @@ def render_panel(context: Context) -> Component:
 
 
 @panel.callback(
-    Input("context"),
     Input("selected_dataset"),
     Output("plot", "figure"),
 )
-def make_figure(context: Context, selected_dataset: int = 0) -> go.Figure:
-    dataset = context.datasets[selected_dataset]
+def make_figure(ctx: Context, selected_dataset: int = 0) -> go.Figure:
+    dataset = ctx.datasets[selected_dataset]
     fig = go.Figure(layout=Layout(title=f"DS #{selected_dataset + 1}", autosize=True))
     fig.add_trace(go.Bar(x=["A", "B", "C"], y=dataset))
     return fig

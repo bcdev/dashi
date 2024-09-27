@@ -10,7 +10,7 @@ from dashipy.lib import Output, Input, Component
 panel = Panel(__name__)
 
 
-@panel.layout(Input("context"))
+@panel.layout()
 def render_panel(context: Context) -> Component:
     selected_dataset: int = 0
     plot = Plot(
@@ -42,7 +42,6 @@ def render_panel(context: Context) -> Component:
 
 
 @panel.callback(
-    Input("context"),
     Input("selected_dataset"),
     Output("plot", "figure"),
 )
