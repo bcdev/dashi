@@ -1,5 +1,5 @@
-import plotly.express as pe
 import plotly.graph_objects as go
+from plotly.graph_objs import Layout
 
 from dashipy.components import Plot, Box, Dropdown
 from dashipy.contribs import Panel
@@ -7,23 +7,20 @@ from dashipy.context import Context
 from dashipy.lib import Output, Input, Component
 
 
-panel = Panel()
+panel = Panel(__name__)
 
 
-@panel.layout(Input("context"), Input("selected_dataset"))
-def render(
-    context: Context,
-    selected_dataset: int = 0,
-) -> Component:
+@panel.layout(Input("context"))
+def render_panel(context: Context) -> Component:
+    selected_dataset: int = 0
     plot = Plot(
         id="plot",
         figure=make_figure(context, selected_dataset),
     )
     dropdown = Dropdown(
         id="selected_dataset",
-        name="selected_dataset",
-        options=[(f"DS #{i + 1}", i) for i in range(len(context.datasets))],
         value=selected_dataset,
+        options=[(f"DS #{i + 1}", i) for i in range(len(context.datasets))],
     )
     control_group = Box(
         style={
@@ -33,14 +30,14 @@ def render(
             "justifyContent": "center",
             "gap": 4,
         },
-        components=[dropdown],
+        children=[dropdown],
     )
     return Box(
         style={
             "display": "flex",
             "flexDirection": "column",
         },
-        components=[plot, control_group],
+        children=[plot, control_group],
     )
 
 
@@ -49,7 +46,8 @@ def render(
     Input("selected_dataset"),
     Output("plot", "figure"),
 )
-def make_figure(context: Context, selected_dataset: int) -> go.Figure:
+def make_figure(context: Context, selected_dataset: int = 0) -> go.Figure:
     dataset = context.datasets[selected_dataset]
-    pe.line(x=[-1.0, 0.0, 1.0], y=dataset, title=f"DS #{selected_dataset + 1}")
-    return pe.line(x=[-1.0, 0.0, 1.0], y=dataset, title=f"DS #{selected_dataset + 1}")
+    fig = go.Figure(layout=Layout(title=f"DS #{selected_dataset + 1}", autosize=True))
+    fig.add_trace(go.Bar(x=["A", "B", "C"], y=dataset))
+    return fig

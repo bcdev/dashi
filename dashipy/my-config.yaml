@@ -1,3 +1,2 @@
-contributions:
-  - my_contrib_1.panel
-  - my_contrib_2.panel
+extensions:
+  - my_extension.ext

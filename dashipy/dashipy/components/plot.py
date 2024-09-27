@@ -1,28 +1,23 @@
 import json
+from dataclasses import dataclass
 from typing import Any
 
 import plotly.graph_objects as go
 
-from dashipy.lib.component import Component
+from dashipy.lib import Component
 
 
+@dataclass(frozen=True)
 class Plot(Component):
-
-    # noinspection PyShadowingBuiltins
-    def __init__(
-        self,
-        figure: go.Figure,
-        id: str | None = None,
-    ):
-        super().__init__("plot", id=id)
-        self.figure = figure
+    figure: go.Figure | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return {
-            **super().to_dict(),
+        d = super().to_dict()
+        if self.figure is not None:
             # TODO: this is stupid, but if using self.figure.to_dict()
             #   for plotly.express figures we get
             #   TypeError: Object of type ndarray is not JSON serializable
-            **json.loads(self.figure.to_json()),
-            # **self.figure.to_dict(),
-        }
+            d.update(figure=json.loads(self.figure.to_json()))
+        else:
+            d.update(figure=None)
+        return d

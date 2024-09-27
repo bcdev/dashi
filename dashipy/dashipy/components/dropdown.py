@@ -1,26 +1,8 @@
-from typing import Any
+from dataclasses import dataclass, field
 
-from dashipy.lib.component import Component
+from dashipy.lib import Component
 
 
+@dataclass(frozen=True)
 class Dropdown(Component):
-
-    # noinspection PyShadowingBuiltins
-    def __init__(
-        self,
-        *,
-        options: list[tuple[str, str | int | float]],
-        # Common HTML attributes
-        id: str = None,
-        name: str = None,
-        value: str | int | float = None,
-        style: dict[str, Any] = None,
-    ):
-        super().__init__("dropdown", id=id, name=name, value=value, style=style)
-        self.options = options
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            **super().to_dict(),
-            "options": self.options,
-        }
+    options: list[tuple[str, str | int | float]] = field(default_factory=list)
