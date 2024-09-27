@@ -1,18 +1,27 @@
 import inspect
-from typing import Callable, Any
+from abc import ABC
+from typing import Callable, Any, Literal
+
+ComponentKind = Literal["Component"]
+AppStateKind = Literal["AppState"]
+StateKind = Literal["State"]
+InputOutputKind = ComponentKind | StateKind | AppStateKind
 
 
-class IOBase:
+class InputOutput(ABC):
     # noinspection PyShadowingBuiltins
     def __init__(
         self,
-        id: str,
-        property: str,
+        id: str | None = None,
+        property: str | None = None,
+        kind: InputOutputKind | None = None,
     ):
-        assert isinstance(id, str) and id != ""
-        assert isinstance(property, str) and property != ""
+        assert id is None or (isinstance(id, str) and id != "")
+        assert property is None or (isinstance(property, str) and property != "")
+        assert kind in (None, "AppState", "State", "Component")
         self.id = id
         self.property = property
+        self.kind = kind
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -22,20 +31,12 @@ class IOBase:
         }
 
 
-class Input(IOBase):
-    # noinspection PyShadowingBuiltins
-    def __init__(self, id: str, property: str = "value", source: str = "component"):
-        super().__init__(id, property)
-        assert isinstance(source, str) and source != ""
-        self.source = source
+class Input(InputOutput):
+    """Callback input."""
 
 
-class Output(IOBase):
-    # noinspection PyShadowingBuiltins
-    def __init__(self, id: str, property: str = "value", target: str = "component"):
-        super().__init__(id, property)
-        assert isinstance(target, str) and target != ""
-        self.target = target
+class Output(InputOutput):
+    """Callback output."""
 
 
 class Callback:
@@ -44,34 +45,6 @@ class Callback:
     All other parameters must be described by
     input objects.
     """
-
-    def __init__(
-        self,
-        function: Callable,
-        signature: inspect.Signature,
-        inputs: list[Input],
-        outputs: list[Output],
-    ):
-        """Private constructor.
-        Use `from_decorator` to instantiate callback objects.
-        """
-        self.function = function
-        self.signature = signature
-        self.param_names = tuple(signature.parameters.keys())
-        self.inputs = inputs
-        self.outputs = outputs
-
-    def invoke(self, context: Any, input_values: list | tuple):
-        args, kwargs = self.make_function_args(context, input_values)
-        return self.function(*args, **kwargs)
-
-    def to_dict(self) -> dict[str, Any]:
-        d = dict(function=self.function.__qualname__)
-        if self.inputs:
-            d.update(inputs=[inp.to_dict() for inp in self.inputs])
-        if self.outputs:
-            d.update(outputs=[out.to_dict() for out in self.outputs])
-        return d
 
     @classmethod
     def from_decorator(
@@ -132,6 +105,34 @@ class Callback:
             )
 
         return Callback(function, signature, inputs, outputs)
+
+    def __init__(
+        self,
+        function: Callable,
+        signature: inspect.Signature,
+        inputs: list[Input],
+        outputs: list[Output],
+    ):
+        """Private constructor.
+        Use `from_decorator` to instantiate callback objects.
+        """
+        self.function = function
+        self.signature = signature
+        self.param_names = tuple(signature.parameters.keys())
+        self.inputs = inputs
+        self.outputs = outputs
+
+    def invoke(self, context: Any, input_values: list | tuple):
+        args, kwargs = self.make_function_args(context, input_values)
+        return self.function(*args, **kwargs)
+
+    def to_dict(self) -> dict[str, Any]:
+        d = dict(function=self.function.__qualname__)
+        if self.inputs:
+            d.update(inputs=[inp.to_dict() for inp in self.inputs])
+        if self.outputs:
+            d.update(outputs=[out.to_dict() for out in self.outputs])
+        return d
 
     def get_param(self, param_name: str) -> inspect.Parameter:
         return self.signature.parameters[param_name]

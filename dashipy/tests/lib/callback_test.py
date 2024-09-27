@@ -6,7 +6,7 @@ import pytest
 from dashipy.lib.callback import Input, Callback
 
 
-def my_callback(a: int = 0, b: str = "", c: bool = False) -> str:
+def my_callback(ctx, a: int = 0, b: str = "", c: bool = False) -> str:
     return f"{a}-{b}-{c}"
 
 
