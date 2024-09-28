@@ -14,13 +14,13 @@ panel = Panel(__name__)
 def render_panel(ctx: Context) -> Component:
     selected_dataset: int = 0
     plot = Plot(
-        id="plot",
-        figure=make_figure(ctx, selected_dataset),
+        id="plot", figure=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
     )
     dropdown = Dropdown(
         id="selected_dataset",
         value=selected_dataset,
         options=[(f"DS #{i + 1}", i) for i in range(len(ctx.datasets))],
+        style={"flexGrow": 0},
     )
     control_group = Box(
         style={
@@ -36,6 +36,8 @@ def render_panel(ctx: Context) -> Component:
         style={
             "display": "flex",
             "flexDirection": "column",
+            "width": "100%",
+            "height": "100%",
         },
         children=[plot, control_group],
     )
@@ -47,6 +49,12 @@ def render_panel(ctx: Context) -> Component:
 )
 def make_figure(ctx: Context, selected_dataset: int = 0) -> go.Figure:
     dataset = ctx.datasets[selected_dataset]
-    fig = go.Figure(layout=Layout(title=f"DS #{selected_dataset + 1}", autosize=True))
+    fig = go.Figure(
+        layout=Layout(
+            title=f"DS #{selected_dataset + 1}",
+            margin=dict(t=40, r=4, b=4, l=4),
+            autosize=True,
+        )
+    )
     fig.add_trace(go.Bar(x=["A", "B", "C"], y=dataset))
     return fig

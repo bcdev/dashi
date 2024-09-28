@@ -6,14 +6,14 @@ from .callback import Callback, Output, Input
 
 class Contribution(ABC):
     # noinspection PyShadowingBuiltins
-    def __init__(self, id: str):
-        self.id = id
+    def __init__(self, name: str):
+        self.name = name
         self.extension: Extension | None = None
         self.layout_callback: Callback | None = None
         self.callbacks: list[Callback] = []
 
     def to_dict(self) -> dict[str, Any]:
-        d = dict(id=self.id)
+        d = dict(name=self.name)
         if self.extension is not None:
             d.update(extension=self.extension.name)
         if self.layout_callback is not None:

@@ -1,9 +1,9 @@
 import "react";
-import { DropdownModel, EventHandler } from "./model.ts";
+import { DropdownModel, PropertyChangeHandler } from "../model/component.ts";
 import { ChangeEvent } from "react";
 
 export interface DashiDropdownProps extends Omit<DropdownModel, "type"> {
-  onEvent: EventHandler;
+  onPropertyChange: PropertyChangeHandler;
 }
 
 function DashiDropdown({
@@ -13,26 +13,30 @@ function DashiDropdown({
   style,
   options,
   disabled,
-  onEvent,
+  onPropertyChange,
 }: DashiDropdownProps) {
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    if (!id) {
+      return;
+    }
     let newValue: string | number = event.currentTarget.value;
     if (typeof value === "number") {
       newValue = Number.parseInt(newValue);
     }
-    return onEvent({
-      componentType: "dropdown",
+    return onPropertyChange({
+      componentType: "Dropdown",
       componentId: id,
-      eventType: "onChange",
-      eventData: { [id || name || "value"]: newValue },
+      propertyName: "value",
+      propertyValue: newValue,
     });
   };
   return (
     <select
       id={id}
+      name={name}
+      value={value}
       style={style}
       disabled={disabled}
-      value={value}
       onChange={handleChange}
     >
       {options.map(([text, value], index) => (

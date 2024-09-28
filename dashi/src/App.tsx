@@ -1,108 +1,180 @@
-import { ReactElement, useEffect, useState } from "react";
-import "./App.css";
-import { PanelEventHandler, PanelModel, Panels } from "./lib/model.ts";
-import { fetchPanels, fetchPanel, FetchResponse } from "./api.ts";
-import DashiPanel from "./lib/DashiPanel.tsx";
+import { CSSProperties, ReactElement, useEffect, useState } from "react";
+import {
+  fetchContributions,
+  fetchExtensions,
+  fetchLayoutComponent,
+} from "./api/api.ts";
+import { ContributionModel, Extension } from "./model/extension.ts";
+import { FetchState, fetchState, useFetchState } from "./api/useFetch.ts";
+import { ComponentModel, PropertyChangeEvent } from "./model/component.ts";
+import DashiComponent from "./components/DashiComponent.tsx";
+
+const contribPoint = "panels";
+const panelContainerStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  width: 400,
+  height: 300,
+  padding: 5,
+  border: "1px gray solid",
+};
+
+interface ContribState {
+  componentVisible?: boolean;
+  componentModelState?: FetchState<ComponentModel>;
+}
 
 function App() {
-  const [panelsResponse, setPanelsResponse] = useState<FetchResponse<Panels>>(
-    {},
+  const extensionsState = useFetchState<Extension[]>(fetchExtensions, []);
+  const contributionsState = useFetchState<ContributionModel[]>(
+    fetchContributions,
+    contribPoint,
   );
 
-  const [panelResponses, setPanelResponses] = useState<
-    Record<string, FetchResponse<PanelModel>>
-  >({});
+  const contributions = contributionsState?.data;
 
-  const [panelVisibilities, setPanelVisibilities] = useState<
-    Record<string, boolean>
-  >({});
+  const [contribStates, setContribStates] = useState<ContribState[]>();
 
   useEffect(() => {
-    fetchPanels().then(setPanelsResponse);
-  }, []);
-
-  useEffect(() => {
-    Object.getOwnPropertyNames(panelVisibilities).forEach((panelId) => {
-      const panelVisible = panelVisibilities[panelId];
-      const panelResponse = panelResponses[panelId];
-      if (panelVisible && !panelResponse) {
-        fetchPanel(panelId).then((panelResponse) => {
-          setPanelResponses({ ...panelResponses, [panelId]: panelResponse });
+    if (contributions) {
+      if (!contribStates) {
+        setContribStates(contributions.map(() => ({})));
+      } else {
+        contribStates.forEach((contribState, contribIndex) => {
+          if (
+            contribState.componentVisible &&
+            contribState.componentModelState === undefined
+          ) {
+            setContribStates(
+              updateContribState(contribStates, contribIndex, {
+                componentModelState: {},
+              }),
+            );
+            fetchState(
+              fetchLayoutComponent,
+              contribPoint,
+              contribIndex,
+              [],
+            ).then(
+              (componentModelState) =>
+                void setContribStates(
+                  updateContribState(contribStates, contribIndex, {
+                    componentModelState,
+                  }),
+                ),
+            );
+          }
         });
       }
-    });
-  }, [panelVisibilities, panelResponses]);
+    }
+  }, [contributions, contribStates]);
 
-  const handlePanelEvent: PanelEventHandler = (event) => {
-    fetchPanel(event.panelId, event).then((result) => {
-      setPanelResponses({ ...panelResponses, [event.panelId]: result });
-    });
-  };
+  console.log("contribStates", contribStates);
 
-  let panelSelector: ReactElement;
-  if (panelsResponse.result) {
-    const panelIds = panelsResponse.result.panels;
-    panelSelector = (
-      <div style={{ padding: 5 }}>
-        {panelIds.map((panelId) => (
-          <div key={panelId}>
-            <input
-              type="checkbox"
-              checked={Boolean(panelVisibilities[panelId])}
-              value={panelId}
-              onChange={(e) => {
-                setPanelVisibilities({
-                  ...panelVisibilities,
-                  [panelId]: e.currentTarget.checked,
-                });
-              }}
-            />
-            <label htmlFor={panelId}> {panelId} </label>
-          </div>
-        ))}
+  let extensionsElement: ReactElement;
+  if (extensionsState?.data) {
+    extensionsElement = (
+      <div style={{ display: "flex", gap: 5 }}>
+        {extensionsState.data.map((extension, extIndex) => {
+          const id = `extensions.${extIndex}`;
+          return (
+            <span
+              key={id}
+              style={{ padding: 5 }}
+            >{`${extension.name}/${extension.version}`}</span>
+          );
+        })}
       </div>
     );
-  } else if (panelsResponse.error) {
-    panelSelector = <div>Error: {panelsResponse.error}</div>;
-  } else {
-    panelSelector = <div>Loading panels...</div>;
+  } else if (extensionsState?.error) {
+    extensionsElement = <div>Error: {extensionsState.error.message}</div>;
+  } else if (extensionsState?.loading) {
+    extensionsElement = <div>{`Loading extensions...`}</div>;
   }
 
-  const panelComponents: ReactElement[] = [];
-  Object.getOwnPropertyNames(panelVisibilities).forEach((panelId) => {
-    const panelVisible = panelVisibilities[panelId];
-    const panelResponse = panelResponses[panelId];
-    let panelComponent: ReactElement;
-    if (panelVisible && panelResponse) {
-      if (panelResponse.result) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { type, ...panelProps } = panelResponse.result as PanelModel;
-        panelComponent = (
-          <DashiPanel
-            key={panelId}
-            panelId={panelId}
-            width={500}
-            height={300}
-            {...panelProps}
-            onEvent={handlePanelEvent}
+  let contribSelector: ReactElement;
+  if (contributions && contribStates) {
+    contribSelector = (
+      <div style={{ padding: 5 }}>
+        {contribStates.map((panelState, panelIndex) => {
+          const id = `${contribPoint}.${panelIndex}`;
+          return (
+            <div key={id}>
+              <input
+                id={id}
+                type="checkbox"
+                checked={panelState.componentVisible}
+                value={panelIndex}
+                onChange={(e) => {
+                  setContribStates(
+                    updateContribState(contribStates, panelIndex, {
+                      componentVisible: Boolean(e.currentTarget.checked),
+                    }),
+                  );
+                }}
+              />
+              <label htmlFor={id}>{contributions[panelIndex].name}</label>
+            </div>
+          );
+        })}
+      </div>
+    );
+  } else if (contributionsState?.error) {
+    contribSelector = <div>Error: {contributionsState.error.message}</div>;
+  } else if (contributionsState?.loading) {
+    contribSelector = <div>{`Loading ${contribPoint}...`}</div>;
+  }
+
+  const panelElements: ReactElement[] = [];
+  (contribStates || []).map((panelState, panelIndex) => {
+    if (panelState.componentVisible) {
+      const componentModelState = panelState.componentModelState;
+      let panelElement: ReactElement | null = null;
+      if (componentModelState?.data) {
+        const handlePropertyChange = (e: PropertyChangeEvent) => {
+          console.log("propertyChange:", e);
+        };
+        panelElement = (
+          <DashiComponent
+            {...componentModelState.data}
+            onPropertyChange={handlePropertyChange}
           />
         );
-      } else if (panelResponse.error) {
-        panelComponent = <div>Error: {panelResponse.error}</div>;
-      } else {
-        panelComponent = <div>Loading chart...</div>;
+      } else if (componentModelState?.error) {
+        panelElement = <span>Error: {componentModelState.error.message}</span>;
+      } else if (componentModelState?.loading) {
+        panelElement = <span>Loading contribution...</span>;
       }
-      panelComponents.push(panelComponent);
+      panelElements.push(
+        <div key={`${contribPoint}.${panelIndex}`} style={panelContainerStyle}>
+          {panelElement}
+        </div>,
+      );
     }
   });
 
   return (
     <>
       <h2>Dashi Demo</h2>
-      {panelSelector}
-      <div style={{ display: "flex", gap: 5 }}>{panelComponents}</div>
+      {extensionsElement}
+      {contribSelector}
+      <div style={{ display: "flex", gap: 5 }}>{panelElements}</div>
     </>
   );
 }
 
 export default App;
+
+function updateContribState(
+  contribStates: ContribState[] | undefined,
+  contribIndex: number,
+  contribState: Partial<ContribState>,
+) {
+  if (contribStates) {
+    return [
+      ...contribStates.slice(0, contribIndex),
+      { ...contribStates[contribIndex], ...contribState },
+      ...contribStates.slice(contribIndex + 1),
+    ];
+  }
+}

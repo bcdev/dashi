@@ -36,7 +36,10 @@ class Container(Component, ABC):
         self.children.append(component)
 
     def to_dict(self) -> dict[str, Any]:
-        return {
-            **super().to_dict(),
-            "children": list(c.to_dict() for c in self.children),
-        }
+        d = super().to_dict()
+        # Note we use "components" instead of "children" in order
+        # to avoid later problems with React component's "children"
+        # property
+        d.pop("children")
+        d.update(components=list(c.to_dict() for c in self.children))
+        return d

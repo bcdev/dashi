@@ -1,5 +1,7 @@
 import asyncio
 import importlib
+import traceback
+from typing import Any
 
 import tornado
 import tornado.web
@@ -29,6 +31,14 @@ class RequestHandler(tornado.web.RequestHandler):
             "authorization,content-type",
         )
 
+    def write_error(self, status_code: int, **kwargs: Any) -> None:
+        error = {"status": status_code, "message": self._reason}
+        if "exc_info" in kwargs:
+            error["traceback"] = traceback.format_exception(*kwargs["exc_info"])
+        self.set_header("Content-Type", "text/json")
+        self.write({"error": error})
+        self.finish()
+
 
 class RootHandler(RequestHandler):
     def get(self):
@@ -42,7 +52,7 @@ class ExtensionsHandler(RequestHandler):
     def get(self):
         extensions: list[Extension] = self.settings[DASHI_EXTENSIONS_KEY]
         self.set_header("Content-Type", "text/json")
-        self.write({"extensions": [e.to_dict() for e in extensions]})
+        self.write({"result": [e.to_dict() for e in extensions]})
 
 
 class ContributionsHandler(RequestHandler):
@@ -56,7 +66,7 @@ class ContributionsHandler(RequestHandler):
             self.set_status(404, f"contribution point {contrib_point_name!r} not found")
             return
         self.set_header("Content-Type", "text/json")
-        self.write({contrib_point_name: [c.to_dict() for c in contributions]})
+        self.write({"result": [c.to_dict() for c in contributions]})
 
 
 class LayoutHandler(RequestHandler):
@@ -67,7 +77,7 @@ class LayoutHandler(RequestHandler):
     # POST /ext/layout/{contrib_point_name}/{contrib_index}
     def post(self, contrib_point_name: str, contrib_index: str):
         data = tornado.escape.json_decode(self.request.body)
-        input_values = data.get("inputs") or []
+        input_values = data.get("inputValues") or []
         self.render_layout(contrib_point_name, int(contrib_index), input_values)
 
     def render_layout(
@@ -102,7 +112,7 @@ class LayoutHandler(RequestHandler):
             return
 
         self.set_header("Content-Type", "text/json")
-        self.write({"component": component.to_dict()})
+        self.write({"result": component.to_dict()})
 
 
 class CallbackHandler(RequestHandler):
@@ -111,18 +121,17 @@ class CallbackHandler(RequestHandler):
     def post(self):
         data = tornado.escape.json_decode(self.request.body)
         # TODO: validate data
-        callback_inputs: list[dict] = data.get("callbacks") or []
+        call_requests: list[dict] = data.get("callRequests") or []
 
         context: Context = self.settings[DASHI_CONTEXT_KEY]
 
         # TODO: assert correctness, set status code on error
-        results: list[dict] = []
-        for callback_input in callback_inputs:
-            extension_index: int = callback_input["extensionIndex"]
-            contrib_point_name: str = callback_input["contribPoint"]
-            contrib_index: int = callback_input["contribIndex"]
-            callback_index: int = callback_input["callbackIndex"]
-            input_values: list = callback_input["inputValues"]
+        call_results: list[dict] = []
+        for call_request in call_requests:
+            contrib_point_name: str = call_request["contribPoint"]
+            contrib_index: int = call_request["contribIndex"]
+            callback_index: int = call_request["callbackIndex"]
+            input_values: list = call_request["inputValues"]
 
             contrib_key = DASHI_CONTRIB_KEY_PREFIX + contrib_point_name
             contributions: list[Contribution] = self.settings[contrib_key]
@@ -138,9 +147,7 @@ class CallbackHandler(RequestHandler):
                 output_value = output_values[output_index]
                 callback_outputs.append(
                     {
-                        "target": output.target,
-                        "id": output.id,
-                        "property": output.property,
+                        **output.to_dict(),
                         "value": (
                             output_value.to_dict()
                             if isinstance(output_value, Component)
@@ -149,9 +156,8 @@ class CallbackHandler(RequestHandler):
                     }
                 )
 
-            results.append(
+            call_results.append(
                 {
-                    "extensionIndex": extension_index,
                     "contribPoint": contrib_point_name,
                     "contribIndex": contrib_index,
                     "callbackOutputs": callback_outputs,
@@ -159,24 +165,24 @@ class CallbackHandler(RequestHandler):
             )
 
         self.set_header("Content-Type", "text/json")
-        self.write({"results": results})
+        self.write({"result": call_results})
 
 
 def print_usage(app, port):
     url = f"http://127.0.0.1:{port}"
     print(f"Listening on {url}...")
     print(f"API:")
-    print(f"- {url}/ext/extensions")
+    print(f"- {url}/dashi/extensions")
     for k in app.settings.keys():
         if k.startswith(DASHI_CONTRIB_KEY_PREFIX):
             contrib_point_name = k[len(DASHI_CONTRIB_KEY_PREFIX) :]
-            print(f"- {url}/ext/contributions/{contrib_point_name}")
+            print(f"- {url}/dashi/contributions/{contrib_point_name}")
     for k, v in app.settings.items():
         if k.startswith(DASHI_CONTRIB_KEY_PREFIX):
             contrib_point_name = k[len(DASHI_CONTRIB_KEY_PREFIX) :]
             contributions: list[Contribution] = v
             for i in range(len(contributions)):
-                print(f"- {url}/ext/layout/{contrib_point_name}/{i}")
+                print(f"- {url}/dashi/layout/{contrib_point_name}/{i}")
 
 
 def make_app():
@@ -191,10 +197,10 @@ def make_app():
     app = tornado.web.Application(
         [
             (r"/", RootHandler),
-            (r"/ext/extensions", ExtensionsHandler),
-            (r"/ext/contributions/([a-z0-9-]+)", ContributionsHandler),
-            (r"/ext/layout/([a-z0-9-]+)/([0-9]+)", LayoutHandler),
-            (r"/ext/callback", CallbackHandler),
+            (r"/dashi/extensions", ExtensionsHandler),
+            (r"/dashi/contributions/([a-z0-9-]+)", ContributionsHandler),
+            (r"/dashi/layout/([a-z0-9-]+)/([0-9]+)", LayoutHandler),
+            (r"/dashi/callback", CallbackHandler),
         ]
     )
     app.settings[DASHI_CONTEXT_KEY] = Context()
