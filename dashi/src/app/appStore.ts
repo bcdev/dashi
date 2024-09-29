@@ -28,50 +28,31 @@ const appStore = create<AppState>((set, getState) => ({
   panelStates: undefined,
   showPanel: (panelIndex: number) => {
     const panelStates = getState().panelStates;
-    if (panelStates) {
+    if (panelStates && !panelStates[panelIndex].visible) {
       const panelState = panelStates[panelIndex];
-      if (!panelState.visible) {
-        console.log("Showing panel", panelIndex, panelStates);
-        set({
-          panelStates: insertPartial<PanelState>(panelStates, panelIndex, {
-            visible: true,
-          }),
+      if (panelState.componentModelResult.status) {
+        updatePanelState(panelIndex, { visible: true });
+      } else {
+        updatePanelState(panelIndex, {
+          visible: true,
+          componentModelResult: { status: "pending" },
         });
         const inputValues: unknown[] = []; // TODO!
-        if (!panelState.componentModelResult.status) {
-          set({
-            panelStates: insertPartial<PanelState>(panelStates, panelIndex, {
-              componentModelResult: { status: "pending" },
-            }),
-          });
-          fetchApiResult(
-            fetchLayoutComponent,
-            "panels",
-            panelIndex,
-            inputValues,
-          ).then((componentModelResult) => {
-            set({
-              panelStates: insertPartial<PanelState>(panelStates, panelIndex, {
-                componentModelResult,
-              }),
-            });
-          });
-        }
+        fetchApiResult(
+          fetchLayoutComponent,
+          "panels",
+          panelIndex,
+          inputValues,
+        ).then((componentModelResult) => {
+          updatePanelState(panelIndex, { componentModelResult });
+        });
       }
     }
   },
   hidePanel: (panelIndex: number) => {
     const panelStates = getState().panelStates;
-    if (panelStates) {
-      const panelState = panelStates[panelIndex];
-      if (panelState.visible) {
-        console.log("Hiding panel", panelIndex, panelState);
-        set({
-          panelStates: insertPartial<PanelState>(panelStates, panelIndex, {
-            visible: false,
-          }),
-        });
-      }
+    if (panelStates && panelStates[panelIndex].visible) {
+      updatePanelState(panelIndex, { visible: false });
     }
   },
 }));
@@ -95,6 +76,13 @@ export function initAppStore() {
     } else {
       set({ contributionPointsResult: result });
     }
+  });
+}
+
+function updatePanelState(panelIndex: number, panelState: Partial<PanelState>) {
+  const panelStates = appStore.getState().panelStates!;
+  appStore.setState({
+    panelStates: insertPartial<PanelState>(panelStates, panelIndex, panelState),
   });
 }
 
