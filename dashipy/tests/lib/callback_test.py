@@ -22,21 +22,6 @@ class FromDecoratorTest(unittest.TestCase):
         self.assertEqual(3, len(callback.inputs))
         self.assertEqual(0, len(callback.outputs))
 
-    def test_input_params(self):
-        callback = Callback.from_decorator(
-            "test", (Input("a"), Input("b"), Input("c")), my_callback
-        )
-        self.assertIsInstance(callback, Callback)
-        self.assertIsInstance(callback.get_param("a"), inspect.Parameter)
-        self.assertIsInstance(callback.get_param("b"), inspect.Parameter)
-        self.assertIsInstance(callback.get_param("c"), inspect.Parameter)
-        self.assertEqual(int, callback.get_param("a").annotation)
-        self.assertEqual(str, callback.get_param("b").annotation)
-        self.assertEqual(bool, callback.get_param("c").annotation)
-        self.assertEqual(0, callback.get_param("a").default)
-        self.assertEqual("", callback.get_param("b").default)
-        self.assertEqual(False, callback.get_param("c").default)
-
     def test_too_few_inputs(self):
         with pytest.raises(
             TypeError,

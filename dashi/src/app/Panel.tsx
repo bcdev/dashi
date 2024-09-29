@@ -1,8 +1,9 @@
 import { CSSProperties, ReactElement } from "react";
-import { PropertyChangeHandler } from "../model/component.ts";
-import DashiComponent from "../components/DashiComponent.tsx";
-import { PanelState } from "./appStore.ts";
-import { ContributionModel } from "../model/extension.ts";
+
+import { ContributionModel } from "../model/contribution";
+import { PropertyChangeHandler } from "../model/component";
+import DashiComponent from "../components/DashiComponent";
+import { PanelState } from "./appStore";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",

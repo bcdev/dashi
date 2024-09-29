@@ -1,14 +1,13 @@
+import { CSSProperties } from "react";
 import {
-  PropertyChangeEvent,
   ComponentModel,
   ContributionChangeHandler,
-} from "../model/component.ts";
-import { ContributionModel } from "../model/extension.ts";
-import DashiComponent from "./DashiComponent.tsx";
-import { CSSProperties } from "react";
+  PropertyChangeEvent,
+} from "../model/component";
+import { ContributionModel } from "../model/contribution";
+import DashiComponent from "./DashiComponent";
 
 export interface DashiContributionProps {
-  //extensionState: Record<string, unknown>;
   componentModel: ComponentModel;
   contributionModel: ContributionModel;
   contribPoint: string;

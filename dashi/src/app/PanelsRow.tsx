@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { PropertyChangeEvent } from "../model/component.ts";
-import { useAppStore } from "./appStore.ts";
+import useAppStore from "./appStore.ts";
 import Panel from "./Panel.tsx";
 
 function PanelsRow() {
@@ -25,14 +25,13 @@ function PanelsRow() {
       panelIndex: number,
       panelEvent: PropertyChangeEvent,
     ) => {
-      // TODO: invoke server-side callbacks
-      //  and process result (-> change states)
       console.log(
         "propertyChange:",
         panelModels[panelIndex],
         panelStates[panelIndex],
         panelEvent,
       );
+      appState.handleComponentPropertyChange("panels", panelIndex, panelEvent);
     };
 
     panelElements = (

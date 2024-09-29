@@ -12,13 +12,15 @@ class InputOutput(ABC):
     # noinspection PyShadowingBuiltins
     def __init__(
         self,
-        id: str | None = None,
+        id: str,
         property: str | None = None,
         kind: InputOutputKind | None = None,
     ):
+        property = "value" if property is None else property
+        kind = "Component" if kind is None else kind
         assert id is None or (isinstance(id, str) and id != "")
-        assert property is None or (isinstance(property, str) and property != "")
-        assert kind in (None, "AppState", "State", "Component")
+        assert isinstance(property, str) and property != ""
+        assert kind in ("AppState", "State", "Component")
         self.id = id
         self.property = property
         self.kind = kind
@@ -133,9 +135,6 @@ class Callback:
         if self.outputs:
             d.update(outputs=[out.to_dict() for out in self.outputs])
         return d
-
-    def get_param(self, param_name: str) -> inspect.Parameter:
-        return self.signature.parameters[param_name]
 
     def make_function_args(
         self, context: Any, values: tuple | list

@@ -1,4 +1,4 @@
-import { useAppStore } from "./appStore.ts";
+import useAppStore from "./appStore.ts";
 
 function PanelsControl() {
   const appState = useAppStore();

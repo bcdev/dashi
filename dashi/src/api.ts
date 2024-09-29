@@ -1,7 +1,8 @@
-import { ComponentModel } from "../model/component.ts";
-import { ContributionModel, ExtensionModel } from "../model/extension.ts";
-import { CallbackCallRequest, CallbackCallResult } from "./types.ts";
-import { callApi } from "../utils/fetchApiResult.ts";
+import { ComponentModel } from "./model/component.ts";
+import { ExtensionModel } from "./model/extension.ts";
+import { ContributionModel } from "./model/contribution.ts";
+import { CallbackCallRequest, CallbackCallResult } from "./model/callback.ts";
+import { callApi } from "./utils/fetchApiResult.ts";
 
 const serverUrl = "http://localhost:8888";
 
