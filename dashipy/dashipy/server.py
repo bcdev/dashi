@@ -15,12 +15,19 @@ from dashipy.lib import Extension, Contribution, Component
 
 DASHI_CONTEXT_KEY = "dashi.context"
 DASHI_EXTENSIONS_KEY = "dashi.extensions"
-DASHI_CONTRIB_KEY_PREFIX = "dashi.contrib."
+DASHI_CONTRIBUTION_POINTS_KEY = "dashi.contribution_points"
 
 Extension.add_contrib_point("panels", Panel)
 
 
-class RequestHandler(tornado.web.RequestHandler):
+class DashiHandler(tornado.web.RequestHandler):
+    @property
+    def extensions(self) -> list[Extension]:
+        return self.settings[DASHI_EXTENSIONS_KEY]
+
+    @property
+    def contribution_points(self) -> dict[str, list[Contribution]]:
+        return self.settings[DASHI_CONTRIBUTION_POINTS_KEY]
 
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
@@ -40,36 +47,38 @@ class RequestHandler(tornado.web.RequestHandler):
         self.finish()
 
 
-class RootHandler(RequestHandler):
+class RootHandler(DashiHandler):
     def get(self):
         self.set_header("Content-Type", "text/plain")
         self.write(f"dashi-server {__version__}")
 
 
-class ExtensionsHandler(RequestHandler):
+class ExtensionsHandler(DashiHandler):
 
     # GET /ext/extensions
     def get(self):
-        extensions: list[Extension] = self.settings[DASHI_EXTENSIONS_KEY]
+        extensions = self.extensions
         self.set_header("Content-Type", "text/json")
         self.write({"result": [e.to_dict() for e in extensions]})
 
 
-class ContributionsHandler(RequestHandler):
+class ContributionsHandler(DashiHandler):
 
-    # GET /ext/contributions/{contrib_point_name}
-    def get(self, contrib_point_name):
-        contrib_key = DASHI_CONTRIB_KEY_PREFIX + contrib_point_name
-        try:
-            contributions: list[Contribution] = self.settings[contrib_key]
-        except KeyError:
-            self.set_status(404, f"contribution point {contrib_point_name!r} not found")
-            return
+    # GET /ext/contributions
+    def get(self):
+        contribution_points = self.contribution_points
         self.set_header("Content-Type", "text/json")
-        self.write({"result": [c.to_dict() for c in contributions]})
+        self.write(
+            {
+                "result": {
+                    cpk: [c.to_dict() for c in cpv]
+                    for cpk, cpv in contribution_points.items()
+                }
+            }
+        )
 
 
-class LayoutHandler(RequestHandler):
+class LayoutHandler(DashiHandler):
     # GET /ext/layout/{contrib_point_name}/{contrib_index}
     def get(self, contrib_point_name: str, contrib_index: str):
         self.render_layout(contrib_point_name, int(contrib_index), [])
@@ -83,9 +92,8 @@ class LayoutHandler(RequestHandler):
     def render_layout(
         self, contrib_point_name: str, contrib_index: int, input_values: list
     ):
-        settings_key = DASHI_CONTRIB_KEY_PREFIX + contrib_point_name
         try:
-            contributions: list[Contribution] = self.settings[settings_key]
+            contributions = self.contribution_points[contrib_point_name]
         except KeyError:
             self.set_status(404, f"contribution point {contrib_point_name!r} not found")
             return
@@ -115,7 +123,7 @@ class LayoutHandler(RequestHandler):
         self.write({"result": component.to_dict()})
 
 
-class CallbackHandler(RequestHandler):
+class CallbackHandler(DashiHandler):
 
     # POST /ext/callback
     def post(self):
@@ -133,8 +141,8 @@ class CallbackHandler(RequestHandler):
             callback_index: int = call_request["callbackIndex"]
             input_values: list = call_request["inputValues"]
 
-            contrib_key = DASHI_CONTRIB_KEY_PREFIX + contrib_point_name
-            contributions: list[Contribution] = self.settings[contrib_key]
+            contribution_points = self.contribution_points
+            contributions = contribution_points[contrib_point_name]
             contribution = contributions[contrib_index]
             callback = contribution.callbacks[callback_index]
             output_values = callback.invoke(context, input_values)
@@ -173,16 +181,11 @@ def print_usage(app, port):
     print(f"Listening on {url}...")
     print(f"API:")
     print(f"- {url}/dashi/extensions")
-    for k in app.settings.keys():
-        if k.startswith(DASHI_CONTRIB_KEY_PREFIX):
-            contrib_point_name = k[len(DASHI_CONTRIB_KEY_PREFIX) :]
-            print(f"- {url}/dashi/contributions/{contrib_point_name}")
-    for k, v in app.settings.items():
-        if k.startswith(DASHI_CONTRIB_KEY_PREFIX):
-            contrib_point_name = k[len(DASHI_CONTRIB_KEY_PREFIX) :]
-            contributions: list[Contribution] = v
-            for i in range(len(contributions)):
-                print(f"- {url}/dashi/layout/{contrib_point_name}/{i}")
+    print(f"- {url}/dashi/contributions")
+    contribution_points = app.settings[DASHI_CONTRIBUTION_POINTS_KEY]
+    for contrib_point_name, contributions in contribution_points.items():
+        for i in range(len(contributions)):
+            print(f"- {url}/dashi/layout/{contrib_point_name}/{i}")
 
 
 def make_app():
@@ -198,18 +201,20 @@ def make_app():
         [
             (r"/", RootHandler),
             (r"/dashi/extensions", ExtensionsHandler),
-            (r"/dashi/contributions/([a-z0-9-]+)", ContributionsHandler),
+            (r"/dashi/contributions", ContributionsHandler),
             (r"/dashi/layout/([a-z0-9-]+)/([0-9]+)", LayoutHandler),
             (r"/dashi/callback", CallbackHandler),
         ]
     )
     app.settings[DASHI_CONTEXT_KEY] = Context()
     app.settings[DASHI_EXTENSIONS_KEY] = extensions
+    contribution_points: dict[str, list[Contribution]] = {}
     for contrib_point_name in Extension.get_contrib_point_names():
         contributions: list[Contribution] = []
         for extension in extensions:
             contributions.extend(getattr(extension, contrib_point_name))
-        app.settings[DASHI_CONTRIB_KEY_PREFIX + contrib_point_name] = contributions
+        contribution_points[contrib_point_name] = contributions
+    app.settings[DASHI_CONTRIBUTION_POINTS_KEY] = contribution_points
     return app
 
 

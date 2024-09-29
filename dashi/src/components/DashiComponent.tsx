@@ -1,22 +1,23 @@
 import { ComponentModel, PropertyChangeHandler } from "../model/component.ts";
-import DashiPlot from "./DashiPlot.tsx";
-import DashiButton from "./DashiButton.tsx";
-import DashiBox from "./DashiBox.tsx";
-import DashiDropdown from "./DashiDropdown.tsx";
+import DashiPlot, { DashiPlotProps } from "./DashiPlot.tsx";
+import DashiButton, { DashiButtonProps } from "./DashiButton.tsx";
+import DashiBox, { DashiBoxProps } from "./DashiBox.tsx";
+import DashiDropdown, { DashiDropdownProps } from "./DashiDropdown.tsx";
 
 export interface DashiComponentProps extends ComponentModel {
   onPropertyChange: PropertyChangeHandler;
 }
 
 function DashiComponent({ type, ...props }: DashiComponentProps) {
+  // TODO: find way to avoid ugly type casts here
   if (type === "Plot") {
-    return <DashiPlot {...props} />;
+    return <DashiPlot {...(props as DashiPlotProps)} />;
   } else if (type === "Dropdown") {
-    return <DashiDropdown {...props} />;
+    return <DashiDropdown {...(props as DashiDropdownProps)} />;
   } else if (type === "Button") {
-    return <DashiButton {...props} />;
+    return <DashiButton {...(props as DashiButtonProps)} />;
   } else if (type === "Box") {
-    return <DashiBox {...props} />;
+    return <DashiBox {...(props as DashiBoxProps)} />;
   }
 }
 

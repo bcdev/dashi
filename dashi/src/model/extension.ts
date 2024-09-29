@@ -1,11 +1,10 @@
-import { ComponentModel } from "./component.ts";
-
-export interface Extension {
+export interface ExtensionModel {
   name: string;
   version: string;
   contributes: string[];
 }
 
+// E.g. a Panel or a Menu
 export interface ContributionModel {
   name: string;
   extension: string;
