@@ -20,7 +20,7 @@ interface PanelProps {
 }
 
 function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
-  if (panelState.visible) {
+  if (!panelState.visible) {
     return null;
   }
   let panelElement: ReactElement | null = null;

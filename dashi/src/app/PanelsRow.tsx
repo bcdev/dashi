@@ -6,6 +6,8 @@ import Panel from "./Panel.tsx";
 function PanelsRow() {
   const appState = useAppStore();
 
+  console.log("appState", appState);
+
   let panelElements: ReactElement | null = null;
   const contributionPointsResult = appState.contributionPointsResult;
   if (contributionPointsResult.data) {
@@ -16,7 +18,7 @@ function PanelsRow() {
       !panelStates ||
       panelModels.length != panelStates?.length
     ) {
-      throw Error("internal state error");
+      throw new Error("internal state error");
     }
 
     const handlePropertyChange = (
@@ -53,8 +55,14 @@ function PanelsRow() {
     );
   } else if (contributionPointsResult.status === "pending") {
     panelElements = <div>Loading panels...</div>;
+  } else {
+    panelElements = <div>Weird panels state</div>;
   }
-  return <div style={{ display: "flex", gap: 5 }}>{panelElements}</div>;
+  return (
+    <div style={{ display: "flex", gap: 5, paddingTop: 10 }}>
+      {panelElements}
+    </div>
+  );
 }
 
 export default PanelsRow;
