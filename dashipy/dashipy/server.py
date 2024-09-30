@@ -48,6 +48,7 @@ class DashiHandler(tornado.web.RequestHandler):
 
 
 class RootHandler(DashiHandler):
+    # GET /
     def get(self):
         self.set_header("Content-Type", "text/plain")
         self.write(f"dashi-server {__version__}")
@@ -55,7 +56,7 @@ class RootHandler(DashiHandler):
 
 class ExtensionsHandler(DashiHandler):
 
-    # GET /ext/extensions
+    # GET /dashi/extensions
     def get(self):
         extensions = self.extensions
         self.set_header("Content-Type", "text/json")
@@ -64,7 +65,7 @@ class ExtensionsHandler(DashiHandler):
 
 class ContributionsHandler(DashiHandler):
 
-    # GET /ext/contributions
+    # GET /dashi/contributions
     def get(self):
         contribution_points = self.contribution_points
         self.set_header("Content-Type", "text/json")
@@ -79,11 +80,11 @@ class ContributionsHandler(DashiHandler):
 
 
 class LayoutHandler(DashiHandler):
-    # GET /ext/layout/{contrib_point_name}/{contrib_index}
+    # GET /dashi/layout/{contrib_point_name}/{contrib_index}
     def get(self, contrib_point_name: str, contrib_index: str):
         self.render_layout(contrib_point_name, int(contrib_index), [])
 
-    # POST /ext/layout/{contrib_point_name}/{contrib_index}
+    # POST /dashi/layout/{contrib_point_name}/{contrib_index}
     def post(self, contrib_point_name: str, contrib_index: str):
         data = tornado.escape.json_decode(self.request.body)
         input_values = data.get("inputValues") or []
@@ -125,7 +126,7 @@ class LayoutHandler(DashiHandler):
 
 class CallbackHandler(DashiHandler):
 
-    # POST /ext/callback
+    # POST /dashi/callback
     def post(self):
         data = tornado.escape.json_decode(self.request.body)
         # TODO: validate data
@@ -160,6 +161,7 @@ class CallbackHandler(DashiHandler):
                             output_value.to_dict()
                             # if isinstance(output_value, Component)
                             if hasattr(output_value, "to_dict")
+                            and callable(output_value.to_dict)
                             else output_value
                         ),
                     }

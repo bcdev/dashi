@@ -15,7 +15,7 @@ class CallTest(unittest.TestCase):
         ctx = object()
         args, kwargs = callback.make_function_args(ctx, [13, "Wow", True])
         self.assertEqual((ctx, 13), args)
-        self.assertEqual({'b': 'Wow', 'c': True}, kwargs)
+        self.assertEqual({"b": "Wow", "c": True}, kwargs)
 
 
 # noinspection PyMethodMayBeStatic
