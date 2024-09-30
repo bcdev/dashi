@@ -1,8 +1,18 @@
-import appStore, { ContribPoint } from "../store/appStore";
-import { PropertyChangeEvent } from "../model/component";
-import { CallbackCallRequest, CallbackCallResult } from "../model/callback";
+import appStore, { ContribPoint, ContributionState } from "../store/appStore";
+import {
+  ComponentModel,
+  ContainerModel,
+  isContainerModel,
+  PropertyChangeEvent,
+} from "../model/component";
+import {
+  CallbackCallRequest,
+  CallbackCallResult,
+  ComputedOutput,
+} from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchCallbackCallResults } from "../api";
+import { updateArray } from "../utils/updateArray";
 
 export default function handleComponentPropertyChange(
   contribPoint: ContribPoint,
@@ -68,24 +78,75 @@ export default function handleComponentPropertyChange(
 }
 
 function applyCallbackCallResults(callResults: CallbackCallResult[]) {
-  // TODO: process call result --> modify any targets in appState.
-  console.warn(
-    "processing of callback results not implemented yet:",
-    callResults,
-  );
-  //const contributionPoints = appStore.getState().contributionPointsResult.data!;
-  callResults.forEach(
-    ({ contribPoint: _1, contribIndex: _2, computedOutputs }) => {
-      //const contributions = contributionPoints[contribPoint];
-      //const contributionModel = contributions[contribIndex];
-      //const contributionState = { ...appStore.getState().panelStates[c] };
-      computedOutputs.forEach((output) => {
-        if (!output.kind || output.kind === "Component") {
-          //const componentId = output.id;
-          //const propertyName = output.property;
-          //const propertyValue = output.value;
-        }
+  console.log("processing call results", callResults);
+  callResults.forEach(({ contribPoint, contribIndex, computedOutputs }) => {
+    console.log(
+      "processing output of",
+      contribPoint,
+      contribIndex,
+      computedOutputs,
+    );
+    const contributionStatesRecord =
+      appStore.getState().contributionStatesRecord;
+    const contributionStates = contributionStatesRecord[contribPoint];
+    const contributionState = contributionStates[contribIndex];
+    const componentModelOld = contributionState.componentModelResult.data;
+    let componentModel = componentModelOld;
+    computedOutputs.forEach((output) => {
+      if (componentModel && (!output.kind || output.kind === "Component")) {
+        componentModel = updateComponentState(componentModel, output);
+      } else {
+        // TODO: process other output kinds which may not require componentModel.
+        console.warn(
+          "processing of this kind of output not supported yet:",
+          output,
+        );
+      }
+    });
+    if (componentModel && componentModel !== componentModelOld) {
+      appStore.setState({
+        contributionStatesRecord: {
+          ...contributionStatesRecord,
+          [contribPoint]: updateArray<ContributionState>(
+            contributionStates,
+            contribIndex,
+            {
+              ...contributionState,
+              componentModelResult: {
+                ...contributionState.componentModelResult,
+                data: componentModel,
+              },
+            },
+          ),
+        },
       });
-    },
-  );
+    }
+  });
+}
+
+function updateComponentState(
+  componentModel: ComponentModel,
+  output: ComputedOutput,
+): ComponentModel {
+  if (componentModel.id === output.id) {
+    return { ...componentModel, [output.property]: output.value };
+  } else if (isContainerModel(componentModel)) {
+    const containerModelOld: ContainerModel = componentModel;
+    let containerModelNew: ContainerModel = containerModelOld;
+    for (let i = 0; i < containerModelOld.components.length; i++) {
+      const itemOld = containerModelOld.components[i];
+      const itemNew = updateComponentState(itemOld, output);
+      if (itemNew !== itemOld) {
+        if (containerModelNew === containerModelOld) {
+          containerModelNew = {
+            ...containerModelOld,
+            components: [...containerModelOld.components],
+          };
+        }
+        containerModelNew.components[i] = itemNew;
+      }
+    }
+    return containerModelNew;
+  }
+  return componentModel;
 }

@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { Component, CSSProperties } from "react";
 import { Config, Layout, PlotData } from "plotly.js";
 
 export type ComponentType = "Button" | "Dropdown" | "Plot" | "Box";
@@ -14,6 +14,12 @@ export interface ComponentModel {
 
 export interface ContainerModel extends ComponentModel {
   components: ComponentModel[];
+}
+
+export function isContainerModel(
+  componentModel: ComponentModel,
+): componentModel is ContainerModel {
+  return !!(componentModel as ContainerModel).components;
 }
 
 export interface DropdownModel extends ComponentModel {

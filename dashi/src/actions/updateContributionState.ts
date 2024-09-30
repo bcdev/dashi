@@ -1,4 +1,5 @@
 import appStore, { ContribPoint, ContributionState } from "../store/appStore";
+import { updateArray } from "../utils/updateArray";
 
 export function updateContributionState(
   contribPoint: ContribPoint,
@@ -17,12 +18,4 @@ export function updateContributionState(
       ),
     },
   });
-}
-
-function updateArray<T>(array: T[], index: number, item: Partial<T>): T[] {
-  return [
-    ...array.slice(0, index),
-    { ...array[index], ...item },
-    ...array.slice(index + 1),
-  ];
 }
