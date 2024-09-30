@@ -12,8 +12,8 @@ function PanelsControl() {
   if (!contributionPoints) {
     return null;
   }
-  const panelModels = contributionPoints[contribState];
-  const panelStates = appState.contributionStatesRecord[contribState];
+  const panelModels = contributionPoints[contribPoint];
+  const panelStates = appState.contributionStatesRecord[contribPoint];
   if (
     !panelModels ||
     !panelStates ||

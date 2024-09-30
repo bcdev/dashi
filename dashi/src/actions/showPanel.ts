@@ -13,10 +13,10 @@ export function showPanel(panelIndex: number) {
   }
   if (panelState.componentModelResult.status) {
     // If we have some status, the component is loaded or is being loaded
-    updateContributionState(panelIndex, { visible: true });
+    updateContributionState(contribPoint, panelIndex, { visible: true });
   } else {
     // No status yet, so we must load the component
-    updateContributionState(panelIndex, {
+    updateContributionState(contribPoint, panelIndex, {
       visible: true,
       componentModelResult: { status: "pending" },
     });
@@ -27,7 +27,9 @@ export function showPanel(panelIndex: number) {
       panelIndex,
       inputValues,
     ).then((componentModelResult) => {
-      updateContributionState(panelIndex, { componentModelResult });
+      updateContributionState(contribPoint, panelIndex, {
+        componentModelResult,
+      });
     });
   }
 }

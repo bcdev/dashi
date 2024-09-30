@@ -6,6 +6,6 @@ export function hidePanel(panelIndex: number) {
   const panelStates =
     appStore.getState().contributionStatesRecord[contribPoint];
   if (panelStates && panelStates[panelIndex].visible) {
-    updateContributionState(panelIndex, { visible: false });
+    updateContributionState(contribPoint, panelIndex, { visible: false });
   }
 }
