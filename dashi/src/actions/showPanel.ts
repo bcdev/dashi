@@ -1,42 +1,43 @@
-import appStore from "../store/appStore";
+import appStore, { ContribPoint } from "../store/appStore";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchLayoutComponent } from "../api";
-import { updatePanelState } from "./updatePanelState";
+import { updateContributionState } from "./updateContributionState";
 
 export function showPanel(panelIndex: number) {
+  const contribPoint = "panels";
   const getState = appStore.getState;
-  const panelStates = getState().contributionPointStates["panels"];
+  const panelStates = getState().contributionStatesRecord[contribPoint];
   const panelState = panelStates[panelIndex];
   if (panelState.visible) {
     return; // nothing to do
   }
   if (panelState.componentModelResult.status) {
     // If we have some status, the component is loaded or is being loaded
-    updatePanelState(panelIndex, { visible: true });
+    updateContributionState(panelIndex, { visible: true });
   } else {
     // No status yet, so we must load the component
-    updatePanelState(panelIndex, {
+    updateContributionState(panelIndex, {
       visible: true,
       componentModelResult: { status: "pending" },
     });
-    const inputValues = getLayoutInputValues("panels", panelIndex);
+    const inputValues = getLayoutInputValues(contribPoint, panelIndex);
     fetchApiResult(
       fetchLayoutComponent,
-      "panels",
+      contribPoint,
       panelIndex,
       inputValues,
     ).then((componentModelResult) => {
-      updatePanelState(panelIndex, { componentModelResult });
+      updateContributionState(panelIndex, { componentModelResult });
     });
   }
 }
 
 function getLayoutInputValues(
-  contribPoint: string,
+  contribPoint: ContribPoint,
   contribIndex: number,
 ): unknown[] {
   const contributionModels =
-    appStore.getState().contributionPointsResult.data![contribPoint];
+    appStore.getState().contributionsRecordResult.data![contribPoint];
   const contributionModel = contributionModels[contribIndex];
   const inputs = contributionModel.layout!.inputs;
   if (inputs && inputs.length > 0) {

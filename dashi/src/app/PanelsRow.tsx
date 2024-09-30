@@ -10,10 +10,10 @@ function PanelsRow() {
   console.log("appState", appState);
 
   let panelElements: ReactElement | null = null;
-  const contributionPointsResult = appState.contributionPointsResult;
-  if (contributionPointsResult.data) {
-    const panelModels = contributionPointsResult.data["panels"];
-    const panelStates = appState.contributionPointStates["panels"];
+  const contributionsRecordResult = appState.contributionsRecordResult;
+  if (contributionsRecordResult.data) {
+    const panelModels = contributionsRecordResult.data["panels"];
+    const panelStates = appState.contributionStatesRecord["panels"];
     if (
       !panelModels ||
       !panelStates ||
@@ -49,11 +49,13 @@ function PanelsRow() {
           ))}
       </>
     );
-  } else if (contributionPointsResult.error) {
+  } else if (contributionsRecordResult.error) {
     panelElements = (
-      <div>Failed loading panels: {contributionPointsResult.error.message}</div>
+      <div>
+        Failed loading panels: {contributionsRecordResult.error.message}
+      </div>
     );
-  } else if (contributionPointsResult.status === "pending") {
+  } else if (contributionsRecordResult.status === "pending") {
     panelElements = <div>Loading panels...</div>;
   } else {
     panelElements = <div>Weird panels state</div>;

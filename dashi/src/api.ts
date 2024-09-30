@@ -1,23 +1,24 @@
 import { ComponentModel } from "./model/component";
-import { ExtensionModel } from "./model/extension";
-import { ContributionModel } from "./model/contribution";
+import { Extension } from "./model/extension";
+import { Contribution } from "./model/contribution";
 import { CallbackCallRequest, CallbackCallResult } from "./model/callback";
 import { callApi } from "./utils/fetchApiResult";
+import { ContribPoint } from "./store/appStore";
 
 const serverUrl = "http://localhost:8888";
 
-export async function fetchExtensions(): Promise<ExtensionModel[]> {
+export async function fetchExtensions(): Promise<Extension[]> {
   return callApi(`${serverUrl}/dashi/extensions`);
 }
 
-export async function fetchContributions(): Promise<
-  Record<string, ContributionModel[]>
+export async function fetchContributionsRecord(): Promise<
+  Record<ContribPoint, Contribution[]>
 > {
   return callApi(`${serverUrl}/dashi/contributions`);
 }
 
 export async function fetchLayoutComponent(
-  contribPoint: string,
+  contribPoint: ContribPoint,
   contribIndex: number,
   inputValues: unknown[],
 ): Promise<ComponentModel> {

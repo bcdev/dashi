@@ -1,4 +1,4 @@
-export interface ExtensionModel {
+export interface Extension {
   name: string;
   version: string;
   contributes: string[];

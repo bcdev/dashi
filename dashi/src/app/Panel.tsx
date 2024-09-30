@@ -1,6 +1,6 @@
 import { CSSProperties, ReactElement } from "react";
 
-import { ContributionModel } from "../model/contribution";
+import { Contribution } from "../model/contribution";
 import { PropertyChangeHandler } from "../model/component";
 import DashiComponent from "../components/DashiComponent";
 import { ContributionState } from "../store/appStore";
@@ -15,7 +15,7 @@ const panelContainerStyle: CSSProperties = {
 };
 
 interface PanelProps {
-  panelModel: ContributionModel;
+  panelModel: Contribution;
   panelState: ContributionState;
   onPropertyChange: PropertyChangeHandler;
 }

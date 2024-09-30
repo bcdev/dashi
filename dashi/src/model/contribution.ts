@@ -1,6 +1,6 @@
 import { Callback } from "./callback";
 
-export interface ContributionModel {
+export interface Contribution {
   name: string;
   extension: string;
   layout?: Callback;

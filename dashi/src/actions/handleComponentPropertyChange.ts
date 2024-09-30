@@ -1,17 +1,17 @@
-import appStore from "../store/appStore";
+import appStore, { ContribPoint } from "../store/appStore";
 import { PropertyChangeEvent } from "../model/component";
 import { CallbackCallRequest, CallbackCallResult } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchCallbackOutputs } from "../api";
 
 export default function handleComponentPropertyChange(
-  contribPoint: string,
+  contribPoint: ContribPoint,
   contribIndex: number,
   contribEvent: PropertyChangeEvent,
 ) {
   const appState = appStore.getState();
   const contributionModels =
-    appState.contributionPointsResult.data![contribPoint];
+    appState.contributionsRecordResult.data![contribPoint];
   const componentId = contribEvent.componentId;
   const componentPropertyName = contribEvent.propertyName;
   const componentPropertyValue = contribEvent.propertyValue;

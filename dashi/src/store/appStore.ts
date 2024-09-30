@@ -1,9 +1,11 @@
 import { create } from "zustand";
 
-import { ExtensionModel } from "../model/extension";
+import { Extension } from "../model/extension";
 import { ComponentModel } from "../model/component";
-import { ContributionModel } from "../model/contribution";
+import { Contribution } from "../model/contribution";
 import { ApiResult } from "../utils/fetchApiResult";
+
+export type ContribPoint = string;
 
 export interface ContributionState {
   visible?: boolean;
@@ -11,15 +13,18 @@ export interface ContributionState {
 }
 
 export interface AppState {
-  extensionModelsResult: ApiResult<ExtensionModel[]>;
-  contributionPointsResult: ApiResult<Record<string, ContributionModel[]>>;
-  contributionPointStates: Record<string, ContributionState[]>;
+  // API call result all extensions
+  extensionsResult: ApiResult<Extension[]>;
+  // API call result of a record that maps contribPoint --> Contribution[]
+  contributionsRecordResult: ApiResult<Record<ContribPoint, Contribution[]>>;
+  // A record that maps contribPoint --> ContributionState[]
+  contributionStatesRecord: Record<ContribPoint, ContributionState[]>;
 }
 
 const appStore = create<AppState>(() => ({
-  extensionModelsResult: {},
-  contributionPointsResult: {},
-  contributionPointStates: {},
+  extensionsResult: {},
+  contributionsRecordResult: {},
+  contributionStatesRecord: {},
 }));
 
 export default appStore;
