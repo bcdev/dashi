@@ -1,4 +1,3 @@
-import inspect
 import unittest
 
 import pytest
@@ -6,8 +5,17 @@ import pytest
 from dashipy.lib.callback import Input, Callback
 
 
-def my_callback(ctx, a: int = 0, b: str = "", c: bool = False) -> str:
+def my_callback(ctx, a: int, /, b: str = "", c: bool = False) -> str:
     return f"{a}-{b}-{c}"
+
+
+class CallTest(unittest.TestCase):
+    def test_make_function_args(self):
+        callback = Callback(my_callback, [Input("a"), Input("b"), Input("c")], [])
+        ctx = object()
+        args, kwargs = callback.make_function_args(ctx, [13, "Wow", True])
+        self.assertEqual((ctx, 13), args)
+        self.assertEqual({'b': 'Wow', 'c': True}, kwargs)
 
 
 # noinspection PyMethodMayBeStatic

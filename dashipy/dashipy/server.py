@@ -158,7 +158,8 @@ class CallbackHandler(DashiHandler):
                         **output.to_dict(),
                         "value": (
                             output_value.to_dict()
-                            if isinstance(output_value, Component)
+                            # if isinstance(output_value, Component)
+                            if hasattr(output_value, "to_dict")
                             else output_value
                         ),
                     }

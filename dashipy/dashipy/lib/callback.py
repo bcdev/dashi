@@ -106,18 +106,19 @@ class Callback:
                 f" but got {num_inputs}"
             )
 
-        return Callback(function, signature, inputs, outputs)
+        return Callback(function, inputs, outputs, signature=signature)
 
     def __init__(
         self,
         function: Callable,
-        signature: inspect.Signature,
         inputs: list[Input],
         outputs: list[Output],
+        signature: inspect.Signature | None = None,
     ):
         """Private constructor.
         Use `from_decorator` to instantiate callback objects.
         """
+        signature = signature if signature is not None else inspect.signature(function)
         self.function = function
         self.signature = signature
         self.param_names = tuple(signature.parameters.keys())
@@ -138,7 +139,7 @@ class Callback:
 
     def make_function_args(
         self, context: Any, values: tuple | list
-    ) -> tuple[list, dict]:
+    ) -> tuple[tuple, dict]:
         num_inputs = len(self.inputs)
         num_values = len(values)
         delta = num_inputs - num_values
@@ -154,11 +155,11 @@ class Callback:
         args = [context]
         kwargs = {}
         for i, param_value in enumerate(values):
-            param_name = param_names[i + 1]
+            param_name = param_names[i]
             param = self.signature.parameters[param_name]
             if param.kind == param.POSITIONAL_ONLY:
                 args.append(param_value)
             else:
                 kwargs[param_name] = param_value
 
-        return args, kwargs
+        return tuple(args), kwargs

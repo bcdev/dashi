@@ -1,7 +1,5 @@
 import unittest
 
-import pytest
-
 from dashipy.contribs import Panel
 from dashipy.lib.callback import Input, Callback, Output
 
