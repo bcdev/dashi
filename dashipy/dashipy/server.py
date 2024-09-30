@@ -151,10 +151,10 @@ class CallbackHandler(DashiHandler):
             if len(callback.outputs) == 1:
                 output_values = (output_values,)
 
-            callback_outputs: list[dict] = []
+            computed_outputs: list[dict] = []
             for output_index, output in enumerate(callback.outputs):
                 output_value = output_values[output_index]
-                callback_outputs.append(
+                computed_outputs.append(
                     {
                         **output.to_dict(),
                         "value": (
@@ -171,7 +171,7 @@ class CallbackHandler(DashiHandler):
                 {
                     "contribPoint": contrib_point_name,
                     "contribIndex": contrib_index,
-                    "callbackOutputs": callback_outputs,
+                    "computedOutputs": computed_outputs,
                 }
             )
 
