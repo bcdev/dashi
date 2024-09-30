@@ -1,4 +1,4 @@
-import useAppStore from "./appStore.ts";
+import useAppStore from "../store/appStore";
 
 function ExtensionsInfo() {
   const appState = useAppStore();

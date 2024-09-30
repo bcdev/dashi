@@ -1,5 +1,5 @@
-import { BoxModel, PropertyChangeHandler } from "../model/component.ts";
-import DashiChildren from "./DashiChildren.tsx";
+import { BoxModel, PropertyChangeHandler } from "../model/component";
+import DashiChildren from "./DashiChildren";
 
 export interface DashiBoxProps extends Omit<BoxModel, "type"> {
   onPropertyChange: PropertyChangeHandler;

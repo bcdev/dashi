@@ -1,5 +1,5 @@
-import { ComponentModel, PropertyChangeHandler } from "../model/component.ts";
-import DashiComponent from "./DashiComponent.tsx";
+import { ComponentModel, PropertyChangeHandler } from "../model/component";
+import DashiComponent from "./DashiComponent";
 
 export interface DashiChildrenProps {
   components?: ComponentModel[];

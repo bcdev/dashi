@@ -1,8 +1,8 @@
-import { ComponentModel, PropertyChangeHandler } from "../model/component.ts";
-import DashiPlot, { DashiPlotProps } from "./DashiPlot.tsx";
-import DashiButton, { DashiButtonProps } from "./DashiButton.tsx";
-import DashiBox, { DashiBoxProps } from "./DashiBox.tsx";
-import DashiDropdown, { DashiDropdownProps } from "./DashiDropdown.tsx";
+import { ComponentModel, PropertyChangeHandler } from "../model/component";
+import DashiPlot, { DashiPlotProps } from "./DashiPlot";
+import DashiButton, { DashiButtonProps } from "./DashiButton";
+import DashiBox, { DashiBoxProps } from "./DashiBox";
+import DashiDropdown, { DashiDropdownProps } from "./DashiDropdown";
 
 export interface DashiComponentProps extends ComponentModel {
   onPropertyChange: PropertyChangeHandler;

@@ -3,7 +3,7 @@ import { CSSProperties, ReactElement } from "react";
 import { ContributionModel } from "../model/contribution";
 import { PropertyChangeHandler } from "../model/component";
 import DashiComponent from "../components/DashiComponent";
-import { PanelState } from "./appStore";
+import { PanelState } from "../store/appStore";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",

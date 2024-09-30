@@ -1,4 +1,4 @@
-import { hasOwnProperty } from "./hasOwnProperty.ts";
+import { hasOwnProperty } from "./hasOwnProperty";
 
 export interface ApiResult<T> {
   status?: "pending" | "ok" | "failed";

@@ -1,7 +1,7 @@
-import ExtensionsInfo from "./ExtensionInfo.tsx";
-import PanelsControl from "./PanelsControl.tsx";
-import PanelsRow from "./PanelsRow.tsx";
-import { initAppStore } from "./appStore.ts";
+import ExtensionsInfo from "./ExtensionInfo";
+import PanelsControl from "./PanelsControl";
+import PanelsRow from "./PanelsRow";
+import { initAppStore } from "../actions/initAppStore";
 
 initAppStore();
 

@@ -1,5 +1,5 @@
 import "react";
-import { DropdownModel, PropertyChangeHandler } from "../model/component.ts";
+import { DropdownModel, PropertyChangeHandler } from "../model/component";
 import { ChangeEvent } from "react";
 
 export interface DashiDropdownProps extends Omit<DropdownModel, "type"> {

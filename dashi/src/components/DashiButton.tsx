@@ -1,5 +1,5 @@
 import { MouseEvent } from "react";
-import { ButtonModel, PropertyChangeHandler } from "../model/component.ts";
+import { ButtonModel, PropertyChangeHandler } from "../model/component";
 
 export interface DashiButtonProps extends Omit<ButtonModel, "type"> {
   onPropertyChange: PropertyChangeHandler;

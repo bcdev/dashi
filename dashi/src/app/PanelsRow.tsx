@@ -1,7 +1,8 @@
 import { ReactElement } from "react";
-import { PropertyChangeEvent } from "../model/component.ts";
-import useAppStore from "./appStore.ts";
-import Panel from "./Panel.tsx";
+import { PropertyChangeEvent } from "../model/component";
+import useAppStore from "../store/appStore";
+import Panel from "./Panel";
+import handleComponentPropertyChange from "../actions/handleComponentPropertyChange";
 
 function PanelsRow() {
   const appState = useAppStore();
@@ -31,7 +32,7 @@ function PanelsRow() {
         panelStates[panelIndex],
         panelEvent,
       );
-      appState.handleComponentPropertyChange("panels", panelIndex, panelEvent);
+      handleComponentPropertyChange("panels", panelIndex, panelEvent);
     };
 
     panelElements = (

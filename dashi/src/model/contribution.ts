@@ -1,4 +1,4 @@
-import { Callback } from "./callback.ts";
+import { Callback } from "./callback";
 
 export interface ContributionModel {
   name: string;

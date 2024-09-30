@@ -1,4 +1,6 @@
-import useAppStore from "./appStore.ts";
+import useAppStore from "../store/appStore";
+import { hidePanel } from "../actions/hidePanel";
+import { showPanel } from "../actions/showPanel";
 
 function PanelsControl() {
   const appState = useAppStore();
@@ -30,9 +32,9 @@ function PanelsControl() {
               value={panelIndex}
               onChange={(e) => {
                 if (e.currentTarget.checked) {
-                  appState.showPanel(panelIndex);
+                  showPanel(panelIndex);
                 } else {
-                  appState.hidePanel(panelIndex);
+                  hidePanel(panelIndex);
                 }
               }}
             />
