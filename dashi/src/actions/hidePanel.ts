@@ -1,11 +1,5 @@
-import appStore, { ContribPoint } from "../store/appStore";
-import { updateContributionState } from "./updateContributionState";
+import { setComponentVisibility } from "./setComponentVisibility";
 
 export function hidePanel(panelIndex: number) {
-  const contribPoint: ContribPoint = "panels";
-  const panelStates =
-    appStore.getState().contributionStatesRecord[contribPoint];
-  if (panelStates && panelStates[panelIndex].visible) {
-    updateContributionState(contribPoint, panelIndex, { visible: false });
-  }
+  setComponentVisibility("panels", panelIndex, false);
 }
