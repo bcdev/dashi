@@ -4,6 +4,8 @@ import useAppStore from "../store/appStore";
 import Panel from "./Panel";
 import handleComponentPropertyChange from "../actions/handleComponentPropertyChange";
 
+const contribPoint = "panels";
+
 function PanelsRow() {
   const appState = useAppStore();
 
@@ -12,8 +14,8 @@ function PanelsRow() {
   let panelElements: ReactElement | null = null;
   const contributionsRecordResult = appState.contributionsRecordResult;
   if (contributionsRecordResult.data) {
-    const panelModels = contributionsRecordResult.data["panels"];
-    const panelStates = appState.contributionStatesRecord["panels"];
+    const panelModels = contributionsRecordResult.data[contribPoint];
+    const panelStates = appState.contributionStatesRecord[contribPoint];
     if (
       !panelModels ||
       !panelStates ||
@@ -32,7 +34,7 @@ function PanelsRow() {
         panelStates[panelIndex],
         panelEvent,
       );
-      handleComponentPropertyChange("panels", panelIndex, panelEvent);
+      handleComponentPropertyChange(contribPoint, panelIndex, panelEvent);
     };
 
     panelElements = (

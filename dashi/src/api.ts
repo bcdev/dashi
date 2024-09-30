@@ -17,7 +17,7 @@ export async function fetchContributionsRecord(): Promise<
   return callApi(`${serverUrl}/dashi/contributions`);
 }
 
-export async function fetchLayoutComponent(
+export async function fetchComponentModel(
   contribPoint: ContribPoint,
   contribIndex: number,
   inputValues: unknown[],
@@ -28,7 +28,7 @@ export async function fetchLayoutComponent(
   });
 }
 
-export async function fetchCallbackOutputs(
+export async function fetchCallbackCallResults(
   callRequests: CallbackCallRequest[],
 ): Promise<CallbackCallResult[]> {
   return callApi(`${serverUrl}/dashi/callback`, {

@@ -7,12 +7,12 @@ const contribPoint: ContribPoint = "panels";
 function PanelsControl() {
   const appState = useAppStore();
 
-  const contributionPointsResult = appState.contributionsRecordResult;
-  const contributionPoints = contributionPointsResult.data;
-  if (!contributionPoints) {
+  const contributionsRecordResult = appState.contributionsRecordResult;
+  const contributionsRecord = contributionsRecordResult.data;
+  if (!contributionsRecord) {
     return null;
   }
-  const panelModels = contributionPoints[contribPoint];
+  const panelModels = contributionsRecord[contribPoint];
   const panelStates = appState.contributionStatesRecord[contribPoint];
   if (
     !panelModels ||

@@ -2,7 +2,7 @@ import appStore, { ContribPoint } from "../store/appStore";
 import { PropertyChangeEvent } from "../model/component";
 import { CallbackCallRequest, CallbackCallResult } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
-import { fetchCallbackOutputs } from "../api";
+import { fetchCallbackCallResults } from "../api";
 
 export default function handleComponentPropertyChange(
   contribPoint: ContribPoint,
@@ -54,7 +54,7 @@ export default function handleComponentPropertyChange(
   });
   console.debug("callRequests", callRequests);
   if (callRequests.length) {
-    fetchApiResult(fetchCallbackOutputs, callRequests).then(
+    fetchApiResult(fetchCallbackCallResults, callRequests).then(
       (callResultResult) => {
         if (callResultResult.data) {
           applyCallbackCallResults(callResultResult.data);

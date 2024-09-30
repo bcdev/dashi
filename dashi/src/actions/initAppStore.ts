@@ -7,26 +7,26 @@ export function initAppStore() {
   const set = appStore.setState;
 
   set({ extensionsResult: { status: "pending" } });
-  fetchApiResult(fetchExtensions).then((result) => {
-    set({ extensionsResult: result });
+  fetchApiResult(fetchExtensions).then((extensionsResult) => {
+    set({ extensionsResult });
   });
 
   set({ contributionsRecordResult: { status: "pending" } });
-  fetchApiResult(fetchContributionsRecord).then((result) => {
-    if (result.data) {
-      const contributionPointStates: Record<string, ContributionState[]> = {};
-      Object.getOwnPropertyNames(result.data).forEach((contribPoint) => {
-        const contributions: Contribution[] = result.data![contribPoint];
-        contributionPointStates[contribPoint] = contributions.map(() => ({
-          componentModelResult: {},
-        }));
-      });
-      set({
-        contributionsRecordResult: result,
-        contributionStatesRecord: contributionPointStates,
-      });
+  fetchApiResult(fetchContributionsRecord).then((contributionsRecordResult) => {
+    if (contributionsRecordResult.data) {
+      const contributionStatesRecord: Record<string, ContributionState[]> = {};
+      Object.getOwnPropertyNames(contributionsRecordResult.data).forEach(
+        (contribPoint) => {
+          const contributions: Contribution[] =
+            contributionsRecordResult.data![contribPoint];
+          contributionStatesRecord[contribPoint] = contributions.map(() => ({
+            componentModelResult: {},
+          }));
+        },
+      );
+      set({ contributionsRecordResult, contributionStatesRecord });
     } else {
-      set({ contributionsRecordResult: result });
+      set({ contributionsRecordResult });
     }
   });
 }

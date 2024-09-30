@@ -1,6 +1,6 @@
 import appStore, { ContribPoint } from "../store/appStore";
 import fetchApiResult from "../utils/fetchApiResult";
-import { fetchLayoutComponent } from "../api";
+import { fetchComponentModel } from "../api";
 import { updateContributionState } from "./updateContributionState";
 
 export function showPanel(panelIndex: number) {
@@ -22,7 +22,7 @@ export function showPanel(panelIndex: number) {
     });
     const inputValues = getLayoutInputValues(contribPoint, panelIndex);
     fetchApiResult(
-      fetchLayoutComponent,
+      fetchComponentModel,
       contribPoint,
       panelIndex,
       inputValues,
