@@ -13,7 +13,7 @@ function PanelsRow() {
   const contributionPointsResult = appState.contributionPointsResult;
   if (contributionPointsResult.data) {
     const panelModels = contributionPointsResult.data["panels"];
-    const panelStates = appState.panelStates;
+    const panelStates = appState.contributionPointStates["panels"];
     if (
       !panelModels ||
       !panelStates ||

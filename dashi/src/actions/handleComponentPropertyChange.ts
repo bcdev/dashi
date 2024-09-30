@@ -1,6 +1,6 @@
 import appStore from "../store/appStore";
 import { PropertyChangeEvent } from "../model/component";
-import { CallbackCallRequest } from "../model/callback";
+import { CallbackCallRequest, CallbackCallResult } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchCallbackOutputs } from "../api";
 
@@ -52,17 +52,12 @@ export default function handleComponentPropertyChange(
       }
     }
   });
-  console.log("callRequests", callRequests);
+  console.debug("callRequests", callRequests);
   if (callRequests.length) {
     fetchApiResult(fetchCallbackOutputs, callRequests).then(
       (callResultResult) => {
         if (callResultResult.data) {
-          const callResult = callResultResult.data;
-          // TODO: process call result --> modify any targets in appState.
-          console.warn(
-            "processing of callback results not implemented yet:",
-            callResult,
-          );
+          applyCallbackCallResults(callResultResult.data);
         } else {
           console.error("callback failed:", callResultResult.error);
           console.error("  for requests:", callRequests);
@@ -70,4 +65,27 @@ export default function handleComponentPropertyChange(
       },
     );
   }
+}
+
+function applyCallbackCallResults(callResults: CallbackCallResult[]) {
+  // TODO: process call result --> modify any targets in appState.
+  console.warn(
+    "processing of callback results not implemented yet:",
+    callResults,
+  );
+  //const contributionPoints = appStore.getState().contributionPointsResult.data!;
+  callResults.forEach(
+    ({ contribPoint: _1, contribIndex: _2, computedOutputs }) => {
+      //const contributions = contributionPoints[contribPoint];
+      //const contributionModel = contributions[contribIndex];
+      //const contributionState = { ...appStore.getState().panelStates[c] };
+      computedOutputs.forEach((output) => {
+        if (!output.kind || output.kind === "Component") {
+          //const componentId = output.id;
+          //const propertyName = output.property;
+          //const propertyValue = output.value;
+        }
+      });
+    },
+  );
 }

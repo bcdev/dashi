@@ -5,7 +5,7 @@ import { updatePanelState } from "./updatePanelState";
 
 export function showPanel(panelIndex: number) {
   const getState = appStore.getState;
-  const panelStates = getState().panelStates!;
+  const panelStates = getState().contributionPointStates["panels"];
   const panelState = panelStates[panelIndex];
   if (panelState.visible) {
     return; // nothing to do

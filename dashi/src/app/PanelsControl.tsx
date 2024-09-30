@@ -2,6 +2,8 @@ import useAppStore from "../store/appStore";
 import { hidePanel } from "../actions/hidePanel";
 import { showPanel } from "../actions/showPanel";
 
+const contribState = "panels";
+
 function PanelsControl() {
   const appState = useAppStore();
 
@@ -10,8 +12,8 @@ function PanelsControl() {
   if (!contributionPoints) {
     return null;
   }
-  const panelModels = contributionPoints["panels"];
-  const panelStates = appState.panelStates;
+  const panelModels = contributionPoints[contribState];
+  const panelStates = appState.contributionPointStates[contribState];
   if (
     !panelModels ||
     !panelStates ||

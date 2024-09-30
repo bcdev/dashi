@@ -3,7 +3,7 @@ import { CSSProperties, ReactElement } from "react";
 import { ContributionModel } from "../model/contribution";
 import { PropertyChangeHandler } from "../model/component";
 import DashiComponent from "../components/DashiComponent";
-import { PanelState } from "../store/appStore";
+import { ContributionState } from "../store/appStore";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",
@@ -16,7 +16,7 @@ const panelContainerStyle: CSSProperties = {
 
 interface PanelProps {
   panelModel: ContributionModel;
-  panelState: PanelState;
+  panelState: ContributionState;
   onPropertyChange: PropertyChangeHandler;
 }
 

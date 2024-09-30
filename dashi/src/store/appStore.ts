@@ -5,7 +5,7 @@ import { ComponentModel } from "../model/component";
 import { ContributionModel } from "../model/contribution";
 import { ApiResult } from "../utils/fetchApiResult";
 
-export interface PanelState {
+export interface ContributionState {
   visible?: boolean;
   componentModelResult: ApiResult<ComponentModel>;
 }
@@ -13,13 +13,13 @@ export interface PanelState {
 export interface AppState {
   extensionModelsResult: ApiResult<ExtensionModel[]>;
   contributionPointsResult: ApiResult<Record<string, ContributionModel[]>>;
-  panelStates: PanelState[] | undefined;
+  contributionPointStates: Record<string, ContributionState[]>;
 }
 
 const appStore = create<AppState>(() => ({
   extensionModelsResult: {},
   contributionPointsResult: {},
-  panelStates: undefined,
+  contributionPointStates: {},
 }));
 
 export default appStore;

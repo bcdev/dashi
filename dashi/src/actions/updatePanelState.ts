@@ -1,16 +1,25 @@
-import appStore, { PanelState } from "../store/appStore";
+import appStore, { ContributionState } from "../store/appStore";
 
 export function updatePanelState(
   panelIndex: number,
-  panelState: Partial<PanelState>,
+  panelState: Partial<ContributionState>,
 ) {
-  const panelStates = appStore.getState().panelStates!;
+  const contribPoint = "panels";
+  const contributionPointStates = appStore.getState().contributionPointStates;
+  const panelStates = contributionPointStates[contribPoint]!;
   appStore.setState({
-    panelStates: insertPartial<PanelState>(panelStates, panelIndex, panelState),
+    contributionPointStates: {
+      ...contributionPointStates,
+      [contribPoint]: updateArrayAt<ContributionState>(
+        panelStates,
+        panelIndex,
+        panelState,
+      ),
+    },
   });
 }
 
-function insertPartial<T>(array: T[], index: number, item: Partial<T>): T[] {
+function updateArrayAt<T>(array: T[], index: number, item: Partial<T>): T[] {
   return [
     ...array.slice(0, index),
     { ...array[index], ...item },
