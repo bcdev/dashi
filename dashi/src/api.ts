@@ -1,42 +1,38 @@
-import { PanelEventData, PanelModel, Panels } from "./lib/model.ts";
+import { ComponentModel } from "./model/component";
+import { Extension } from "./model/extension";
+import { Contribution } from "./model/contribution";
+import { CallbackCallRequest, CallbackCallResult } from "./model/callback";
+import { callApi } from "./utils/fetchApiResult";
+import { ContribPoint } from "./store/appStore";
 
-export interface FetchResponse<T> {
-  result?: T;
-  error?: string;
+const serverUrl = "http://localhost:8888";
+
+export async function fetchExtensions(): Promise<Extension[]> {
+  return callApi(`${serverUrl}/dashi/extensions`);
 }
 
-export async function fetchPanels(): Promise<FetchResponse<Panels>> {
-  return fetchJson("http://localhost:8888/panels");
+export async function fetchContributionsRecord(): Promise<
+  Record<ContribPoint, Contribution[]>
+> {
+  return callApi(`${serverUrl}/dashi/contributions`);
 }
 
-export async function fetchPanel(
-  panelId: string,
-  event?: PanelEventData,
-): Promise<FetchResponse<PanelModel>> {
-  const url = `http://localhost:8888/panels/${panelId}`;
-  if (event) {
-    return fetchJson(url, {
-      method: "post",
-      body: JSON.stringify(event),
-    });
-  } else {
-    return fetchJson(url);
-  }
+export async function fetchComponentModel(
+  contribPoint: ContribPoint,
+  contribIndex: number,
+  inputValues: unknown[],
+): Promise<ComponentModel> {
+  return callApi(`${serverUrl}/dashi/layout/${contribPoint}/${contribIndex}`, {
+    body: JSON.stringify({ inputValues }),
+    method: "post",
+  });
 }
 
-export async function fetchJson<T>(
-  url: string,
-  init?: RequestInit,
-): Promise<FetchResponse<T>> {
-  try {
-    const response = await fetch(url, init);
-    if (response.ok) {
-      const result = await response.json();
-      return { result: result as T };
-    } else {
-      return { error: response.statusText };
-    }
-  } catch (e) {
-    return { error: `${e}` };
-  }
+export async function fetchCallbackCallResults(
+  callRequests: CallbackCallRequest[],
+): Promise<CallbackCallResult[]> {
+  return callApi(`${serverUrl}/dashi/callback`, {
+    body: JSON.stringify({ callRequests }),
+    method: "post",
+  });
 }

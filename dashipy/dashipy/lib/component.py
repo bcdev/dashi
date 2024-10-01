@@ -1,35 +1,45 @@
 from abc import ABC
+from dataclasses import dataclass, field
 from typing import Any
 
 
+@dataclass(frozen=True)
 class Component(ABC):
+    id: str = None
+    name: str = None
+    value: str | int | float = None
+    style: dict[str, Any] = None
 
-    # noinspection PyShadowingBuiltins
-    def __init__(
-        self,
-        type: str,
-        *,
-        # Common data model
-        name: str | None = None,
-        value: Any = None,
-        # Common HTML attributes
-        id: str | None = None,
-        style: dict[str, Any] | None = None,
-    ):
-        self.type = type
-        self.name = name
-        self.value = value
-        self.id = id
-        self.style = style
+    @property
+    def type(self):
+        return self.__class__.__name__
 
     def to_dict(self) -> dict[str, Any]:
-        attrs = "type", "name", "id", "style"
-        data = {
-            attr: getattr(self, attr)
-            for attr in attrs
-            if getattr(self, attr) is not None
-        }
-        # "value is included only if "name" is given
-        if "name" in data:
-            data["value"] = self.value
-        return data
+        d = dict(type=self.type)
+        d.update(
+            {
+                attr_name: attr_value
+                for attr_name, attr_value in self.__dict__.items()
+                if attr_value is not None
+                and not attr_name.startswith("_")
+                and attr_name
+            }
+        )
+        return d
+
+
+@dataclass(frozen=True)
+class Container(Component, ABC):
+    children: list[Component] = field(default_factory=list)
+
+    def add(self, component: Component):
+        self.children.append(component)
+
+    def to_dict(self) -> dict[str, Any]:
+        d = super().to_dict()
+        # Note we use "components" instead of "children" in order
+        # to avoid later problems with React component's "children"
+        # property
+        d.pop("children")
+        d.update(components=list(c.to_dict() for c in self.children))
+        return d

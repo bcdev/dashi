@@ -1,17 +1,33 @@
 import asyncio
 import importlib
-from typing import Callable, Any
+import traceback
+from typing import Any
 
 import tornado
 import tornado.web
 import tornado.log
 import yaml
 
-from dashipy.context import Context
 from dashipy import __version__
+from dashipy.context import Context
+from dashipy.contribs import Panel
+from dashipy.lib import Extension, Contribution, Component
+
+DASHI_CONTEXT_KEY = "dashi.context"
+DASHI_EXTENSIONS_KEY = "dashi.extensions"
+DASHI_CONTRIBUTION_POINTS_KEY = "dashi.contribution_points"
+
+Extension.add_contrib_point("panels", Panel)
 
 
-class RequestHandler(tornado.web.RequestHandler):
+class DashiHandler(tornado.web.RequestHandler):
+    @property
+    def extensions(self) -> list[Extension]:
+        return self.settings[DASHI_EXTENSIONS_KEY]
+
+    @property
+    def contribution_points(self) -> dict[str, list[Contribution]]:
+        return self.settings[DASHI_CONTRIBUTION_POINTS_KEY]
 
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
@@ -22,42 +38,157 @@ class RequestHandler(tornado.web.RequestHandler):
             "authorization,content-type",
         )
 
+    def write_error(self, status_code: int, **kwargs: Any) -> None:
+        error = {"status": status_code, "message": self._reason}
+        if "exc_info" in kwargs:
+            error["traceback"] = traceback.format_exception(*kwargs["exc_info"])
+        self.set_header("Content-Type", "text/json")
+        self.write({"error": error})
+        self.finish()
 
-class RootHandler(RequestHandler):
+
+class RootHandler(DashiHandler):
+    # GET /
     def get(self):
         self.set_header("Content-Type", "text/plain")
         self.write(f"dashi-server {__version__}")
 
 
-class PanelsHandler(RequestHandler):
+class ExtensionsHandler(DashiHandler):
 
-    # GET /panels
+    # GET /dashi/extensions
     def get(self):
-        panels: dict[str, Callable] = self.settings["panels"]
+        extensions = self.extensions
         self.set_header("Content-Type", "text/json")
-        self.write({"panels": list(panels.keys())})
+        self.write({"result": [e.to_dict() for e in extensions]})
 
 
-class PanelRendererHandler(RequestHandler):
-    # GET /panels/{panel_id}
-    def get(self, panel_id: str):
-        self.render_panel(panel_id, {})
+class ContributionsHandler(DashiHandler):
 
-    # POST /panels/{panel_id}
-    def post(self, panel_id: str):
-        event = tornado.escape.json_decode(self.request.body)
-        panel_props = event.get("eventData") or {}
-        self.render_panel(panel_id, panel_props)
+    # GET /dashi/contributions
+    def get(self):
+        contribution_points = self.contribution_points
+        self.set_header("Content-Type", "text/json")
+        self.write(
+            {
+                "result": {
+                    cpk: [c.to_dict() for c in cpv]
+                    for cpk, cpv in contribution_points.items()
+                }
+            }
+        )
 
-    def render_panel(self, panel_id: str, panel_props: dict[str, Any]):
-        context: Context = self.settings["context"]
-        panels: dict[str, Callable] = self.settings["panels"]
-        panel_renderer = panels.get(panel_id)
-        if panel_renderer is not None:
-            self.set_header("Content-Type", "text/json")
-            self.write(panel_renderer(context, **panel_props).to_dict())
-        else:
-            self.set_status(404, f"panel not found: {panel_props}")
+
+class LayoutHandler(DashiHandler):
+    # GET /dashi/layout/{contrib_point_name}/{contrib_index}
+    def get(self, contrib_point_name: str, contrib_index: str):
+        self.render_layout(contrib_point_name, int(contrib_index), [])
+
+    # POST /dashi/layout/{contrib_point_name}/{contrib_index}
+    def post(self, contrib_point_name: str, contrib_index: str):
+        data = tornado.escape.json_decode(self.request.body)
+        input_values = data.get("inputValues") or []
+        self.render_layout(contrib_point_name, int(contrib_index), input_values)
+
+    def render_layout(
+        self, contrib_point_name: str, contrib_index: int, input_values: list
+    ):
+        try:
+            contributions = self.contribution_points[contrib_point_name]
+        except KeyError:
+            self.set_status(404, f"contribution point {contrib_point_name!r} not found")
+            return
+
+        contrib_ref = f"{contrib_point_name}[{contrib_index}]"
+
+        try:
+            contribution = contributions[contrib_index]
+        except IndexError:
+            self.set_status(404, f"contribution {contrib_ref!r} not found")
+            return
+
+        callback = contribution.layout_callback
+        if callback is None:
+            self.set_status(400, f"contribution {contrib_ref!r} has no layout")
+            return
+
+        context: Context = self.settings[DASHI_CONTEXT_KEY]
+
+        try:
+            component = callback.invoke(context, input_values)
+        except BaseException as e:
+            self.set_status(400, f"contribution {contrib_ref!r}: {e}")
+            return
+
+        self.set_header("Content-Type", "text/json")
+        self.write({"result": component.to_dict()})
+
+
+class CallbackHandler(DashiHandler):
+
+    # POST /dashi/callback
+    def post(self):
+        data = tornado.escape.json_decode(self.request.body)
+        # TODO: validate data
+        call_requests: list[dict] = data.get("callRequests") or []
+
+        context: Context = self.settings[DASHI_CONTEXT_KEY]
+
+        # TODO: assert correctness, set status code on error
+        call_results: list[dict] = []
+        for call_request in call_requests:
+            contrib_point_name: str = call_request["contribPoint"]
+            contrib_index: int = call_request["contribIndex"]
+            callback_index: int = call_request["callbackIndex"]
+            input_values: list = call_request["inputValues"]
+
+            contribution_points = self.contribution_points
+            contributions = contribution_points[contrib_point_name]
+            contribution = contributions[contrib_index]
+            callback = contribution.callbacks[callback_index]
+            output_values = callback.invoke(context, input_values)
+
+            if len(callback.outputs) == 1:
+                output_values = (output_values,)
+
+            computed_outputs: list[dict] = []
+            for output_index, output in enumerate(callback.outputs):
+                output_value = output_values[output_index]
+                computed_outputs.append(
+                    {
+                        **output.to_dict(),
+                        "value": (
+                            output_value.to_dict()
+                            # if isinstance(output_value, Component)
+                            if hasattr(output_value, "to_dict")
+                            and callable(output_value.to_dict)
+                            else output_value
+                        ),
+                    }
+                )
+
+            call_results.append(
+                {
+                    "contribPoint": contrib_point_name,
+                    "contribIndex": contrib_index,
+                    "computedOutputs": computed_outputs,
+                }
+            )
+
+        self.set_header("Content-Type", "text/json")
+        self.write({"result": call_results})
+
+
+def print_usage(app, port):
+    url = f"http://127.0.0.1:{port}"
+    print(f"Listening on {url}...")
+    print(f"API:")
+    print(f"- {url}/dashi/extensions")
+    print(f"- {url}/dashi/contributions")
+    contribution_points = app.settings[DASHI_CONTRIBUTION_POINTS_KEY]
+    for contrib_point_name, contributions in contribution_points.items():
+        for i in range(len(contributions)):
+            print(f"- {url}/dashi/layout/{contrib_point_name}/{i}")
 
 
 def make_app():
@@ -66,39 +197,58 @@ def make_app():
         server_config = yaml.load(f, yaml.SafeLoader)
 
     # Parse panel renderers
-    panels: dict[str, Callable] = {}
-    for panel_ref in server_config.get("panels", []):
-        try:
-            module_name, function_name = panel_ref.rsplit(".", maxsplit=2)
-        except (ValueError, AttributeError):
-            raise TypeError(f"panel renderer syntax error: {panel_ref!r}")
-        module = importlib.import_module(module_name)
-        render_function = getattr(module, function_name)
-        if not callable(render_function):
-            raise TypeError(
-                f"panel renderer {panel_ref!r} does not refer to a callable"
-            )
-        panels[panel_ref.replace(".", "-").replace("_", "-").lower()] = render_function
+    extensions = load_extensions(server_config)
 
     # Create app
     app = tornado.web.Application(
         [
             (r"/", RootHandler),
-            (r"/panels", PanelsHandler),
-            (r"/panels/([a-z0-9-]+)", PanelRendererHandler),
+            (r"/dashi/extensions", ExtensionsHandler),
+            (r"/dashi/contributions", ContributionsHandler),
+            (r"/dashi/layout/([a-z0-9-]+)/([0-9]+)", LayoutHandler),
+            (r"/dashi/callback", CallbackHandler),
         ]
     )
-    app.settings["context"] = Context()
-    app.settings["panels"] = panels
+    app.settings[DASHI_CONTEXT_KEY] = Context()
+    app.settings[DASHI_EXTENSIONS_KEY] = extensions
+    contribution_points: dict[str, list[Contribution]] = {}
+    for contrib_point_name in Extension.get_contrib_point_names():
+        contributions: list[Contribution] = []
+        for extension in extensions:
+            contributions.extend(getattr(extension, contrib_point_name))
+        contribution_points[contrib_point_name] = contributions
+    app.settings[DASHI_CONTRIBUTION_POINTS_KEY] = contribution_points
     return app
+
+
+def load_extensions(server_config: dict) -> list[Extension]:
+    extensions: list[Extension] = []
+    for ext_ref in server_config.get("extensions", []):
+        try:
+            module_name, attr_name = ext_ref.rsplit(".", maxsplit=2)
+        except (ValueError, AttributeError):
+            raise TypeError(f"contribution syntax error: {ext_ref!r}")
+        module = importlib.import_module(module_name)
+        extension = getattr(module, attr_name)
+        if not isinstance(extension, Extension):
+            raise TypeError(
+                f"extension {ext_ref!r} must refer to an"
+                f" instance of {Extension.__qualname__!r},"
+                f" but was {type(extension).__qualname__!r}"
+            )
+        extensions.append(extension)
+    return extensions
 
 
 async def main():
     tornado.log.enable_pretty_logging()
+
     port = 8888
     app = make_app()
     app.listen(port)
-    print(f"Listening on http://127.0.0.1:{port}...")
+
+    print_usage(app, port)
+
     shutdown_event = asyncio.Event()
     await shutdown_event.wait()
 
