@@ -1,6 +1,7 @@
 import "react";
 import { DropdownModel, PropertyChangeHandler } from "../model/component";
-import { ChangeEvent } from "react";
+import React from "react";
+import {Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 
 export interface DashiDropdownProps extends Omit<DropdownModel, "type"> {
   onPropertyChange: PropertyChangeHandler;
@@ -10,19 +11,18 @@ function DashiDropdown({
   id,
   name,
   value,
-  style,
   options,
   disabled,
   onPropertyChange,
 }: DashiDropdownProps) {
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const label = id?.split("_").map(([firstLetter, ...rest]) => firstLetter.toUpperCase() + rest.join('')).join(' ');
+  const [dropdownValue, setValue] = React.useState<string | undefined>(value);
+  const handleChange = (event: SelectChangeEvent) => {
     if (!id) {
       return;
     }
-    let newValue: string | number = event.currentTarget.value;
-    if (typeof value === "number") {
-      newValue = Number.parseInt(newValue);
-    }
+    const newValue: string | number = event.target.value;
+    setValue(newValue);
     return onPropertyChange({
       componentType: "Dropdown",
       componentId: id,
@@ -31,20 +31,24 @@ function DashiDropdown({
     });
   };
   return (
-    <select
+    <Box sx={{ minWidth: 120 }}>
+    <FormControl fullWidth>
+    <InputLabel>{label}</InputLabel>
+    <Select
       id={id}
       name={name}
-      value={value}
-      style={style}
+      value={dropdownValue}
       disabled={disabled}
       onChange={handleChange}
-    >
+      variant={"filled"}>
       {options.map(([text, value], index) => (
-        <option key={index} value={value}>
+        <MenuItem key={index} value={value}>
           {text}
-        </option>
+        </MenuItem>
       ))}
-    </select>
+    </Select>
+    </FormControl>
+    </Box>
   );
 }
 

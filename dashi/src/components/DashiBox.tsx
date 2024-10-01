@@ -1,5 +1,6 @@
 import { BoxModel, PropertyChangeHandler } from "../model/component";
 import DashiChildren from "./DashiChildren";
+import {Box} from "@mui/material";
 
 export interface DashiBoxProps extends Omit<BoxModel, "type"> {
   onPropertyChange: PropertyChangeHandler;
@@ -7,12 +8,12 @@ export interface DashiBoxProps extends Omit<BoxModel, "type"> {
 
 function DashiBox({ id, style, components, onPropertyChange }: DashiBoxProps) {
   return (
-    <div id={id} style={style}>
+    <Box id={id} style={style}>
       <DashiChildren
         components={components}
         onPropertyChange={onPropertyChange}
       />
-    </div>
+    </Box>
   );
 }
 
