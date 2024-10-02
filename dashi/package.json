@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "deep-diff": "^1.0.2",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.1",
     "immer": "^10.1.1",
     "plotly.js": "^2.35.2",
     "react": "^18.3.1",

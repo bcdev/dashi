@@ -1,6 +1,7 @@
 import useAppStore, { ContribPoint } from "../store/appStore";
 import { hidePanel } from "../actions/hidePanel";
 import { showPanel } from "../actions/showPanel";
+import {Checkbox} from "@mui/material";
 
 const contribPoint: ContribPoint = "panels";
 
@@ -27,10 +28,10 @@ function PanelsControl() {
         const id = `panels.${panelIndex}`;
         return (
           <div key={id}>
-            <input
+            <Checkbox
+              color="secondary"
               id={id}
-              type="checkbox"
-              checked={panelState.visible}
+              checked={panelState.visible || false}
               value={panelIndex}
               onChange={(e) => {
                 if (e.currentTarget.checked) {

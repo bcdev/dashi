@@ -1,5 +1,6 @@
 import { MouseEvent } from "react";
 import { ButtonModel, PropertyChangeHandler } from "../model/component";
+import Button from '@mui/material/Button';
 
 export interface DashiButtonProps extends Omit<ButtonModel, "type"> {
   onPropertyChange: PropertyChangeHandler;
@@ -27,7 +28,7 @@ function DashiButton({
     }
   };
   return (
-    <button
+    <Button
       id={id}
       name={name}
       value={value}
@@ -36,7 +37,7 @@ function DashiButton({
       onClick={handleClick}
     >
       {text}
-    </button>
+    </Button>
   );
 }
 

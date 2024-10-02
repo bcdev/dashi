@@ -1,10 +1,11 @@
-import { Component, CSSProperties } from "react";
+import { CSSProperties } from "react";
 import { Config, Layout, PlotData } from "plotly.js";
 
 export type ComponentType = "Button" | "Dropdown" | "Plot" | "Box";
 
 export interface ComponentModel {
   type: ComponentType;
+  label?: string;
   // common HTML attributes
   id?: string;
   name?: string;
