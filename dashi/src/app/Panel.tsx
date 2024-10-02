@@ -1,9 +1,10 @@
-import { CSSProperties, ReactElement } from "react";
+import {CSSProperties, ReactElement} from "react";
 
 import { Contribution } from "../model/contribution";
 import { PropertyChangeHandler } from "../model/component";
 import DashiComponent from "../components/DashiComponent";
 import { ContributionState } from "../store/appStore";
+import {CircularProgress} from "@mui/material";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",
@@ -40,7 +41,7 @@ function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
       </span>
     );
   } else if (componentModelResult.status === "pending") {
-    panelElement = <span>Loading {panelModel.name}...</span>;
+    panelElement = <span><CircularProgress size={30} color="secondary" /> Loading {panelModel.name}...</span>;
   }
   return <div style={panelContainerStyle}>{panelElement}</div>;
 }
