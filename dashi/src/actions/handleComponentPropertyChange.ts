@@ -13,6 +13,10 @@ import {
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchCallbackCallResults } from "../api";
 import { updateArray } from "../utils/updateArray";
+import { produce } from "immer";
+import { diff } from "deep-diff";
+
+const useImmer = false;
 
 export default function handleComponentPropertyChange(
   contribPoint: ContribPoint,
@@ -98,28 +102,43 @@ function applyCallbackCallResults(callResults: CallbackCallResult[]) {
       } else {
         // TODO: process other output kinds which may not require componentModel.
         console.warn(
-          "processing of this kind of output not supported yet:",
+          "processing of this output kind not supported yet:",
           output,
         );
       }
     });
     if (componentModel && componentModel !== componentModelOld) {
-      appStore.setState({
-        contributionStatesRecord: {
-          ...contributionStatesRecord,
-          [contribPoint]: updateArray<ContributionState>(
-            contributionStates,
-            contribIndex,
-            {
-              ...contributionState,
-              componentModelResult: {
-                ...contributionState.componentModelResult,
-                data: componentModel,
+      if (useImmer) {
+        const oldState = appStore.getState();
+        const newState = produce(oldState, (draft) => {
+          draft.contributionStatesRecord[contribPoint][
+            contribIndex
+          ].componentModelResult.data = componentModel;
+        });
+        console.log("state change diff:", diff(oldState, newState));
+        appStore.setState(newState);
+      } else {
+        const oldState = appStore.getState();
+        const newState = {
+          ...oldState,
+          contributionStatesRecord: {
+            ...contributionStatesRecord,
+            [contribPoint]: updateArray<ContributionState>(
+              contributionStates,
+              contribIndex,
+              {
+                ...contributionState,
+                componentModelResult: {
+                  ...contributionState.componentModelResult,
+                  data: componentModel,
+                },
               },
-            },
-          ),
-        },
-      });
+            ),
+          },
+        };
+        console.log("state change diff:", diff(oldState, newState));
+        appStore.setState(newState);
+      }
     }
   });
 }
