@@ -5,10 +5,11 @@ export type ComponentType = "Button" | "Dropdown" | "Plot" | "Box";
 
 export interface ComponentModel {
   type: ComponentType;
+  label?: string;
   // common HTML attributes
   id?: string;
   name?: string;
-  value?: string;
+  value?: string | number;
   style?: CSSProperties;
 }
 

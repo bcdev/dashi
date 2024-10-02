@@ -1,7 +1,14 @@
 import "react";
 import { DropdownModel, PropertyChangeHandler } from "../model/component";
 import React from "react";
-import {Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {
+  // Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 
 export interface DashiDropdownProps extends Omit<DropdownModel, "type"> {
   onPropertyChange: PropertyChangeHandler;
@@ -13,16 +20,21 @@ function DashiDropdown({
   value,
   options,
   disabled,
+  style,
+  label,
   onPropertyChange,
 }: DashiDropdownProps) {
-  const label = id?.split("_").map(([firstLetter, ...rest]) => firstLetter.toUpperCase() + rest.join('')).join(' ');
-  const [dropdownValue, setValue] = React.useState<string | undefined>(value);
+  const [dropdownValue, setDropdownValue] = React.useState(value);
   const handleChange = (event: SelectChangeEvent) => {
     if (!id) {
       return;
     }
-    const newValue: string | number = event.target.value;
-    setValue(newValue);
+    let newValue: string | number = event.target.value;
+    if (typeof value == "number") {
+      newValue = Number.parseInt(newValue);
+    }
+
+    setDropdownValue(newValue);
     return onPropertyChange({
       componentType: "Dropdown",
       componentId: id,
@@ -31,24 +43,24 @@ function DashiDropdown({
     });
   };
   return (
-    <Box sx={{ minWidth: 120 }}>
-    <FormControl fullWidth>
-    <InputLabel>{label}</InputLabel>
-    <Select
-      id={id}
-      name={name}
-      value={dropdownValue}
-      disabled={disabled}
-      onChange={handleChange}
-      variant={"filled"}>
-      {options.map(([text, value], index) => (
-        <MenuItem key={index} value={value}>
-          {text}
-        </MenuItem>
-      ))}
-    </Select>
+    <FormControl>
+      {label && <InputLabel>{label}</InputLabel>}
+      <Select
+        id={id}
+        name={name}
+        style={style}
+        value={`${dropdownValue}`}
+        disabled={disabled}
+        onChange={handleChange}
+        variant={"filled"}
+      >
+        {options.map(([text, value], index) => (
+          <MenuItem key={index} value={value}>
+            {text}
+          </MenuItem>
+        ))}
+      </Select>
     </FormControl>
-    </Box>
   );
 }
 
