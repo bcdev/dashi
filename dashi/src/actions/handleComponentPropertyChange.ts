@@ -5,11 +5,7 @@ import {
   isContainerModel,
   PropertyChangeEvent,
 } from "../model/component";
-import {
-  CallbackCallRequest,
-  CallbackCallResult,
-  ComputedOutput,
-} from "../model/callback";
+import { CallbackCallRequest, ChangeRequest, Change } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchCallbackCallResults } from "../api";
 import { updateArray } from "../utils/updateArray";
@@ -27,6 +23,8 @@ export default function handleComponentPropertyChange(
   const componentPropertyValue = contribEvent.propertyValue;
   const contributionModel = contributionModels[contribIndex];
   const callRequests: CallbackCallRequest[] = [];
+  // Prepare calling all callbacks of the contribution
+  // that are triggered by the property change
   (contributionModel.callbacks || []).forEach((callback, callbackIndex) => {
     if (callback.inputs && callback.inputs.length > 0) {
       let triggerIndex: number = -1;
@@ -38,11 +36,12 @@ export default function handleComponentPropertyChange(
               input.id === componentId &&
               input.property === componentPropertyName
             ) {
+              // Ok - the current callback is triggered by the property change
               triggerIndex = inputIndex;
               return componentPropertyValue;
             } else {
               // TODO: get inputValue from other component with given id/property.
-              //    For time being we use null as it is JSON-serializable
+              //   For time being we use null as it is JSON-serializable
             }
           } else {
             // TODO: get inputValue from other kinds.
@@ -74,25 +73,21 @@ export default function handleComponentPropertyChange(
         }
       },
     );
+  } else {
   }
 }
 
-function applyCallbackCallResults(callResults: CallbackCallResult[]) {
+function applyCallbackCallResults(callResults: ChangeRequest[]) {
   console.log("processing call results", callResults);
-  callResults.forEach(({ contribPoint, contribIndex, computedOutputs }) => {
-    console.log(
-      "processing output of",
-      contribPoint,
-      contribIndex,
-      computedOutputs,
-    );
+  callResults.forEach(({ contribPoint, contribIndex, changes }) => {
+    console.log("processing output of", contribPoint, contribIndex, changes);
     const contributionStatesRecord =
       appStore.getState().contributionStatesRecord;
     const contributionStates = contributionStatesRecord[contribPoint];
     const contributionState = contributionStates[contribIndex];
     const componentModelOld = contributionState.componentModelResult.data;
     let componentModel = componentModelOld;
-    computedOutputs.forEach((output) => {
+    changes.forEach((output) => {
       if (componentModel && (!output.kind || output.kind === "Component")) {
         componentModel = updateComponentState(componentModel, output);
       } else {
@@ -126,7 +121,7 @@ function applyCallbackCallResults(callResults: CallbackCallResult[]) {
 
 function updateComponentState(
   componentModel: ComponentModel,
-  output: ComputedOutput,
+  output: Change,
 ): ComponentModel {
   if (componentModel.id === output.id) {
     return { ...componentModel, [output.property]: output.value };
