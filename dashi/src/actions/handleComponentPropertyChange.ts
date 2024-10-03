@@ -61,12 +61,28 @@ export default function handleComponentPropertyChange(
       }
     }
   });
+  const originalChangeRequest: ChangeRequest = {
+    contribPoint,
+    contribIndex,
+    changes: [
+      {
+        kind: "Component",
+        id: componentId,
+        property: componentPropertyName,
+        value: componentPropertyValue,
+      },
+    ],
+  };
   console.debug("callRequests", callRequests);
-  if (callRequests.length) {
+  if (callRequests.length == 0) {
+    applyChangeRequests([originalChangeRequest]);
+  } else {
     fetchApiResult(fetchChangeRequests, callRequests).then(
       (changeRequestsResult) => {
         if (changeRequestsResult.data) {
-          applyChangeRequests(changeRequestsResult.data);
+          applyChangeRequests(
+            [originalChangeRequest].concat(changeRequestsResult.data),
+          );
         } else {
           console.error(
             "callback failed:",
@@ -81,23 +97,28 @@ export default function handleComponentPropertyChange(
 }
 
 function applyChangeRequests(changeRequests: ChangeRequest[]) {
-  console.log("processing call results", changeRequests);
+  console.log("applying change requests", changeRequests);
   changeRequests.forEach(({ contribPoint, contribIndex, changes }) => {
-    console.log("processing output of", contribPoint, contribIndex, changes);
+    console.log(
+      "processing change request",
+      contribPoint,
+      contribIndex,
+      changes,
+    );
     const contributionStatesRecord =
       appStore.getState().contributionStatesRecord;
     const contributionStates = contributionStatesRecord[contribPoint];
     const contributionState = contributionStates[contribIndex];
     const componentModelOld = contributionState.componentModelResult.data;
     let componentModel = componentModelOld;
-    changes.forEach((output) => {
-      if (componentModel && (!output.kind || output.kind === "Component")) {
-        componentModel = updateComponentState(componentModel, output);
+    changes.forEach((change) => {
+      if (componentModel && (!change.kind || change.kind === "Component")) {
+        componentModel = updateComponentState(componentModel, change);
       } else {
         // TODO: process other output kinds which may not require componentModel.
         console.warn(
           "processing of this kind of output not supported yet:",
-          output,
+          change,
         );
       }
     });
@@ -124,16 +145,16 @@ function applyChangeRequests(changeRequests: ChangeRequest[]) {
 
 function updateComponentState(
   componentModel: ComponentModel,
-  output: Change,
+  change: Change,
 ): ComponentModel {
-  if (componentModel.id === output.id) {
-    return { ...componentModel, [output.property]: output.value };
+  if (componentModel.id === change.id) {
+    return { ...componentModel, [change.property]: change.value };
   } else if (isContainerModel(componentModel)) {
     const containerModelOld: ContainerModel = componentModel;
     let containerModelNew: ContainerModel = containerModelOld;
     for (let i = 0; i < containerModelOld.components.length; i++) {
       const itemOld = containerModelOld.components[i];
-      const itemNew = updateComponentState(itemOld, output);
+      const itemNew = updateComponentState(itemOld, change);
       if (itemNew !== itemOld) {
         if (containerModelNew === containerModelOld) {
           containerModelNew = {

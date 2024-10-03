@@ -1,6 +1,5 @@
 import "react";
 import { DropdownModel, PropertyChangeHandler } from "../model/component";
-import React from "react";
 import {
   // Box,
   FormControl,
@@ -24,7 +23,6 @@ function DashiDropdown({
   label,
   onPropertyChange,
 }: DashiDropdownProps) {
-  const [dropdownValue, setDropdownValue] = React.useState(value);
   const handleChange = (event: SelectChangeEvent) => {
     if (!id) {
       return;
@@ -34,7 +32,6 @@ function DashiDropdown({
       newValue = Number.parseInt(newValue);
     }
 
-    setDropdownValue(newValue);
     return onPropertyChange({
       componentType: "Dropdown",
       componentId: id,
@@ -49,7 +46,7 @@ function DashiDropdown({
         id={id}
         name={name}
         style={style}
-        value={`${dropdownValue}`}
+        value={`${value}`}
         disabled={disabled}
         onChange={handleChange}
         variant={"filled"}
