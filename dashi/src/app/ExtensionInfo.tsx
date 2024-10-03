@@ -1,4 +1,5 @@
 import useAppStore from "../store/appStore";
+import { Typography } from "@mui/material";
 
 function ExtensionsInfo() {
   const appState = useAppStore();
@@ -9,10 +10,11 @@ function ExtensionsInfo() {
         {extensionsResult.data.map((extension, extIndex) => {
           const id = `extensions.${extIndex}`;
           return (
-            <span
+            <Typography
               key={id}
-              style={{ padding: 5 }}
-            >{`${extension.name}/${extension.version}`}</span>
+              style={{ padding: 4 }}
+              fontSize="small"
+            >{`${extension.name}/${extension.version}`}</Typography>
           );
         })}
       </div>
