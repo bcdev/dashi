@@ -28,7 +28,7 @@ export async function fetchComponentModel(
   });
 }
 
-export async function fetchCallbackCallResults(
+export async function fetchChangeRequests(
   callRequests: CallbackCallRequest[],
 ): Promise<ChangeRequest[]> {
   return callApi(`${serverUrl}/dashi/callback`, {

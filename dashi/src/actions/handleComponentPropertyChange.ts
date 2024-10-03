@@ -7,7 +7,7 @@ import {
 } from "../model/component";
 import { CallbackCallRequest, ChangeRequest, Change } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
-import { fetchCallbackCallResults } from "../api";
+import { fetchChangeRequests } from "../api";
 import { updateArray } from "../utils/updateArray";
 
 export default function handleComponentPropertyChange(
@@ -63,23 +63,26 @@ export default function handleComponentPropertyChange(
   });
   console.debug("callRequests", callRequests);
   if (callRequests.length) {
-    fetchApiResult(fetchCallbackCallResults, callRequests).then(
-      (callResultResult) => {
-        if (callResultResult.data) {
-          applyCallbackCallResults(callResultResult.data);
+    fetchApiResult(fetchChangeRequests, callRequests).then(
+      (changeRequestsResult) => {
+        if (changeRequestsResult.data) {
+          applyChangeRequests(changeRequestsResult.data);
         } else {
-          console.error("callback failed:", callResultResult.error);
-          console.error("  for requests:", callRequests);
+          console.error(
+            "callback failed:",
+            changeRequestsResult.error,
+            "for call requests:",
+            callRequests,
+          );
         }
       },
     );
-  } else {
   }
 }
 
-function applyCallbackCallResults(callResults: ChangeRequest[]) {
-  console.log("processing call results", callResults);
-  callResults.forEach(({ contribPoint, contribIndex, changes }) => {
+function applyChangeRequests(changeRequests: ChangeRequest[]) {
+  console.log("processing call results", changeRequests);
+  changeRequests.forEach(({ contribPoint, contribIndex, changes }) => {
     console.log("processing output of", contribPoint, contribIndex, changes);
     const contributionStatesRecord =
       appStore.getState().contributionStatesRecord;
