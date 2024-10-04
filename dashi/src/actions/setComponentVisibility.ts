@@ -8,8 +8,8 @@ export function setComponentVisibility(
   panelIndex: number,
   visible: boolean,
 ) {
-  const getState = appStore.getState;
-  const contributionStates = getState().contributionStatesRecord[contribPoint];
+  const { contributionStatesRecord } = appStore.getState();
+  const contributionStates = contributionStatesRecord[contribPoint];
   const contributionState = contributionStates[panelIndex];
   if (contributionState.visible === visible) {
     return; // nothing to do

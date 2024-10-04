@@ -6,7 +6,7 @@ export function updateContributionState(
   panelIndex: number,
   panelState: Partial<ContributionState>,
 ) {
-  const contributionStatesRecord = appStore.getState().contributionStatesRecord;
+  const { contributionStatesRecord } = appStore.getState();
   const contribStates = contributionStatesRecord[contribPoint]!;
   appStore.setState({
     contributionStatesRecord: {

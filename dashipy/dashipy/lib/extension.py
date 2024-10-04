@@ -46,6 +46,9 @@ class Contribution(ABC):
 
         return decorator
 
+    def __str__(self):
+        return self.name
+
 
 class Extension:
     """A UI Extension."""
