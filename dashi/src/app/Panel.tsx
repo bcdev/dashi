@@ -1,6 +1,5 @@
-import {CSSProperties, ReactElement} from "react";
+import { CSSProperties, ReactElement } from "react";
 
-import { Contribution } from "../model/contribution";
 import { PropertyChangeHandler } from "../model/component";
 import DashiComponent from "../components/DashiComponent";
 import { ContributionState } from "../store/appStore";
@@ -24,7 +23,7 @@ const panelHeaderStyle: CSSProperties = {
 };
 
 interface PanelProps {
-  panelModel: Contribution;
+  panelModel: PanelModel;
   panelState: ContributionState;
   onPropertyChange: PropertyChangeHandler;
 }
