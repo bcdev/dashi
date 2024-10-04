@@ -40,16 +40,15 @@ function DashiDropdown({
     });
   };
   return (
-    <FormControl>
-      {label && <InputLabel>{label}</InputLabel>}
+    <FormControl variant="filled" size="small" style={style}>
+      {label && <InputLabel id={`${id}-label`}>{label}</InputLabel>}
       <Select
+        labelId={`${id}-label`}
         id={id}
         name={name}
-        style={style}
         value={`${value}`}
         disabled={disabled}
         onChange={handleChange}
-        variant={"filled"}
       >
         {options.map(([text, value], index) => (
           <MenuItem key={index} value={value}>
