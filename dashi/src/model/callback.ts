@@ -17,18 +17,23 @@ export interface Input extends InputOutput {}
 export interface Output extends InputOutput {}
 
 export interface CallbackCallRequest {
+  // The contribution that requests the callback call
   contribPoint: string;
   contribIndex: number;
+  // The callback of the contribution
   callbackIndex: number;
+  // The input values for the callback
   inputValues: unknown[];
 }
 
-export interface CallbackCallResult {
+export interface ChangeRequest {
+  // The contribution that requests the changes
   contribPoint: string;
   contribIndex: number;
-  computedOutputs: ComputedOutput[];
+  // The changes requested by the contribution
+  changes: Change[];
 }
 
-export interface ComputedOutput extends Output {
+export interface Change extends Output {
   value: unknown;
 }
