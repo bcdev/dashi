@@ -79,12 +79,12 @@ export default function handleComponentPropertyChange(
   };
   console.debug("callRequests", callRequests);
   if (callRequests.length == 0) {
-    applyChangeRequests([originalChangeRequest]);
+    applyChangeRequestsToAppState([originalChangeRequest]);
   } else {
     fetchApiResult(fetchChangeRequests, callRequests).then(
       (changeRequestsResult) => {
         if (changeRequestsResult.data) {
-          applyChangeRequests(
+          applyChangeRequestsToAppState(
             [originalChangeRequest].concat(changeRequestsResult.data),
           );
         } else {
@@ -100,8 +100,10 @@ export default function handleComponentPropertyChange(
   }
 }
 
-function applyChangeRequests(changeRequests: ChangeRequest[]) {
+function applyChangeRequestsToAppState(changeRequests: ChangeRequest[]) {
   console.log("applying change requests", changeRequests);
+  const appStateOld = appStore.getState();
+  let appStateNew = appStateOld;
   changeRequests.forEach(({ contribPoint, contribIndex, changes }) => {
     console.log(
       "processing change request",
@@ -109,37 +111,29 @@ function applyChangeRequests(changeRequests: ChangeRequest[]) {
       contribIndex,
       changes,
     );
-    const contributionStatesRecord =
-      appStore.getState().contributionStatesRecord;
+    const contributionStatesRecord = appStateNew.contributionStatesRecord;
     const contributionStates = contributionStatesRecord[contribPoint];
     const contributionState = contributionStates[contribIndex];
     const componentModelOld = contributionState.componentModelResult.data;
-    let componentModel = componentModelOld;
+    let componentModelNew = componentModelOld;
     changes.forEach((change) => {
-      if (componentModel && (!change.kind || change.kind === "Component")) {
-        componentModel = updateComponentState(componentModel, change);
+      if (componentModelNew && (!change.kind || change.kind === "Component")) {
+        componentModelNew = applyComponentChange(componentModelNew, change);
       } else {
         // TODO: process other output kinds which may not require componentModel.
-        console.warn(
-          "processing of this kind of output not supported yet:",
-          change,
-        );
+        console.warn("applying this kind of change not supported yet:", change);
       }
     });
-    if (componentModel && componentModel !== componentModelOld) {
+    if (componentModelNew && componentModelNew !== componentModelOld) {
       if (useImmer) {
-        const oldState = appStore.getState();
-        const newState = produce(oldState, (draft) => {
+        appStateNew = produce(appStateNew, (draft) => {
           draft.contributionStatesRecord[contribPoint][
             contribIndex
-          ].componentModelResult.data = componentModel;
+          ].componentModelResult.data = componentModelNew;
         });
-        console.log("state change diff:", diff(oldState, newState));
-        appStore.setState(newState);
       } else {
-        const oldState = appStore.getState();
-        const newState = {
-          ...oldState,
+        appStateNew = {
+          ...appStateNew,
           contributionStatesRecord: {
             ...contributionStatesRecord,
             [contribPoint]: updateArray<ContributionState>(
@@ -149,20 +143,22 @@ function applyChangeRequests(changeRequests: ChangeRequest[]) {
                 ...contributionState,
                 componentModelResult: {
                   ...contributionState.componentModelResult,
-                  data: componentModel,
+                  data: componentModelNew,
                 },
               },
             ),
           },
         };
-        console.log("state change diff:", diff(oldState, newState));
-        appStore.setState(newState);
       }
     }
   });
+  if (appStateNew !== appStateOld) {
+    console.log("state change diff:", diff(appStateOld, appStateNew));
+    appStore.setState(appStateNew);
+  }
 }
 
-function updateComponentState(
+function applyComponentChange(
   componentModel: ComponentModel,
   change: Change,
 ): ComponentModel {
@@ -173,7 +169,7 @@ function updateComponentState(
     let containerModelNew: ContainerModel = containerModelOld;
     for (let i = 0; i < containerModelOld.components.length; i++) {
       const itemOld = containerModelOld.components[i];
-      const itemNew = updateComponentState(itemOld, change);
+      const itemNew = applyComponentChange(itemOld, change);
       if (itemNew !== itemOld) {
         if (containerModelNew === containerModelOld) {
           containerModelNew = {
