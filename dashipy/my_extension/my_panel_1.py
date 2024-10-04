@@ -19,8 +19,9 @@ def render_panel(ctx: Context) -> Component:
     dropdown = Dropdown(
         id="selected_dataset",
         value=selected_dataset,
+        label="Dataset",
         options=[(f"DS #{i + 1}", i) for i in range(len(ctx.datasets))],
-        style={"flexGrow": 0},
+        style={"flexGrow": 0, "minWidth": 120},
     )
     control_group = Box(
         style={

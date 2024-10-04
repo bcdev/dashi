@@ -1,7 +1,7 @@
 import { ComponentModel } from "./model/component";
 import { Extension } from "./model/extension";
 import { Contribution } from "./model/contribution";
-import { CallbackCallRequest, CallbackCallResult } from "./model/callback";
+import { CallbackCallRequest, ChangeRequest } from "./model/callback";
 import { callApi } from "./utils/fetchApiResult";
 import { ContribPoint } from "./store/appStore";
 
@@ -28,9 +28,9 @@ export async function fetchComponentModel(
   });
 }
 
-export async function fetchCallbackCallResults(
+export async function fetchChangeRequests(
   callRequests: CallbackCallRequest[],
-): Promise<CallbackCallResult[]> {
+): Promise<ChangeRequest[]> {
   return callApi(`${serverUrl}/dashi/callback`, {
     body: JSON.stringify({ callRequests }),
     method: "post",
