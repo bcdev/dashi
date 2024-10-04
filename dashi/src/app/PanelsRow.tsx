@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { PropertyChangeEvent } from "../model/component";
 import useAppStore from "../store/appStore";
 import Panel from "./Panel";
-import handleComponentPropertyChange from "../actions/handleComponentPropertyChange";
+import applyPropertyChange from "../actions/applyPropertyChange";
 import { PanelModel } from "../model/panel";
 
 const contribPoint = "panels";
@@ -41,7 +41,7 @@ function PanelsRow() {
         panelStates[panelIndex],
         panelEvent,
       );
-      handleComponentPropertyChange(contribPoint, panelIndex, panelEvent);
+      applyPropertyChange(contribPoint, panelIndex, panelEvent);
     };
 
     panelElements = (

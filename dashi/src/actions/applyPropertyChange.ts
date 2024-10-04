@@ -1,4 +1,4 @@
-import appStore, { ContribPoint, ContributionState } from "../store/appStore";
+import appStore, { ContribPoint } from "../store/appStore";
 import {
   ComponentModel,
   ContainerModel,
@@ -8,16 +8,12 @@ import {
 import { CallbackCallRequest, ChangeRequest, Change } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchChangeRequests } from "../api";
-import { updateArray } from "../utils/updateArray";
 import { produce, setAutoFreeze } from "immer";
-import { diff } from "deep-diff";
 
 // https://github.com/plotly/react-plotly.js/issues/43
 setAutoFreeze(false);
 
-const useImmer = true;
-
-export default function handleComponentPropertyChange(
+export default function applyPropertyChange(
   contribPoint: ContribPoint,
   contribIndex: number,
   contribEvent: PropertyChangeEvent,
@@ -82,12 +78,12 @@ export default function handleComponentPropertyChange(
   };
   console.debug("callRequests", callRequests);
   if (callRequests.length == 0) {
-    applyChangeRequestsToAppState([originalChangeRequest]);
+    applyChangeRequests([originalChangeRequest]);
   } else {
     fetchApiResult(fetchChangeRequests, callRequests).then(
       (changeRequestsResult) => {
         if (changeRequestsResult.data) {
-          applyChangeRequestsToAppState(
+          applyChangeRequests(
             [originalChangeRequest].concat(changeRequestsResult.data),
           );
         } else {
@@ -103,7 +99,7 @@ export default function handleComponentPropertyChange(
   }
 }
 
-function applyChangeRequestsToAppState(changeRequests: ChangeRequest[]) {
+function applyChangeRequests(changeRequests: ChangeRequest[]) {
   console.log("applying change requests", changeRequests);
   const appStateOld = appStore.getState();
   let appStateNew = appStateOld;
@@ -128,37 +124,14 @@ function applyChangeRequestsToAppState(changeRequests: ChangeRequest[]) {
       }
     });
     if (componentModelNew && componentModelNew !== componentModelOld) {
-      if (useImmer) {
-        appStateNew = produce(appStateNew, (draft) => {
-          draft.contributionStatesRecord[contribPoint][
-            contribIndex
-          ].componentModelResult.data = componentModelNew;
-        });
-      } else {
-        appStateNew = {
-          ...appStateNew,
-          contributionStatesRecord: {
-            ...contributionStatesRecord,
-            [contribPoint]: updateArray<ContributionState>(
-              contributionStates,
-              contribIndex,
-              {
-                ...contributionState,
-                componentModelResult: {
-                  ...contributionState.componentModelResult,
-                  data: componentModelNew,
-                },
-              },
-            ),
-          },
-        };
-      }
+      appStateNew = produce(appStateNew, (draft) => {
+        draft.contributionStatesRecord[contribPoint][
+          contribIndex
+        ].componentModelResult.data = componentModelNew;
+      });
     }
   });
-  if (appStateNew !== appStateOld) {
-    console.log("state change diff:", diff(appStateOld, appStateNew));
-    appStore.setState(appStateNew);
-  }
+  appStore.setState(appStateNew);
 }
 
 function applyComponentChange(

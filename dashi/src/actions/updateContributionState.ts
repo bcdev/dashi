@@ -1,21 +1,22 @@
-import appStore, { ContribPoint, ContributionState } from "../store/appStore";
-import { updateArray } from "../utils/updateArray";
+import appStore, {
+  AppState,
+  ContribPoint,
+  ContributionState,
+} from "../store/appStore";
+import { Draft, produce } from "immer";
 
 export function updateContributionState(
   contribPoint: ContribPoint,
-  panelIndex: number,
-  panelState: Partial<ContributionState>,
+  contribIndex: number,
+  contribState: Partial<ContributionState>,
 ) {
-  const { contributionStatesRecord } = appStore.getState();
-  const contribStates = contributionStatesRecord[contribPoint]!;
-  appStore.setState({
-    contributionStatesRecord: {
-      ...contributionStatesRecord,
-      [contribPoint]: updateArray<ContributionState>(
-        contribStates,
-        panelIndex,
-        panelState,
-      ),
-    },
-  });
+  appStore.setState(
+    produce(appStore.getState(), (draft: Draft<AppState>) => {
+      const contributions = draft.contributionStatesRecord[contribPoint];
+      contributions[contribIndex] = {
+        ...contributions[contribIndex],
+        ...contribState,
+      };
+    }),
+  );
 }
