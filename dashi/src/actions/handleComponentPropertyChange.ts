@@ -9,10 +9,13 @@ import { CallbackCallRequest, ChangeRequest, Change } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchChangeRequests } from "../api";
 import { updateArray } from "../utils/updateArray";
-import { produce } from "immer";
+import { produce, setAutoFreeze } from "immer";
 import { diff } from "deep-diff";
 
-const useImmer = false;
+// https://github.com/plotly/react-plotly.js/issues/43
+setAutoFreeze(false);
+
+const useImmer = true;
 
 export default function handleComponentPropertyChange(
   contribPoint: ContribPoint,
