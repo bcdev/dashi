@@ -1,7 +1,19 @@
 export interface Callback {
-  function: string;
+  function: CallbackFunction;
   inputs?: Input[];
   outputs?: Output[];
+}
+
+export interface CallbackFunction {
+  name: string;
+  parameters: CallbackParameter[];
+  returnType: string | string[];
+}
+
+export interface CallbackParameter {
+  name: string;
+  type?: string | string[];
+  default?: unknown;
 }
 
 export type InputOutputKind = "AppState" | "State" | "Component";
