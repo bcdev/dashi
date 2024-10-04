@@ -7,7 +7,7 @@ from dashipy.context import Context
 from dashipy.lib import Output, Input, Component
 
 
-panel = Panel(__name__)
+panel = Panel(__name__, title="Panel A")
 
 
 @panel.layout()

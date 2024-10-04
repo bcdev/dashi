@@ -17,6 +17,7 @@ DASHI_CONTEXT_KEY = "dashi.context"
 DASHI_EXTENSIONS_KEY = "dashi.extensions"
 DASHI_CONTRIBUTION_POINTS_KEY = "dashi.contribution_points"
 
+# This would done by extension of xcube server
 Extension.add_contrib_point("panels", Panel)
 
 
