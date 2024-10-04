@@ -135,7 +135,7 @@ class CallbackHandler(DashiHandler):
         context: Context = self.settings[DASHI_CONTEXT_KEY]
 
         # TODO: assert correctness, set status code on error
-        call_results: list[dict] = []
+        change_requests: list[dict] = []
         for call_request in call_requests:
             contrib_point_name: str = call_request["contribPoint"]
             contrib_index: int = call_request["contribIndex"]
@@ -151,10 +151,10 @@ class CallbackHandler(DashiHandler):
             if len(callback.outputs) == 1:
                 output_values = (output_values,)
 
-            computed_outputs: list[dict] = []
+            changes: list[dict] = []
             for output_index, output in enumerate(callback.outputs):
                 output_value = output_values[output_index]
-                computed_outputs.append(
+                changes.append(
                     {
                         **output.to_dict(),
                         "value": (
@@ -167,16 +167,16 @@ class CallbackHandler(DashiHandler):
                     }
                 )
 
-            call_results.append(
+            change_requests.append(
                 {
                     "contribPoint": contrib_point_name,
                     "contribIndex": contrib_index,
-                    "computedOutputs": computed_outputs,
+                    "changes": changes,
                 }
             )
 
         self.set_header("Content-Type", "text/json")
-        self.write({"result": call_results})
+        self.write({"result": change_requests})
 
 
 def print_usage(app, port):
