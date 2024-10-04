@@ -3,19 +3,26 @@ import { PropertyChangeEvent } from "../model/component";
 import useAppStore from "../store/appStore";
 import Panel from "./Panel";
 import handleComponentPropertyChange from "../actions/handleComponentPropertyChange";
+import { PanelModel } from "../model/panel";
 
 const contribPoint = "panels";
 
 function PanelsRow() {
-  const appState = useAppStore();
-
-  console.log("appState", appState);
+  const contributionStatesRecord = useAppStore(
+    (state) => state.contributionStatesRecord,
+  );
+  const contributionsRecordResult = useAppStore(
+    (state) => state.contributionsRecordResult,
+  );
 
   let panelElements: ReactElement | null = null;
-  const contributionsRecordResult = appState.contributionsRecordResult;
   if (contributionsRecordResult.data) {
-    const panelModels = contributionsRecordResult.data[contribPoint];
-    const panelStates = appState.contributionStatesRecord[contribPoint];
+    // TODO: Validate that PanelModel contains a title (It should be valid).
+    //  It can be done in one central place and not everytime we need to render a panel
+    const panelModels = contributionsRecordResult.data[
+      contribPoint
+    ] as PanelModel[];
+    const panelStates = contributionStatesRecord[contribPoint];
     if (
       !panelModels ||
       !panelStates ||
