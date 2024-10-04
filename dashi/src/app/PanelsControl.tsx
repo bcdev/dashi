@@ -1,7 +1,7 @@
 import useAppStore, { ContribPoint } from "../store/appStore";
 import { hidePanel } from "../actions/hidePanel";
 import { showPanel } from "../actions/showPanel";
-import {Checkbox} from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 
 const contribPoint: ContribPoint = "panels";
 
@@ -23,29 +23,32 @@ function PanelsControl() {
     throw Error("internal state error");
   }
   return (
-    <div style={{ padding: 5 }}>
+    <FormGroup>
       {panelStates.map((panelState, panelIndex) => {
         const id = `panels.${panelIndex}`;
         return (
-          <div key={id}>
-            <Checkbox
-              color="secondary"
-              id={id}
-              checked={panelState.visible || false}
-              value={panelIndex}
-              onChange={(e) => {
-                if (e.currentTarget.checked) {
-                  showPanel(panelIndex);
-                } else {
-                  hidePanel(panelIndex);
-                }
-              }}
-            />
-            <label htmlFor={id}>{panelModels[panelIndex].name}</label>
-          </div>
+          <FormControlLabel
+            key={panelIndex}
+            label={panelModels[panelIndex].name}
+            control={
+              <Checkbox
+                color="secondary"
+                id={id}
+                checked={panelState.visible || false}
+                value={panelIndex}
+                onChange={(e) => {
+                  if (e.currentTarget.checked) {
+                    showPanel(panelIndex);
+                  } else {
+                    hidePanel(panelIndex);
+                  }
+                }}
+              />
+            }
+          />
         );
       })}
-    </div>
+    </FormGroup>
   );
 }
 
