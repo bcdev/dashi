@@ -1,7 +1,19 @@
 export interface Callback {
-  function: string;
+  function: CbFunction;
   inputs?: Input[];
   outputs?: Output[];
+}
+
+export interface CbFunction {
+  name: string;
+  parameters: CbParameter[];
+  returnType: string | string[];
+}
+
+export interface CbParameter {
+  name: string;
+  type?: string | string[];
+  default?: unknown;
 }
 
 export type InputOutputKind = "AppState" | "State" | "Component";
