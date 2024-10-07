@@ -131,10 +131,7 @@ function applyChangeRequests(changeRequests: ChangeRequest[]) {
             contribIndex,
             {
               ...contributionState,
-              componentModelResult: {
-                ...contributionState.componentModelResult,
-                data: componentModel,
-              },
+              componentState: componentModel,
             },
           ),
         },
