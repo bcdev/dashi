@@ -65,3 +65,57 @@ export interface ContributionChangeEvent extends PropertyChangeEvent {
 export type ContributionChangeHandler = (
   event: ContributionChangeEvent,
 ) => void;
+
+export function getComponentPath(
+  componentModel: ComponentModel,
+  componentId: string,
+): (string | number)[] | undefined {
+  if (componentModel.id === componentId) {
+    return [];
+  }
+  if (isContainerModel(componentModel)) {
+    for (let i = 0; i < componentModel.components.length; i++) {
+      const item = componentModel.components[i];
+      if (item.id === componentId) {
+        return ["components", i];
+      }
+      const subPath = getComponentPath(item, componentId);
+      if (subPath) {
+        return ["components", i].concat(subPath);
+      }
+    }
+  }
+}
+
+export function getComponentPathG<
+  T extends object,
+  IK extends keyof T,
+  CK extends keyof T,
+>(
+  componentModel: T,
+  componentIdKey: IK,
+  componentChildrenKey: CK,
+  componentId: string,
+): (CK | number)[] | undefined {
+  if (componentModel[componentIdKey] === componentId) {
+    return [];
+  }
+  const children = componentModel[componentChildrenKey] as T[] | undefined;
+  if (children) {
+    for (let i = 0; i < children.length; i++) {
+      const item = children[i];
+      if (item.id === componentId) {
+        return [componentChildrenKey, i];
+      }
+      const subPath = getComponentPathG(
+        item,
+        componentIdKey,
+        componentChildrenKey,
+        componentId,
+      );
+      if (subPath) {
+        return [componentChildrenKey, i].concat(subPath);
+      }
+    }
+  }
+}
