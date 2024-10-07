@@ -11,15 +11,23 @@ const panelContainerStyle: CSSProperties = {
   flexDirection: "column",
   width: 400,
   height: 400,
-  padding: 5,
   border: "1px gray solid",
 };
 
 const panelHeaderStyle: CSSProperties = {
+  flexGrow: 0,
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "row",
   width: "100%",
   textAlign: "center",
+  background: "lightgray",
+  padding: "2px 4px 2px 4px",
+};
+
+const panelContentStyle: CSSProperties = {
+  width: "100%",
+  flexGrow: 1,
+  padding: 2,
 };
 
 interface PanelProps {
@@ -58,7 +66,7 @@ function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
   return (
     <div style={panelContainerStyle}>
       <div style={panelHeaderStyle}>{panelModel.title}</div>
-      {panelElement}
+      <div style={panelContentStyle}>{panelElement}</div>
     </div>
   );
 }
