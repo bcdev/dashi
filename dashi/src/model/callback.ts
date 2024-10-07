@@ -1,16 +1,16 @@
 export interface Callback {
-  function: CallbackFunction;
+  function: CbFunction;
   inputs?: Input[];
   outputs?: Output[];
 }
 
-export interface CallbackFunction {
+export interface CbFunction {
   name: string;
-  parameters: CallbackParameter[];
+  parameters: CbParameter[];
   returnType: string | string[];
 }
 
-export interface CallbackParameter {
+export interface CbParameter {
   name: string;
   type?: string | string[];
   default?: unknown;
