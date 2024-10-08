@@ -4,6 +4,7 @@ import useAppStore from "../store/appStore";
 import Panel from "./Panel";
 import handleComponentPropertyChange from "../actions/handleComponentPropertyChange";
 import { PanelModel } from "../model/panel";
+import { JSX } from "react/jsx-runtime";
 
 const contribPoint = "panels";
 
@@ -37,6 +38,7 @@ function PanelsRow() {
     ) => {
       console.log(
         "propertyChange:",
+        panelIndex,
         panelModels[panelIndex],
         panelStates[panelIndex],
         panelEvent,
@@ -44,20 +46,20 @@ function PanelsRow() {
       handleComponentPropertyChange(contribPoint, panelIndex, panelEvent);
     };
 
-    panelElements = (
-      <>
-        {panelStates
-          .filter((panelState) => panelState.visible)
-          .map((panelState, panelIndex) => (
-            <Panel
-              key={panelIndex}
-              panelState={panelState}
-              panelModel={panelModels[panelIndex]}
-              onPropertyChange={(e) => handlePropertyChange(panelIndex, e)}
-            />
-          ))}
-      </>
-    );
+    const visiblePanels: JSX.Element[] = [];
+    panelStates.forEach((panelState, panelIndex) => {
+      if (panelState.visible) {
+        visiblePanels.push(
+          <Panel
+            key={panelIndex}
+            panelState={panelState}
+            panelModel={panelModels[panelIndex]}
+            onPropertyChange={(e) => handlePropertyChange(panelIndex, e)}
+          />,
+        );
+      }
+    });
+    panelElements = <>{visiblePanels}</>;
   } else if (contributionsRecordResult.error) {
     panelElements = (
       <div>
