@@ -10,6 +10,7 @@ export type ContribPoint = string;
 export interface ContributionState {
   visible?: boolean;
   componentModelResult: ApiResult<ComponentModel>;
+  componentState?: ComponentModel;
 }
 
 export interface AppState {
