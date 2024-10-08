@@ -6,6 +6,7 @@ export type ComponentType = "Button" | "Dropdown" | "Plot" | "Box";
 export interface ComponentState {
   type: ComponentType;
   label?: string;
+  components?: ComponentState[];
   // common HTML attributes
   id?: string;
   name?: string;
@@ -20,7 +21,7 @@ export interface ContainerState extends ComponentState {
 export function isContainerState(
   componentModel: ComponentState,
 ): componentModel is ContainerState {
-  return !!(componentModel as ContainerState).components;
+  return !!componentModel.components;
 }
 
 export interface DropdownState extends ComponentState {
