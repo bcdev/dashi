@@ -109,7 +109,7 @@ function applyChangeRequests(changeRequests: ChangeRequest[]) {
       appStore.getState().contributionStatesRecord;
     const contributionStates = contributionStatesRecord[contribPoint];
     const contributionState = contributionStates[contribIndex];
-    const componentModelOld = contributionState.componentModelResult.data;
+    const componentModelOld = contributionState.componentState;
     let componentModel = componentModelOld;
     changes.forEach((change) => {
       if (componentModel && (!change.kind || change.kind === "Component")) {

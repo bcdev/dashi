@@ -40,14 +40,12 @@ function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
   if (!panelState.visible) {
     return null;
   }
+  const componentState = panelState.componentState;
   let panelElement: ReactElement | null = null;
   const componentModelResult = panelState.componentModelResult;
-  if (componentModelResult.data) {
+  if (componentModelResult.data && componentState) {
     panelElement = (
-      <DashiComponent
-        {...componentModelResult.data}
-        onPropertyChange={onPropertyChange}
-      />
+      <DashiComponent {...componentState} onPropertyChange={onPropertyChange} />
     );
   } else if (componentModelResult.error) {
     panelElement = (

@@ -29,8 +29,10 @@ export function setComponentVisibility(
       panelIndex,
       inputValues,
     ).then((componentModelResult) => {
+      const componentState = componentModelResult?.data;
       updateContributionState(contribPoint, panelIndex, {
         componentModelResult,
+        componentState,
       });
     });
   }
