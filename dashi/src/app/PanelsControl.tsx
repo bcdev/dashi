@@ -8,22 +8,23 @@ import { ContribPoint } from "../model/extension";
 const contribPoint: ContribPoint = "panels";
 
 function PanelsControl() {
-  const appState = useAppStore();
-
-  const contributionsRecordResult = appState.contributionsRecordResult;
-  const contributionsRecord = contributionsRecordResult.data;
-  if (!contributionsRecord) {
+  const contributionModelsRecord = useAppStore(
+    (state) => state.contributionModelsRecord,
+  );
+  const contributionStatesRecord = useAppStore(
+    (state) => state.contributionStatesRecord,
+  );
+  const panelModels = contributionModelsRecord[contribPoint];
+  const panelStates = contributionStatesRecord[contribPoint];
+  if (!panelModels || !panelStates) {
+    // Ok, not ready yet
     return null;
   }
-  const panelModels = contributionsRecord[contribPoint];
-  const panelStates = appState.contributionStatesRecord[contribPoint];
-  if (
-    !panelModels ||
-    !panelStates ||
-    panelModels.length != panelStates?.length
-  ) {
+  // TODO: assert panelModels.length === panelStates.length
+  if (panelModels.length != panelStates?.length) {
     throw Error("internal state error");
   }
+
   return (
     <FormGroup>
       {panelStates.map((panelState, panelIndex) => {

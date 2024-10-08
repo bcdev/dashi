@@ -1,22 +1,15 @@
 import { ComponentState } from "./state/component";
-import { ContribPoint, Extension } from "./model/extension";
-import { Contribution } from "./model/contribution";
+import { ContribPoint, Contributions } from "./model/extension";
 import { CallbackCallRequest, ChangeRequest } from "./model/callback";
 import { callApi } from "./utils/fetchApiResult";
 
 const serverUrl = "http://localhost:8888";
 
-export async function fetchExtensions(): Promise<Extension[]> {
-  return callApi(`${serverUrl}/dashi/extensions`);
-}
-
-export async function fetchContributionsRecord(): Promise<
-  Record<ContribPoint, Contribution[]>
-> {
+export async function fetchContributions(): Promise<Contributions> {
   return callApi(`${serverUrl}/dashi/contributions`);
 }
 
-export async function fetchComponentModel(
+export async function fetchInitialComponentState(
   contribPoint: ContribPoint,
   contribIndex: number,
   inputValues: unknown[],

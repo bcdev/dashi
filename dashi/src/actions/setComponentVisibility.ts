@@ -1,6 +1,6 @@
 import appStore from "../store/appStore";
 import fetchApiResult from "../utils/fetchApiResult";
-import { fetchComponentModel } from "../api";
+import { fetchInitialComponentState } from "../api";
 import { updateContributionState } from "./updateContributionState";
 
 import { ContribPoint } from "../model/extension";
@@ -26,7 +26,7 @@ export function setComponentVisibility(
     });
     const inputValues = getLayoutInputValues(contribPoint, panelIndex);
     fetchApiResult(
-      fetchComponentModel,
+      fetchInitialComponentState,
       contribPoint,
       panelIndex,
       inputValues,
@@ -44,8 +44,8 @@ function getLayoutInputValues(
   contribPoint: ContribPoint,
   contribIndex: number,
 ): unknown[] {
-  const contributionModels =
-    appStore.getState().contributionsRecordResult.data![contribPoint];
+  const { contributionModelsRecord } = appStore.getState();
+  const contributionModels = contributionModelsRecord[contribPoint];
   const contributionModel = contributionModels[contribIndex];
   const inputs = contributionModel.layout!.inputs;
   if (inputs && inputs.length > 0) {
