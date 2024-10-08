@@ -1,10 +1,10 @@
 import { CSSProperties, ReactElement } from "react";
-
-import DashiComponent from "../components/DashiComponent";
 import { CircularProgress } from "@mui/material";
-import { PanelModel } from "../state/panel";
-import { ContributionState } from "../state/contribution";
+
 import { PropertyChangeHandler } from "../model/event";
+import { Contribution } from "../model/contribution";
+import { ContributionState } from "../state/contribution";
+import DashiComponent from "../components/DashiComponent";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",
@@ -31,7 +31,7 @@ const panelContentStyle: CSSProperties = {
 };
 
 interface PanelProps {
-  panelModel: PanelModel;
+  panelModel: Contribution;
   panelState: ContributionState;
   onPropertyChange: PropertyChangeHandler;
 }
@@ -42,7 +42,7 @@ function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
   }
   const componentState = panelState.componentState;
   let panelElement: ReactElement | null = null;
-  const componentModelResult = panelState.componentModelResult;
+  const componentModelResult = panelState.componentStateResult;
   if (componentModelResult.data && componentState) {
     panelElement = (
       <DashiComponent {...componentState} onPropertyChange={onPropertyChange} />
@@ -63,7 +63,7 @@ function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
   }
   return (
     <div style={panelContainerStyle}>
-      <div style={panelHeaderStyle}>{panelModel.title}</div>
+      <div style={panelHeaderStyle}>{panelState.title}</div>
       <div style={panelContentStyle}>{panelElement}</div>
     </div>
   );

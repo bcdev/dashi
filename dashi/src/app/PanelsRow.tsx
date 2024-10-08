@@ -18,7 +18,7 @@ function PanelsRow() {
   let panelElements: ReactElement | null = null;
   if (contributionsRecordResult.data) {
     // TODO: Validate that PanelModel contains a title (It should be valid).
-    //  It can be done in one central place and not everytime we need to render a panel
+    //  It can be done in one central place and not everytime we need to render a panelModel
     const panelModels = contributionsRecordResult.data[
       contribPoint
     ] as PanelModel[];

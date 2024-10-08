@@ -16,13 +16,13 @@ export function setComponentVisibility(
   if (contributionState.visible === visible) {
     return; // nothing to do
   }
-  if (contributionState.componentModelResult.status) {
+  if (contributionState.componentStateResult.status) {
     updateContributionState(contribPoint, panelIndex, { visible });
   } else {
     // No status yet, so we must load the component
     updateContributionState(contribPoint, panelIndex, {
       visible,
-      componentModelResult: { status: "pending" },
+      componentStateResult: { status: "pending" },
     });
     const inputValues = getLayoutInputValues(contribPoint, panelIndex);
     fetchApiResult(
@@ -33,7 +33,7 @@ export function setComponentVisibility(
     ).then((componentModelResult) => {
       const componentState = componentModelResult?.data;
       updateContributionState(contribPoint, panelIndex, {
-        componentModelResult,
+        componentStateResult: componentModelResult,
         componentState,
       });
     });

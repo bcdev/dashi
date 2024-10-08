@@ -2,7 +2,9 @@ import { ApiResult } from "../utils/fetchApiResult";
 import { ComponentState } from "./component";
 
 export interface ContributionState {
+  title?: string;
   visible?: boolean;
-  componentModelResult: ApiResult<ComponentState>;
+  componentStateResult: ApiResult<ComponentState>;
+  // componentStateResult.data
   componentState?: ComponentState;
 }

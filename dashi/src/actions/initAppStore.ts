@@ -20,9 +20,13 @@ export function initAppStore() {
         (contribPoint) => {
           const contributions: Contribution[] =
             contributionsRecordResult.data![contribPoint];
-          contributionStatesRecord[contribPoint] = contributions.map(() => ({
-            componentModelResult: {},
-          }));
+          contributionStatesRecord[contribPoint] = contributions.map(
+            (contribution) => ({
+              title: contribution.title,
+              visible: contribution.visible,
+              componentStateResult: {},
+            }),
+          );
         },
       );
       set({ contributionsRecordResult, contributionStatesRecord });
