@@ -1,7 +1,8 @@
-import useAppStore, { ContribPoint } from "../store/appStore";
+import useAppStore from "../store/appStore";
 import { hidePanel } from "../actions/hidePanel";
 import { showPanel } from "../actions/showPanel";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { ContribPoint } from "../state/contribution";
 
 const contribPoint: ContribPoint = "panels";
 

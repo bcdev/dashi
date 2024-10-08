@@ -1,11 +1,5 @@
 import { expect, test } from "vitest";
-import {
-  BoxModel,
-  ButtonModel,
-  ComponentModel,
-  ContainerModel,
-  getComponentPath,
-} from "./component";
+import { ComponentModel, ContainerModel, getComponentPath } from "./component";
 
 test("shallow", () => {
   const model: ComponentModel = {

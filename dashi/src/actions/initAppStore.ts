@@ -1,7 +1,8 @@
-import appStore, { ContributionState } from "../store/appStore";
+import appStore from "../store/appStore";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchContributionsRecord, fetchExtensions } from "../api";
 import { Contribution } from "../model/contribution";
+import { ContributionState } from "../state/contribution";
 
 export function initAppStore() {
   const set = appStore.setState;

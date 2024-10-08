@@ -1,17 +1,9 @@
 import { create } from "zustand";
 
 import { Extension } from "../model/extension";
-import { ComponentModel } from "../model/component";
 import { Contribution } from "../model/contribution";
 import { ApiResult } from "../utils/fetchApiResult";
-
-export type ContribPoint = string;
-
-export interface ContributionState {
-  visible?: boolean;
-  componentModelResult: ApiResult<ComponentModel>;
-  componentState?: ComponentModel;
-}
+import { ContribPoint, ContributionState } from "../state/contribution";
 
 export interface AppState {
   // API call result all extensions

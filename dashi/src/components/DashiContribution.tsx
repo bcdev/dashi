@@ -6,7 +6,7 @@ import {
 } from "../model/component";
 import { Contribution } from "../model/contribution";
 import DashiComponent from "./DashiComponent";
-import { ContribPoint } from "../store/appStore";
+import { ContribPoint } from "../state/contribution";
 
 export interface DashiContributionProps {
   componentModel: ComponentModel;

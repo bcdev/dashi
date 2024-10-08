@@ -3,7 +3,7 @@ import { Extension } from "./model/extension";
 import { Contribution } from "./model/contribution";
 import { CallbackCallRequest, ChangeRequest } from "./model/callback";
 import { callApi } from "./utils/fetchApiResult";
-import { ContribPoint } from "./store/appStore";
+import { ContribPoint } from "./state/contribution";
 
 const serverUrl = "http://localhost:8888";
 

@@ -2,9 +2,9 @@ import { CSSProperties, ReactElement } from "react";
 
 import { PropertyChangeHandler } from "../model/component";
 import DashiComponent from "../components/DashiComponent";
-import { ContributionState } from "../store/appStore";
 import { CircularProgress } from "@mui/material";
 import { PanelModel } from "../model/panel";
+import { ContributionState } from "../state/contribution";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",

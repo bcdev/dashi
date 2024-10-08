@@ -1,4 +1,4 @@
-import appStore, { ContribPoint, ContributionState } from "../store/appStore";
+import appStore from "../store/appStore";
 import {
   ComponentModel,
   ContainerModel,
@@ -9,6 +9,7 @@ import { CallbackCallRequest, ChangeRequest, Change } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchChangeRequests } from "../api";
 import { updateArray } from "../utils/updateArray";
+import { ContribPoint, ContributionState } from "../state/contribution";
 
 export default function handleComponentPropertyChange(
   contribPoint: ContribPoint,

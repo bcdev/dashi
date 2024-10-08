@@ -104,7 +104,7 @@ export function getComponentPathG<
   if (children) {
     for (let i = 0; i < children.length; i++) {
       const item = children[i];
-      if (item.id === componentId) {
+      if (item[componentIdKey] === componentId) {
         return [componentChildrenKey, i];
       }
       const subPath = getComponentPathG(
