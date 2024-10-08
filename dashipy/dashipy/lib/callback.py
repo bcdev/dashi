@@ -1,6 +1,9 @@
 import inspect
+import types
 from abc import ABC
 from typing import Callable, Any, Literal
+
+from .component import Component
 
 ComponentKind = Literal["Component"]
 AppStateKind = Literal["AppState"]
@@ -130,11 +133,19 @@ class Callback:
         return self.function(*args, **kwargs)
 
     def to_dict(self) -> dict[str, Any]:
-        d = dict(function=self.function.__qualname__)
+        # skip ctx parameter:
+        parameters = list(self.signature.parameters.values())[1:]
+        d = {
+            "function": {
+                "name": self.function.__qualname__,
+                "parameters": [_parameter_to_dict(p) for p in parameters],
+                "returnType": _annotation_to_str(self.signature.return_annotation),
+            }
+        }
         if self.inputs:
-            d.update(inputs=[inp.to_dict() for inp in self.inputs])
+            d.update({"inputs": [inp.to_dict() for inp in self.inputs]})
         if self.outputs:
-            d.update(outputs=[out.to_dict() for out in self.outputs])
+            d.update({"outputs": [out.to_dict() for out in self.outputs]})
         return d
 
     def make_function_args(
@@ -163,3 +174,65 @@ class Callback:
                 kwargs[param_name] = param_value
 
         return tuple(args), kwargs
+
+
+def _parameter_to_dict(parameter: inspect.Parameter) -> dict[str, Any]:
+    empty = inspect.Parameter.empty
+    d = {"name": parameter.name}
+    if parameter.annotation is not empty:
+        d |= {"type": _annotation_to_str(parameter.annotation)}
+    if parameter.default is not empty:
+        d |= {"default": parameter.default}
+    return d
+
+
+_scalar_types = {
+    "None": "null",
+    "NoneType": "null",
+    "bool": "boolean",
+    "int": "integer",
+    "float": "float",
+    "str": "string",
+    "Component": "Component",
+}
+
+_array_types = {
+    "list[bool]": "boolean[]",
+    "list[int]": "integer[]",
+    "list[float]": "float[]",
+    "list[str]": "string[]",
+    "list[Component]": "Component[]",
+}
+
+_object_types = {
+    "Figure": "Figure",
+    "Component": "Component",
+}
+
+
+def _annotation_to_str(annotation: Any) -> str | list[str]:
+    if isinstance(annotation, types.UnionType):
+        type_name = str(annotation)
+        try:
+            return [_scalar_types[t] for t in type_name.split(" | ")]
+        except KeyError:
+            pass
+    elif isinstance(annotation, types.GenericAlias):
+        type_name = str(annotation)
+        try:
+            return _array_types[type_name]
+        except KeyError:
+            pass
+    else:
+        type_name = (
+            annotation.__name__ if hasattr(annotation, "__name__") else str(annotation)
+        )
+        try:
+            return _scalar_types[type_name]
+        except KeyError:
+            pass
+        try:
+            return _object_types[type_name]
+        except KeyError:
+            pass
+    raise TypeError(f"unsupported type: {type_name}")
