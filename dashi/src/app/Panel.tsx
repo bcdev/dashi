@@ -1,10 +1,10 @@
 import { CSSProperties, ReactElement } from "react";
 
-import { PropertyChangeHandler } from "../model/component";
 import DashiComponent from "../components/DashiComponent";
 import { CircularProgress } from "@mui/material";
-import { PanelModel } from "../model/panel";
+import { PanelModel } from "../state/panel";
 import { ContributionState } from "../state/contribution";
+import { PropertyChangeHandler } from "../model/event";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",

@@ -1,15 +1,17 @@
 import appStore from "../store/appStore";
 import {
-  ComponentModel,
-  ContainerModel,
-  isContainerModel,
-  PropertyChangeEvent,
-} from "../model/component";
+  ComponentState,
+  ContainerState,
+  isContainerState,
+} from "../state/component";
 import { CallbackCallRequest, ChangeRequest, Change } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchChangeRequests } from "../api";
 import { updateArray } from "../utils/updateArray";
-import { ContribPoint, ContributionState } from "../state/contribution";
+import { ContributionState } from "../state/contribution";
+import { PropertyChangeEvent } from "../model/event";
+
+import { ContribPoint } from "../model/extension";
 
 export default function handleComponentPropertyChange(
   contribPoint: ContribPoint,
@@ -142,14 +144,14 @@ function applyChangeRequests(changeRequests: ChangeRequest[]) {
 }
 
 function updateComponentState(
-  componentModel: ComponentModel,
+  componentModel: ComponentState,
   change: Change,
-): ComponentModel {
+): ComponentState {
   if (componentModel.id === change.id) {
     return { ...componentModel, [change.property]: change.value };
-  } else if (isContainerModel(componentModel)) {
-    const containerModelOld: ContainerModel = componentModel;
-    let containerModelNew: ContainerModel = containerModelOld;
+  } else if (isContainerState(componentModel)) {
+    const containerModelOld: ContainerState = componentModel;
+    let containerModelNew: ContainerState = containerModelOld;
     for (let i = 0; i < containerModelOld.components.length; i++) {
       const itemOld = containerModelOld.components[i];
       const itemNew = updateComponentState(itemOld, change);

@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
-import { Extension } from "../model/extension";
+import { ContribPoint, Extension } from "../model/extension";
 import { Contribution } from "../model/contribution";
 import { ApiResult } from "../utils/fetchApiResult";
-import { ContribPoint, ContributionState } from "../state/contribution";
+import { ContributionState } from "../state/contribution";
 
 export interface AppState {
   // API call result all extensions

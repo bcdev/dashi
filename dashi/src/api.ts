@@ -1,9 +1,8 @@
-import { ComponentModel } from "./model/component";
-import { Extension } from "./model/extension";
+import { ComponentState } from "./state/component";
+import { ContribPoint, Extension } from "./model/extension";
 import { Contribution } from "./model/contribution";
 import { CallbackCallRequest, ChangeRequest } from "./model/callback";
 import { callApi } from "./utils/fetchApiResult";
-import { ContribPoint } from "./state/contribution";
 
 const serverUrl = "http://localhost:8888";
 
@@ -21,7 +20,7 @@ export async function fetchComponentModel(
   contribPoint: ContribPoint,
   contribIndex: number,
   inputValues: unknown[],
-): Promise<ComponentModel> {
+): Promise<ComponentState> {
   return callApi(`${serverUrl}/dashi/layout/${contribPoint}/${contribIndex}`, {
     body: JSON.stringify({ inputValues }),
     method: "post",

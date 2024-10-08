@@ -1,10 +1,8 @@
 import { ApiResult } from "../utils/fetchApiResult";
-import { ComponentModel } from "../model/component";
-
-export type ContribPoint = string;
+import { ComponentState } from "./component";
 
 export interface ContributionState {
   visible?: boolean;
-  componentModelResult: ApiResult<ComponentModel>;
-  componentState?: ComponentModel;
+  componentModelResult: ApiResult<ComponentState>;
+  componentState?: ComponentState;
 }
