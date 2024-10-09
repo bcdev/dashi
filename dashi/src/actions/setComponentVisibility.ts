@@ -1,7 +1,9 @@
-import appStore, { ContribPoint } from "../store/appStore";
+import appStore from "../store/appStore";
 import fetchApiResult from "../utils/fetchApiResult";
-import { fetchComponentModel } from "../api";
+import { fetchInitialComponentState } from "../api";
 import { updateContributionState } from "./updateContributionState";
+
+import { ContribPoint } from "../model/extension";
 
 export function setComponentVisibility(
   contribPoint: ContribPoint,
@@ -14,24 +16,24 @@ export function setComponentVisibility(
   if (contributionState.visible === visible) {
     return; // nothing to do
   }
-  if (contributionState.componentModelResult.status) {
+  if (contributionState.componentStateResult.status) {
     updateContributionState(contribPoint, panelIndex, { visible });
   } else {
     // No status yet, so we must load the component
     updateContributionState(contribPoint, panelIndex, {
       visible,
-      componentModelResult: { status: "pending" },
+      componentStateResult: { status: "pending" },
     });
     const inputValues = getLayoutInputValues(contribPoint, panelIndex);
     fetchApiResult(
-      fetchComponentModel,
+      fetchInitialComponentState,
       contribPoint,
       panelIndex,
       inputValues,
     ).then((componentModelResult) => {
       const componentState = componentModelResult?.data;
       updateContributionState(contribPoint, panelIndex, {
-        componentModelResult,
+        componentStateResult: componentModelResult,
         componentState,
       });
     });
@@ -42,8 +44,8 @@ function getLayoutInputValues(
   contribPoint: ContribPoint,
   contribIndex: number,
 ): unknown[] {
-  const contributionModels =
-    appStore.getState().contributionsRecordResult.data![contribPoint];
+  const { contributionModelsRecord } = appStore.getState();
+  const contributionModels = contributionModelsRecord[contribPoint];
   const contributionModel = contributionModels[contribIndex];
   const inputs = contributionModel.layout!.inputs;
   if (inputs && inputs.length > 0) {

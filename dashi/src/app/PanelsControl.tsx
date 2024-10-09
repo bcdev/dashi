@@ -1,35 +1,30 @@
-import useAppStore, { ContribPoint } from "../store/appStore";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+
+import useAppStore from "../store/appStore";
 import { hidePanel } from "../actions/hidePanel";
 import { showPanel } from "../actions/showPanel";
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { ContribPoint } from "../model/extension";
 
 const contribPoint: ContribPoint = "panels";
 
 function PanelsControl() {
-  const appState = useAppStore();
-
-  const contributionsRecordResult = appState.contributionsRecordResult;
-  const contributionsRecord = contributionsRecordResult.data;
-  if (!contributionsRecord) {
+  const contributionStatesRecord = useAppStore(
+    (state) => state.contributionStatesRecord,
+  );
+  const panelStates = contributionStatesRecord[contribPoint];
+  if (!panelStates) {
+    // Ok, not ready yet
     return null;
   }
-  const panelModels = contributionsRecord[contribPoint];
-  const panelStates = appState.contributionStatesRecord[contribPoint];
-  if (
-    !panelModels ||
-    !panelStates ||
-    panelModels.length != panelStates?.length
-  ) {
-    throw Error("internal state error");
-  }
+
   return (
-    <FormGroup>
+    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
       {panelStates.map((panelState, panelIndex) => {
         const id = `panels.${panelIndex}`;
         return (
           <FormControlLabel
             key={panelIndex}
-            label={panelModels[panelIndex].name}
+            label={panelState.title}
             control={
               <Checkbox
                 color="secondary"

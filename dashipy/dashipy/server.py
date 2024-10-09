@@ -11,13 +11,13 @@ import yaml
 from dashipy import __version__
 from dashipy.context import Context
 from dashipy.contribs import Panel
-from dashipy.lib import Extension, Contribution, Component
+from dashipy.lib import Extension, Contribution
 
 DASHI_CONTEXT_KEY = "dashi.context"
 DASHI_EXTENSIONS_KEY = "dashi.extensions"
 DASHI_CONTRIBUTION_POINTS_KEY = "dashi.contribution_points"
 
-# This would done by extension of xcube server
+# This would be done by a xcube server extension
 Extension.add_contrib_point("panels", Panel)
 
 
@@ -55,26 +55,21 @@ class RootHandler(DashiHandler):
         self.write(f"dashi-server {__version__}")
 
 
-class ExtensionsHandler(DashiHandler):
-
-    # GET /dashi/extensions
-    def get(self):
-        extensions = self.extensions
-        self.set_header("Content-Type", "text/json")
-        self.write({"result": [e.to_dict() for e in extensions]})
-
-
 class ContributionsHandler(DashiHandler):
 
     # GET /dashi/contributions
     def get(self):
+        extensions = self.extensions
         contribution_points = self.contribution_points
         self.set_header("Content-Type", "text/json")
         self.write(
             {
                 "result": {
-                    cpk: [c.to_dict() for c in cpv]
-                    for cpk, cpv in contribution_points.items()
+                    "extensions": [e.to_dict() for e in extensions],
+                    "contributions": {
+                        cpk: [c.to_dict() for c in cpv]
+                        for cpk, cpv in contribution_points.items()
+                    }
                 }
             }
         )
@@ -184,7 +179,6 @@ def print_usage(app, port):
     url = f"http://127.0.0.1:{port}"
     print(f"Listening on {url}...")
     print(f"API:")
-    print(f"- {url}/dashi/extensions")
     print(f"- {url}/dashi/contributions")
     contribution_points = app.settings[DASHI_CONTRIBUTION_POINTS_KEY]
     for contrib_point_name, contributions in contribution_points.items():
@@ -204,7 +198,6 @@ def make_app():
     app = tornado.web.Application(
         [
             (r"/", RootHandler),
-            (r"/dashi/extensions", ExtensionsHandler),
             (r"/dashi/contributions", ContributionsHandler),
             (r"/dashi/layout/([a-z0-9-]+)/([0-9]+)", LayoutHandler),
             (r"/dashi/callback", CallbackHandler),

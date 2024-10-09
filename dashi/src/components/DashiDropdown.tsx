@@ -1,5 +1,5 @@
 import "react";
-import { DropdownModel, PropertyChangeHandler } from "../model/component";
+import { DropdownState } from "../state/component";
 import {
   // Box,
   FormControl,
@@ -9,7 +9,9 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
-export interface DashiDropdownProps extends Omit<DropdownModel, "type"> {
+import { PropertyChangeHandler } from "../model/event";
+
+export interface DashiDropdownProps extends Omit<DropdownState, "type"> {
   onPropertyChange: PropertyChangeHandler;
 }
 
