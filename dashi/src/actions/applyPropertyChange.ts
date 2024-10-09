@@ -1,23 +1,25 @@
-import appStore, { ContribPoint, ContributionState } from "../store/appStore";
+import appStore from "../store/appStore";
 import {
-  ComponentModel,
-  ContainerModel,
-  isContainerModel,
-  PropertyChangeEvent,
-} from "../model/component";
+  ComponentState,
+  ContainerState,
+  isContainerState,
+} from "../state/component";
 import { CallbackCallRequest, ChangeRequest, Change } from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchChangeRequests } from "../api";
 import { updateArray } from "../utils/updateArray";
+import { ContributionState } from "../state/contribution";
+import { PropertyChangeEvent } from "../model/event";
 
-export default function handleComponentPropertyChange(
+import { ContribPoint } from "../model/extension";
+
+export default function applyPropertyChange(
   contribPoint: ContribPoint,
   contribIndex: number,
   contribEvent: PropertyChangeEvent,
 ) {
-  const appState = appStore.getState();
-  const contributionModels =
-    appState.contributionsRecordResult.data![contribPoint];
+  const { contributionModelsRecord } = appStore.getState();
+  const contributionModels = contributionModelsRecord[contribPoint];
   const componentId = contribEvent.componentId;
   const componentPropertyName = contribEvent.propertyName;
   const componentPropertyValue = contribEvent.propertyValue;
@@ -105,15 +107,14 @@ function applyChangeRequests(changeRequests: ChangeRequest[]) {
       contribIndex,
       changes,
     );
-    const contributionStatesRecord =
-      appStore.getState().contributionStatesRecord;
+    const { contributionStatesRecord } = appStore.getState();
     const contributionStates = contributionStatesRecord[contribPoint];
     const contributionState = contributionStates[contribIndex];
-    const componentModelOld = contributionState.componentState;
-    let componentModel = componentModelOld;
+    const componentStateOld = contributionState.componentState;
+    let componentState = componentStateOld;
     changes.forEach((change) => {
-      if (componentModel && (!change.kind || change.kind === "Component")) {
-        componentModel = updateComponentState(componentModel, change);
+      if (componentState && (!change.kind || change.kind === "Component")) {
+        componentState = applyComponentStateChange(componentState, change);
       } else {
         // TODO: process other output kinds which may not require componentModel.
         console.warn(
@@ -122,17 +123,14 @@ function applyChangeRequests(changeRequests: ChangeRequest[]) {
         );
       }
     });
-    if (componentModel && componentModel !== componentModelOld) {
+    if (componentState && componentState !== componentStateOld) {
       appStore.setState({
         contributionStatesRecord: {
           ...contributionStatesRecord,
           [contribPoint]: updateArray<ContributionState>(
             contributionStates,
             contribIndex,
-            {
-              ...contributionState,
-              componentState: componentModel,
-            },
+            { ...contributionState, componentState },
           ),
         },
       });
@@ -140,29 +138,29 @@ function applyChangeRequests(changeRequests: ChangeRequest[]) {
   });
 }
 
-function updateComponentState(
-  componentModel: ComponentModel,
+function applyComponentStateChange(
+  componentState: ComponentState,
   change: Change,
-): ComponentModel {
-  if (componentModel.id === change.id) {
-    return { ...componentModel, [change.property]: change.value };
-  } else if (isContainerModel(componentModel)) {
-    const containerModelOld: ContainerModel = componentModel;
-    let containerModelNew: ContainerModel = containerModelOld;
-    for (let i = 0; i < containerModelOld.components.length; i++) {
-      const itemOld = containerModelOld.components[i];
-      const itemNew = updateComponentState(itemOld, change);
+): ComponentState {
+  if (componentState.id === change.id) {
+    return { ...componentState, [change.property]: change.value };
+  } else if (isContainerState(componentState)) {
+    const containerStateOld: ContainerState = componentState;
+    let containerStateNew: ContainerState = containerStateOld;
+    for (let i = 0; i < containerStateOld.components.length; i++) {
+      const itemOld = containerStateOld.components[i];
+      const itemNew = applyComponentStateChange(itemOld, change);
       if (itemNew !== itemOld) {
-        if (containerModelNew === containerModelOld) {
-          containerModelNew = {
-            ...containerModelOld,
-            components: [...containerModelOld.components],
+        if (containerStateNew === containerStateOld) {
+          containerStateNew = {
+            ...containerStateOld,
+            components: [...containerStateOld.components],
           };
         }
-        containerModelNew.components[i] = itemNew;
+        containerStateNew.components[i] = itemNew;
       }
     }
-    return containerModelNew;
+    return containerStateNew;
   }
-  return componentModel;
+  return componentState;
 }

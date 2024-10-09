@@ -2,12 +2,12 @@ import useAppStore from "../store/appStore";
 import { Typography } from "@mui/material";
 
 function ExtensionsInfo() {
-  const appState = useAppStore();
-  const extensionsResult = appState.extensionsResult;
-  if (extensionsResult.data) {
+  const contributionsResult = useAppStore((state) => state.contributionsResult);
+  const extensions = useAppStore((state) => state.extensions);
+  if (contributionsResult.status === "ok") {
     return (
       <div style={{ display: "flex", gap: 5 }}>
-        {extensionsResult.data.map((extension, extIndex) => {
+        {extensions.map((extension, extIndex) => {
           const id = `extensions.${extIndex}`;
           return (
             <Typography
@@ -19,10 +19,10 @@ function ExtensionsInfo() {
         })}
       </div>
     );
-  } else if (extensionsResult.error) {
-    return <div>Error: {extensionsResult.error.message}</div>;
-  } else if (extensionsResult.status === "pending") {
-    return <div>{`Loading extensions...`}</div>;
+  } else if (contributionsResult.error) {
+    return <div>Error: {contributionsResult.error.message}</div>;
+  } else if (contributionsResult.status === "pending") {
+    return <div>{`Loading contributions...`}</div>;
   }
   return null;
 }
