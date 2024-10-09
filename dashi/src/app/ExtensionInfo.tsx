@@ -22,7 +22,7 @@ function ExtensionsInfo() {
   } else if (contributionsResult.error) {
     return <div>Error: {contributionsResult.error.message}</div>;
   } else if (contributionsResult.status === "pending") {
-    return <div>{`Loading contributions...`}</div>;
+    return <div>{`Loading extensions...`}</div>;
   }
   return null;
 }
