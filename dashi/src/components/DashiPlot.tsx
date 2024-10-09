@@ -1,4 +1,5 @@
 import Plot from "react-plotly.js";
+
 import { PlotState } from "../state/component";
 import { PropertyChangeHandler } from "../model/event";
 

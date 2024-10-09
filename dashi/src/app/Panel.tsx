@@ -1,5 +1,5 @@
 import { CSSProperties, ReactElement } from "react";
-import { CircularProgress } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { PropertyChangeHandler } from "../model/event";
 import { Contribution } from "../model/contribution";

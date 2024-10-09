@@ -1,7 +1,6 @@
 import appStore from "../store/appStore";
 import { updateArray } from "../utils/updateArray";
 import { ContributionState } from "../state/contribution";
-
 import { ContribPoint } from "../model/extension";
 
 export function updateContributionState(
