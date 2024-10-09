@@ -1,5 +1,6 @@
+import Typography from "@mui/material/Typography";
+
 import useAppStore from "../store/appStore";
-import { Typography } from "@mui/material";
 
 function ExtensionsInfo() {
   const contributionsResult = useAppStore((state) => state.contributionsResult);

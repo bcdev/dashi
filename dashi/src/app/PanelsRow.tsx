@@ -1,7 +1,8 @@
+import React from "react";
 import useAppStore from "../store/appStore";
-import Panel from "./Panel";
 import applyPropertyChange from "../actions/applyPropertyChange";
 import { PropertyChangeEvent } from "../model/event";
+import Panel from "./Panel";
 
 const contribPoint = "panels";
 
@@ -29,19 +30,23 @@ function PanelsRow() {
   ) => {
     applyPropertyChange(contribPoint, panelIndex, panelEvent);
   };
-
+  const visiblePanels: React.JSX.Element[] = [];
+  panelStates.forEach((panelState, panelIndex) => {
+    if (panelState.visible) {
+      visiblePanels.push(
+        <Panel
+          key={panelIndex}
+          panelState={panelState}
+          panelModel={panelModels[panelIndex]}
+          onPropertyChange={(e) => handlePropertyChange(panelIndex, e)}
+        />,
+      );
+    }
+  });
+  const panelElements = <>{visiblePanels}</>;
   return (
     <div style={{ display: "flex", gap: 5, paddingTop: 10 }}>
-      {panelStates
-        .filter((panelState) => panelState.visible)
-        .map((panelState, panelIndex) => (
-          <Panel
-            key={panelIndex}
-            panelModel={panelModels[panelIndex]}
-            panelState={panelState}
-            onPropertyChange={(e) => handlePropertyChange(panelIndex, e)}
-          />
-        ))}
+      {panelElements}
     </div>
   );
 }
