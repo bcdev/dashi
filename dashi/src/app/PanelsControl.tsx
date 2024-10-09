@@ -1,4 +1,6 @@
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
 
 import useAppStore from "../store/appStore";
 import { hidePanel } from "../actions/hidePanel";
