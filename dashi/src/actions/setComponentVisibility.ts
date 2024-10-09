@@ -1,9 +1,8 @@
-import appStore from "../store/appStore";
-import fetchApiResult from "../utils/fetchApiResult";
 import { fetchInitialComponentState } from "../api";
-import { updateContributionState } from "./updateContributionState";
-
+import appStore from "../store/appStore";
 import { ContribPoint } from "../model/extension";
+import fetchApiResult from "../utils/fetchApiResult";
+import { updateContributionState } from "./updateContributionState";
 
 export function setComponentVisibility(
   contribPoint: ContribPoint,

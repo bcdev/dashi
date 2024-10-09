@@ -1,9 +1,9 @@
 import { ComponentState } from "../state/component";
+import { PropertyChangeHandler } from "../model/event";
 import DashiPlot, { DashiPlotProps } from "./DashiPlot";
 import DashiButton, { DashiButtonProps } from "./DashiButton";
 import DashiBox, { DashiBoxProps } from "./DashiBox";
 import DashiDropdown, { DashiDropdownProps } from "./DashiDropdown";
-import { PropertyChangeHandler } from "../model/event";
 
 export interface DashiComponentProps extends ComponentState {
   onPropertyChange: PropertyChangeHandler;

@@ -1,14 +1,10 @@
-import {
-  CssBaseline,
-  ThemeProvider,
-  createTheme,
-  Typography,
-} from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import Typography from "@mui/material/Typography";
 
+import { initAppStore } from "../actions/initAppStore";
 import ExtensionsInfo from "./ExtensionInfo";
 import PanelsControl from "./PanelsControl";
 import PanelsRow from "./PanelsRow";
-import { initAppStore } from "../actions/initAppStore";
 
 initAppStore();
 

@@ -1,13 +1,9 @@
-import "react";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+
 import { DropdownState } from "../state/component";
-import {
-  // Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
 import { PropertyChangeHandler } from "../model/event";
 
 export interface DashiDropdownProps extends Omit<DropdownState, "type"> {
