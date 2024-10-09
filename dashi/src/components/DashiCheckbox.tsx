@@ -1,10 +1,10 @@
+import { ChangeEvent } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
 import { CheckboxState } from "../state/component";
 import { PropertyChangeHandler } from "../model/event";
-import { ChangeEvent } from "react";
 
 export interface DashiCheckboxProps extends Omit<CheckboxState, "type"> {
   onPropertyChange: PropertyChangeHandler;
