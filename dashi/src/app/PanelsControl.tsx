@@ -1,8 +1,10 @@
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
+
 import useAppStore from "../store/appStore";
 import { hidePanel } from "../actions/hidePanel";
 import { showPanel } from "../actions/showPanel";
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-
 import { ContribPoint } from "../model/extension";
 
 const contribPoint: ContribPoint = "panels";

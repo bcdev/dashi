@@ -4,93 +4,73 @@ import {
   ContainerState,
   isContainerState,
 } from "../state/component";
-import { CallbackCallRequest, ChangeRequest, Change } from "../model/callback";
+import {
+  Callback,
+  CallbackCall,
+  CallbackCallRequest,
+  Change,
+  ChangeRequest,
+  Input,
+} from "../model/callback";
 import fetchApiResult from "../utils/fetchApiResult";
 import { fetchChangeRequests } from "../api";
 import { updateArray } from "../utils/updateArray";
 import { ContributionState } from "../state/contribution";
 import { PropertyChangeEvent } from "../model/event";
-
 import { ContribPoint } from "../model/extension";
+import { Contribution } from "../model/contribution";
 
 export default function applyPropertyChange(
   contribPoint: ContribPoint,
   contribIndex: number,
   contribEvent: PropertyChangeEvent,
 ) {
-  const { contributionModelsRecord } = appStore.getState();
+  const { contributionModelsRecord, contributionStatesRecord } =
+    appStore.getState();
   const contributionModels = contributionModelsRecord[contribPoint];
-  const componentId = contribEvent.componentId;
-  const componentPropertyName = contribEvent.propertyName;
-  const componentPropertyValue = contribEvent.propertyValue;
+  const contributionStates = contributionStatesRecord[contribPoint];
   const contributionModel = contributionModels[contribIndex];
-  const callRequests: CallbackCallRequest[] = [];
-  // Prepare calling all callbacks of the contribution
-  // that are triggered by the property change
-  (contributionModel.callbacks || []).forEach((callback, callbackIndex) => {
-    if (callback.inputs && callback.inputs.length > 0) {
-      let triggerIndex: number = -1;
-      const inputValues: unknown[] = callback.inputs.map(
-        (input, inputIndex) => {
-          const kind = input.kind || "Component";
-          if (kind === "Component") {
-            if (
-              input.id === componentId &&
-              input.property === componentPropertyName
-            ) {
-              // Ok - the current callback is triggered by the property change
-              triggerIndex = inputIndex;
-              return componentPropertyValue;
-            } else {
-              // TODO: get inputValue from other component with given id/property.
-              //   For time being we use null as it is JSON-serializable
-            }
-          } else {
-            // TODO: get inputValue from other kinds.
-            //   For time being we use null as it is JSON-serializable
-          }
-          console.warn(`callback input not supported yet:`, input);
-          return null;
-        },
-      );
-      if (triggerIndex >= 0) {
-        callRequests.push({
-          contribPoint,
-          contribIndex,
-          callbackIndex,
-          inputValues,
-        });
-      }
-    }
-  });
-  const originalChangeRequest: ChangeRequest = {
+  const contributionState = contributionStates[contribIndex];
+  const callbackCalls = generateCallbackCalls(
+    contributionModel,
+    contributionState,
+    contribEvent,
+  );
+  const triggerChangeRequest: ChangeRequest = {
     contribPoint,
     contribIndex,
     changes: [
       {
         kind: "Component",
-        id: componentId,
-        property: componentPropertyName,
-        value: componentPropertyValue,
+        id: contribEvent.componentId,
+        property: contribEvent.propertyName,
+        value: contribEvent.propertyValue,
       },
     ],
   };
-  console.debug("callRequests", callRequests);
-  if (callRequests.length == 0) {
-    applyChangeRequests([originalChangeRequest]);
+  // console.debug("callRequests", callRequests);
+  if (callbackCalls.length == 0) {
+    applyChangeRequests([triggerChangeRequest]);
   } else {
-    fetchApiResult(fetchChangeRequests, callRequests).then(
+    const callbackCallRequests: CallbackCallRequest[] = callbackCalls.map(
+      (cbc) => ({
+        contribPoint,
+        contribIndex,
+        ...cbc,
+      }),
+    );
+    fetchApiResult(fetchChangeRequests, callbackCallRequests).then(
       (changeRequestsResult) => {
         if (changeRequestsResult.data) {
           applyChangeRequests(
-            [originalChangeRequest].concat(changeRequestsResult.data),
+            [triggerChangeRequest].concat(changeRequestsResult.data),
           );
         } else {
           console.error(
             "callback failed:",
             changeRequestsResult.error,
             "for call requests:",
-            callRequests,
+            callbackCalls,
           );
         }
       },
@@ -98,52 +78,131 @@ export default function applyPropertyChange(
   }
 }
 
-function applyChangeRequests(changeRequests: ChangeRequest[]) {
-  console.log("applying change requests", changeRequests);
-  changeRequests.forEach(({ contribPoint, contribIndex, changes }) => {
-    console.log(
-      "processing change request",
-      contribPoint,
-      contribIndex,
-      changes,
+function generateCallbackCalls(
+  contributionModel: Contribution,
+  contributionState: ContributionState,
+  contribEvent: PropertyChangeEvent,
+): CallbackCall[] {
+  const callbackCalls: CallbackCall[] = [];
+  // Prepare calling all callbacks of the contribution
+  // that are triggered by the property change
+  (contributionModel.callbacks || []).forEach((callback, callbackIndex) => {
+    const inputValues = getInputValues(
+      contributionState,
+      contribEvent,
+      callback,
     );
-    const { contributionStatesRecord } = appStore.getState();
-    const contributionStates = contributionStatesRecord[contribPoint];
-    const contributionState = contributionStates[contribIndex];
-    const componentStateOld = contributionState.componentState;
-    let componentState = componentStateOld;
-    changes.forEach((change) => {
-      if (componentState && (!change.kind || change.kind === "Component")) {
-        componentState = applyComponentStateChange(componentState, change);
-      } else {
-        // TODO: process other output kinds which may not require componentModel.
-        console.warn(
-          "processing of this kind of output not supported yet:",
-          change,
+    if (inputValues) {
+      callbackCalls.push({ callbackIndex, inputValues });
+    }
+  });
+  return callbackCalls;
+}
+
+export function getInputValues(
+  contributionState: ContributionState,
+  contribEvent: PropertyChangeEvent,
+  callback: Callback,
+): unknown[] | undefined {
+  // No inputs defined
+  if (!callback.inputs || !callback.inputs.length) {
+    return undefined;
+  }
+
+  // Find the index of input that is a trigger
+  const triggerIndex: number = callback.inputs.findIndex(
+    (input) =>
+      (!input.kind || input.kind === "Component") &&
+      input.id === contribEvent.componentId &&
+      input.property === contribEvent.propertyName,
+  );
+  // No trigger index found --> this callback is not applicable
+  if (triggerIndex < 0) {
+    return undefined;
+  }
+
+  // Compute input values
+  return callback.inputs.map((input, inputIndex) => {
+    let inputValue: unknown = undefined;
+    if (!input.kind || input.kind === "Component") {
+      if (inputIndex === triggerIndex) {
+        // Return the property value of the trigger event
+        inputValue = contribEvent.propertyValue;
+      } else if (contributionState.componentState) {
+        // Return value of a property of some component in the tree
+        inputValue = getComponentStateValue(
+          contributionState.componentState,
+          input,
         );
       }
-    });
-    if (componentState && componentState !== componentStateOld) {
-      appStore.setState({
-        contributionStatesRecord: {
-          ...contributionStatesRecord,
-          [contribPoint]: updateArray<ContributionState>(
-            contributionStates,
-            contribIndex,
-            { ...contributionState, componentState },
-          ),
-        },
-      });
+    } else {
+      // TODO: Get value from another kind of input.
+      console.warn(`input kind not supported yet:`, input);
     }
+    if (inputValue === undefined) {
+      // We use null, because undefined is not JSON-serializable.
+      inputValue = null;
+      console.warn(`value is undefined for input`, input);
+    }
+    return inputValue;
   });
 }
 
-function applyComponentStateChange(
+export function applyChangeRequests(changeRequests: ChangeRequest[]) {
+  const { contributionStatesRecord } = appStore.getState();
+  const contributionStatesRecordNew = applyContributionChangeRequests(
+    contributionStatesRecord,
+    changeRequests,
+  );
+  if (contributionStatesRecordNew !== contributionStatesRecord) {
+    appStore.setState({
+      contributionStatesRecord: contributionStatesRecordNew,
+    });
+  }
+  // TODO: Set value of another kind of output.
+}
+
+export function applyContributionChangeRequests(
+  contributionStatesRecord: Record<ContribPoint, ContributionState[]>,
+  changeRequests: ChangeRequest[],
+): Record<ContribPoint, ContributionState[]> {
+  changeRequests.forEach(({ contribPoint, contribIndex, changes }) => {
+    const contributionState =
+      contributionStatesRecord[contribPoint][contribIndex];
+    const componentStateOld = contributionState.componentState;
+    let componentState = componentStateOld;
+    if (componentState) {
+      changes
+        .filter((change) => !change.kind || change.kind === "Component")
+        .forEach((change) => {
+          componentState = applyComponentStateChange(componentState!, change);
+        });
+      if (componentState !== componentStateOld) {
+        contributionStatesRecord = {
+          ...contributionStatesRecord,
+          [contribPoint]: updateArray<ContributionState>(
+            contributionStatesRecord[contribPoint],
+            contribIndex,
+            { ...contributionState, componentState },
+          ),
+        };
+      }
+    }
+  });
+  return contributionStatesRecord;
+}
+
+export function applyComponentStateChange(
   componentState: ComponentState,
   change: Change,
 ): ComponentState {
   if (componentState.id === change.id) {
-    return { ...componentState, [change.property]: change.value };
+    const oldValue = (componentState as unknown as Record<string, unknown>)[
+      change.property
+    ];
+    if (oldValue !== change.value) {
+      return { ...componentState, [change.property]: change.value };
+    }
   } else if (isContainerState(componentState)) {
     const containerStateOld: ContainerState = componentState;
     let containerStateNew: ContainerState = containerStateOld;
@@ -163,4 +222,26 @@ function applyComponentStateChange(
     return containerStateNew;
   }
   return componentState;
+}
+
+const noValue = {};
+
+export function getComponentStateValue(
+  componentState: ComponentState,
+  input: Input,
+): unknown {
+  if (componentState.id === input.id) {
+    return (componentState as unknown as Record<string, unknown>)[
+      input.property
+    ];
+  } else if (isContainerState(componentState)) {
+    for (let i = 0; i < componentState.components.length; i++) {
+      const item = componentState.components[i];
+      const itemValue = getComponentStateValue(item, input);
+      if (itemValue !== noValue) {
+        return itemValue;
+      }
+    }
+  }
+  return noValue;
 }

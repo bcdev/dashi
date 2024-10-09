@@ -28,20 +28,22 @@ export interface Input extends InputOutput {}
 
 export interface Output extends InputOutput {}
 
-export interface CallbackCallRequest {
-  // The contribution that requests the callback call
+export interface ContribRef {
+  // Identifies a contribution
   contribPoint: string;
   contribIndex: number;
+}
+
+export interface CallbackCall {
   // The callback of the contribution
   callbackIndex: number;
   // The input values for the callback
   inputValues: unknown[];
 }
 
-export interface ChangeRequest {
-  // The contribution that requests the changes
-  contribPoint: string;
-  contribIndex: number;
+export interface CallbackCallRequest extends ContribRef, CallbackCall {}
+
+export interface ChangeRequest extends ContribRef {
   // The changes requested by the contribution
   changes: Change[];
 }

@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
 import { Config, Layout, PlotData } from "plotly.js";
 
-export type ComponentType = "Button" | "Dropdown" | "Plot" | "Box";
+export type ComponentType = "Button" | "Checkbox" | "Dropdown" | "Plot" | "Box";
 
 export interface ComponentState {
   type: ComponentType;
@@ -10,8 +10,9 @@ export interface ComponentState {
   // common HTML attributes
   id?: string;
   name?: string;
-  value?: string | number;
+  value?: boolean | string | number;
   style?: CSSProperties;
+  disabled?: boolean;
 }
 
 export interface ContainerState extends ComponentState {
@@ -27,13 +28,17 @@ export function isContainerState(
 export interface DropdownState extends ComponentState {
   type: "Dropdown";
   options: Array<[string, string | number]>;
-  disabled?: boolean;
 }
 
 export interface ButtonState extends ComponentState {
   type: "Button";
   text: string;
-  disabled?: boolean;
+}
+
+export interface CheckboxState extends ComponentState {
+  type: "Checkbox";
+  label: string;
+  value?: boolean;
 }
 
 export interface PlotState extends ComponentState {
