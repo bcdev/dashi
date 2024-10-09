@@ -2,8 +2,8 @@ import { create } from "zustand";
 
 import { ContribPoint, Contributions, Extension } from "../model/extension";
 import { Contribution } from "../model/contribution";
-import { ApiResult } from "../utils/fetchApiResult";
 import { ContributionState } from "../state/contribution";
+import { ApiResult } from "../utils/fetchApiResult";
 
 export interface AppState {
   // API call result /dashi/contributions

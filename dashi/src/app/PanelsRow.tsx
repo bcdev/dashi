@@ -1,8 +1,8 @@
 import React from "react";
 import useAppStore from "../store/appStore";
-import Panel from "./Panel";
 import applyPropertyChange from "../actions/applyPropertyChange";
 import { PropertyChangeEvent } from "../model/event";
+import Panel from "./Panel";
 
 const contribPoint = "panels";
 

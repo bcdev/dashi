@@ -1,5 +1,6 @@
+import Typography from "@mui/material/Typography";
+
 import useAppStore from "../store/appStore";
-import { Typography } from "@mui/material";
 
 function ExtensionsInfo() {
   const contributionsResult = useAppStore((state) => state.contributionsResult);
@@ -22,7 +23,7 @@ function ExtensionsInfo() {
   } else if (contributionsResult.error) {
     return <div>Error: {contributionsResult.error.message}</div>;
   } else if (contributionsResult.status === "pending") {
-    return <div>{`Loading contributions...`}</div>;
+    return <div>{`Loading extensions...`}</div>;
   }
   return null;
 }
