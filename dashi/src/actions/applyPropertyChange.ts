@@ -1,24 +1,24 @@
 import appStore from "../store/appStore";
+import { fetchChangeRequests } from "../api";
+import fetchApiResult from "../utils/fetchApiResult";
 import {
   ComponentState,
   ContainerState,
   isContainerState,
 } from "../state/component";
+import { ContribPoint } from "../model/extension";
 import {
-  Callback,
-  CallbackCall,
   CallbackCallRequest,
-  Change,
   ChangeRequest,
+  Change,
+  CallbackCall,
+  Callback,
   Input,
 } from "../model/callback";
-import fetchApiResult from "../utils/fetchApiResult";
-import { fetchChangeRequests } from "../api";
-import { updateArray } from "../utils/updateArray";
-import { ContributionState } from "../state/contribution";
 import { PropertyChangeEvent } from "../model/event";
-import { ContribPoint } from "../model/extension";
 import { Contribution } from "../model/contribution";
+import { ContributionState } from "../state/contribution";
+import { updateArray } from "../utils/updateArray";
 
 export default function applyPropertyChange(
   contribPoint: ContribPoint,
