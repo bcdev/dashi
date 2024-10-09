@@ -12,6 +12,7 @@ class Plot(Component):
     figure: go.Figure | None = None
 
     def to_dict(self) -> dict[str, Any]:
+        print("to_dict called here:::plot")
         d = super().to_dict()
         if self.figure is not None:
             # TODO: this is stupid, but if using self.figure.to_dict()

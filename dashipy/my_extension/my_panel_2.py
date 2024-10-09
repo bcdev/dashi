@@ -2,6 +2,7 @@ import plotly.express as pe
 import plotly.graph_objects as go
 
 from dashipy.components import Plot, Box, Dropdown
+from dashipy.components.figure import PlotFigure
 from dashipy.contribs import Panel
 from dashipy.context import Context
 from dashipy.lib import Output, Input, Component
@@ -48,8 +49,9 @@ def render_panel(ctx: Context) -> Component:
     Input("selected_dataset"),
     Output("plot", "figure"),
 )
-def make_figure(ctx: Context, selected_dataset: int) -> go.Figure:
+def make_figure(ctx: Context, selected_dataset: int) -> PlotFigure:
     dataset = ctx.datasets[selected_dataset]
     line = pe.line(x=[-1.0, 0.0, 1.0], y=dataset, title=f"DS #{selected_dataset + 1}")
     line.update_layout(dict(margin=dict(t=40, r=4, b=4, l=4), autosize=True))
-    return line
+    # line_dict = line.to_dict()
+    return PlotFigure(figure=line)
