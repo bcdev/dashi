@@ -8,6 +8,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+
 import { PropertyChangeHandler } from "../model/event";
 
 export interface DashiDropdownProps extends Omit<DropdownState, "type"> {
