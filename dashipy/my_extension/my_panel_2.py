@@ -53,5 +53,4 @@ def make_figure(ctx: Context, selected_dataset: int) -> PlotFigure:
     dataset = ctx.datasets[selected_dataset]
     line = pe.line(x=[-1.0, 0.0, 1.0], y=dataset, title=f"DS #{selected_dataset + 1}")
     line.update_layout(dict(margin=dict(t=40, r=4, b=4, l=4), autosize=True))
-    # line_dict = line.to_dict()
-    return PlotFigure(figure=line)
+    return PlotFigure(line)
