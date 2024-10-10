@@ -14,10 +14,7 @@ class Plot(Component):
     def to_dict(self) -> dict[str, Any]:
         d = super().to_dict()
         if self.figure is not None:
-            # TODO: this is stupid, but if using self.figure.to_dict()
-            #   for plotly.express figures we get
-            #   TypeError: Object of type ndarray is not JSON serializable
-            d.update(figure=json.loads(self.figure.to_json()))
+            d.update(figure=self.figure.to_dict())
         else:
             d.update(figure=None)
         return d

@@ -1,5 +1,6 @@
 import asyncio
 import importlib
+import json
 import traceback
 from typing import Any
 
@@ -12,6 +13,7 @@ from dashipy import __version__
 from dashipy.context import Context
 from dashipy.contribs import Panel
 from dashipy.lib import Extension, Contribution
+from dashipy.utils import NumpyJSONEncoder
 
 DASHI_CONTEXT_KEY = "dashi.context"
 DASHI_EXTENSIONS_KEY = "dashi.extensions"
@@ -117,7 +119,7 @@ class LayoutHandler(DashiHandler):
             return
 
         self.set_header("Content-Type", "text/json")
-        self.write({"result": component.to_dict()})
+        self.write(json.dumps({"result":  component.to_dict()}, cls=NumpyJSONEncoder))
 
 
 class CallbackHandler(DashiHandler):
@@ -172,7 +174,7 @@ class CallbackHandler(DashiHandler):
             )
 
         self.set_header("Content-Type", "text/json")
-        self.write({"result": change_requests})
+        self.write(json.dumps({"result":  change_requests}, cls=NumpyJSONEncoder))
 
 
 def print_usage(app, port):
