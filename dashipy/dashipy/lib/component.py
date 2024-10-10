@@ -5,10 +5,16 @@ from typing import Any
 
 @dataclass(frozen=True)
 class Component(ABC):
-    id: str = None
-    name: str = None
-    value: str | int | float = None
-    style: dict[str, Any] = None
+    # Common HTML properties
+    id: str | None = None
+    name: str | None = None
+    value: bool | int | float | str | None = None
+    style: dict[str, Any] | None = None
+    # We may add more here later
+    #
+    # Special non-HTML properties
+    label: str | None = None
+    children: list["Component"] | None = None
 
     @property
     def type(self):
@@ -21,25 +27,14 @@ class Component(ABC):
                 attr_name: attr_value
                 for attr_name, attr_value in self.__dict__.items()
                 if attr_value is not None
-                and not attr_name.startswith("_")
                 and attr_name
+                and attr_name != "children"
+                and not attr_name.startswith("_")
             }
         )
-        return d
-
-
-@dataclass(frozen=True)
-class Container(Component, ABC):
-    children: list[Component] = field(default_factory=list)
-
-    def add(self, component: Component):
-        self.children.append(component)
-
-    def to_dict(self) -> dict[str, Any]:
-        d = super().to_dict()
-        # Note we use "components" instead of "children" in order
-        # to avoid later problems with React component's "children"
-        # property
-        d.pop("children")
-        d.update(components=list(c.to_dict() for c in self.children))
+        if self.children is not None:
+            # Note we use "components" instead of "children" in order
+            # to avoid later problems with React component's "children"
+            # property
+            d.update(components=list(c.to_dict() for c in self.children))
         return d
