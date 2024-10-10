@@ -194,7 +194,6 @@ _scalar_types = {
     "float": "float",
     "str": "string",
     "Component": "Component",
-    "PlotFigure": "PlotFigure"
 }
 
 _array_types = {
