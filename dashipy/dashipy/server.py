@@ -119,7 +119,7 @@ class LayoutHandler(DashiHandler):
             return
 
         self.set_header("Content-Type", "text/json")
-        self.write(json.dumps({"result":  component.to_dict()}, cls=NumpyJSONEncoder, indent=4))
+        self.write(json.dumps({"result":  component.to_dict()}, cls=NumpyJSONEncoder))
 
 
 class CallbackHandler(DashiHandler):
@@ -174,7 +174,7 @@ class CallbackHandler(DashiHandler):
             )
 
         self.set_header("Content-Type", "text/json")
-        self.write(json.dumps({"result":  change_requests}, cls=NumpyJSONEncoder, indent=4))
+        self.write(json.dumps({"result":  change_requests}, cls=NumpyJSONEncoder))
 
 
 def print_usage(app, port):
