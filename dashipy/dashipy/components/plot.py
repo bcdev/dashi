@@ -5,8 +5,6 @@ from typing import Any
 import plotly.graph_objects as go
 
 from dashipy.lib import Component
-from dashipy.utils.json import convert_ndarray_to_list
-
 
 @dataclass(frozen=True)
 class Plot(Component):
