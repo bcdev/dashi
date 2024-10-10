@@ -9,7 +9,5 @@ def convert_ndarray_to_list(obj):
         return [convert_ndarray_to_list(e) for e in obj]
     elif isinstance(obj, tuple):
         return tuple(convert_ndarray_to_list(e) for e in obj)
-    elif hasattr(obj, 'to_plotly_json'):
-        return convert_ndarray_to_list(obj.to_plotly_json())
     else:
         return obj
