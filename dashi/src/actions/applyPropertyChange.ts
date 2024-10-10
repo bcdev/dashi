@@ -1,5 +1,5 @@
 import appStore from "../store/appStore";
-import { fetchChangeRequests } from "../api";
+import { fetchStateChangeRequests } from "../api";
 import fetchApiResult from "../utils/fetchApiResult";
 import {
   ComponentState,
@@ -8,12 +8,12 @@ import {
 } from "../state/component";
 import { ContribPoint } from "../model/extension";
 import {
-  CallbackCallRequest,
-  ChangeRequest,
-  Change,
-  CallbackCall,
   Callback,
+  CallbackRef,
+  CallbackRequest,
   Input,
+  StateChange,
+  StateChangeRequest,
 } from "../model/callback";
 import { PropertyChangeEvent } from "../model/event";
 import { Contribution } from "../model/contribution";
@@ -31,15 +31,17 @@ export default function applyPropertyChange(
   const contributionStates = contributionStatesRecord[contribPoint];
   const contributionModel = contributionModels[contribIndex];
   const contributionState = contributionStates[contribIndex];
-  const callbackCalls = generateCallbackCalls(
+  const callbackRefs = generateCallbackRefs(
     contributionModel,
     contributionState,
     contribEvent,
   );
-  const triggerChangeRequest: ChangeRequest = {
+  // The primary state change request corresponds
+  // to the original property change event.
+  const primaryChangeRequest: StateChangeRequest = {
     contribPoint,
     contribIndex,
-    changes: [
+    stateChanges: [
       {
         kind: "Component",
         id: contribEvent.componentId,
@@ -49,28 +51,31 @@ export default function applyPropertyChange(
     ],
   };
   // console.debug("callRequests", callRequests);
-  if (callbackCalls.length == 0) {
-    applyChangeRequests([triggerChangeRequest]);
+  if (callbackRefs.length == 0) {
+    applyStateChangeRequests([primaryChangeRequest]);
   } else {
-    const callbackCallRequests: CallbackCallRequest[] = callbackCalls.map(
-      (cbc) => ({
+    const callbackRequests: CallbackRequest[] = callbackRefs.map(
+      (callbackRef) => ({
         contribPoint,
         contribIndex,
-        ...cbc,
+        ...callbackRef,
       }),
     );
-    fetchApiResult(fetchChangeRequests, callbackCallRequests).then(
+    fetchApiResult(fetchStateChangeRequests, callbackRequests).then(
       (changeRequestsResult) => {
-        if (changeRequestsResult.data) {
-          applyChangeRequests(
-            [triggerChangeRequest].concat(changeRequestsResult.data),
+        const secondaryChangeRequests = changeRequestsResult.data;
+        if (secondaryChangeRequests) {
+          applyStateChangeRequests(
+            [primaryChangeRequest].concat(secondaryChangeRequests),
           );
         } else {
+          // Note, we do not even apply the primaryChangeRequest
+          // in order to avoid an inconsistent state.
           console.error(
             "callback failed:",
             changeRequestsResult.error,
             "for call requests:",
-            callbackCalls,
+            callbackRefs,
           );
         }
       },
@@ -78,12 +83,12 @@ export default function applyPropertyChange(
   }
 }
 
-function generateCallbackCalls(
+function generateCallbackRefs(
   contributionModel: Contribution,
   contributionState: ContributionState,
   contribEvent: PropertyChangeEvent,
-): CallbackCall[] {
-  const callbackCalls: CallbackCall[] = [];
+): CallbackRef[] {
+  const callbackRefs: CallbackRef[] = [];
   // Prepare calling all callbacks of the contribution
   // that are triggered by the property change
   (contributionModel.callbacks || []).forEach((callback, callbackIndex) => {
@@ -93,10 +98,10 @@ function generateCallbackCalls(
       callback,
     );
     if (inputValues) {
-      callbackCalls.push({ callbackIndex, inputValues });
+      callbackRefs.push({ callbackIndex, inputValues });
     }
   });
-  return callbackCalls;
+  return callbackRefs;
 }
 
 export function getInputValues(
@@ -148,11 +153,13 @@ export function getInputValues(
   });
 }
 
-export function applyChangeRequests(changeRequests: ChangeRequest[]) {
+export function applyStateChangeRequests(
+  stateChangeRequests: StateChangeRequest[],
+) {
   const { contributionStatesRecord } = appStore.getState();
   const contributionStatesRecordNew = applyContributionChangeRequests(
     contributionStatesRecord,
-    changeRequests,
+    stateChangeRequests,
   );
   if (contributionStatesRecordNew !== contributionStatesRecord) {
     appStore.setState({
@@ -164,51 +171,59 @@ export function applyChangeRequests(changeRequests: ChangeRequest[]) {
 
 export function applyContributionChangeRequests(
   contributionStatesRecord: Record<ContribPoint, ContributionState[]>,
-  changeRequests: ChangeRequest[],
+  stateChangeRequests: StateChangeRequest[],
 ): Record<ContribPoint, ContributionState[]> {
-  changeRequests.forEach(({ contribPoint, contribIndex, changes }) => {
-    const contributionState =
-      contributionStatesRecord[contribPoint][contribIndex];
-    const componentStateOld = contributionState.componentState;
-    let componentState = componentStateOld;
-    if (componentState) {
-      changes
-        .filter((change) => !change.kind || change.kind === "Component")
-        .forEach((change) => {
-          componentState = applyComponentStateChange(componentState!, change);
-        });
-      if (componentState !== componentStateOld) {
-        contributionStatesRecord = {
-          ...contributionStatesRecord,
-          [contribPoint]: updateArray<ContributionState>(
-            contributionStatesRecord[contribPoint],
-            contribIndex,
-            { ...contributionState, componentState },
-          ),
-        };
+  stateChangeRequests.forEach(
+    ({ contribPoint, contribIndex, stateChanges }) => {
+      const contributionState =
+        contributionStatesRecord[contribPoint][contribIndex];
+      const componentStateOld = contributionState.componentState;
+      let componentState = componentStateOld;
+      if (componentState) {
+        stateChanges
+          .filter(
+            (stateChange) =>
+              !stateChange.kind || stateChange.kind === "Component",
+          )
+          .forEach((stateChange) => {
+            componentState = applyComponentStateChange(
+              componentState!,
+              stateChange,
+            );
+          });
+        if (componentState !== componentStateOld) {
+          contributionStatesRecord = {
+            ...contributionStatesRecord,
+            [contribPoint]: updateArray<ContributionState>(
+              contributionStatesRecord[contribPoint],
+              contribIndex,
+              { ...contributionState, componentState },
+            ),
+          };
+        }
       }
-    }
-  });
+    },
+  );
   return contributionStatesRecord;
 }
 
 export function applyComponentStateChange(
   componentState: ComponentState,
-  change: Change,
+  stateChange: StateChange,
 ): ComponentState {
-  if (componentState.id === change.id) {
+  if (componentState.id === stateChange.id) {
     const oldValue = (componentState as unknown as Record<string, unknown>)[
-      change.property
+      stateChange.property
     ];
-    if (oldValue !== change.value) {
-      return { ...componentState, [change.property]: change.value };
+    if (oldValue !== stateChange.value) {
+      return { ...componentState, [stateChange.property]: stateChange.value };
     }
   } else if (isContainerState(componentState)) {
     const containerStateOld: ContainerState = componentState;
     let containerStateNew: ContainerState = containerStateOld;
     for (let i = 0; i < containerStateOld.components.length; i++) {
       const itemOld = containerStateOld.components[i];
-      const itemNew = applyComponentStateChange(itemOld, change);
+      const itemNew = applyComponentStateChange(itemOld, stateChange);
       if (itemNew !== itemOld) {
         if (containerStateNew === containerStateOld) {
           containerStateNew = {

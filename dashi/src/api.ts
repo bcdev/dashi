@@ -1,6 +1,6 @@
 import { ComponentState } from "./state/component";
 import { ContribPoint, Contributions } from "./model/extension";
-import { CallbackCallRequest, ChangeRequest } from "./model/callback";
+import { CallbackRequest, StateChangeRequest } from "./model/callback";
 import { callApi } from "./utils/fetchApiResult";
 
 const serverUrl = "http://localhost:8888";
@@ -20,11 +20,11 @@ export async function fetchInitialComponentState(
   });
 }
 
-export async function fetchChangeRequests(
-  callRequests: CallbackCallRequest[],
-): Promise<ChangeRequest[]> {
+export async function fetchStateChangeRequests(
+  callbackRequests: CallbackRequest[],
+): Promise<StateChangeRequest[]> {
   return callApi(`${serverUrl}/dashi/callback`, {
-    body: JSON.stringify({ callRequests }),
+    body: JSON.stringify({ callbackRequests: callbackRequests }),
     method: "post",
   });
 }
