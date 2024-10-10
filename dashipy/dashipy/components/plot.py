@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 
 from dashipy.lib import Component
 
+
 @dataclass(frozen=True)
 class Plot(Component):
     figure: go.Figure | None = None
