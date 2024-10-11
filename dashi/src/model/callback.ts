@@ -52,7 +52,6 @@ export interface CallbackRef {
 
 /**
  * A `CallbackRequest` is a request to invoke a server side-side callback.
- * Instances of this interface are returned from invoking a server-side callback.
  * The result from invoking server-side callbacks is a list of `StateChangeRequest`
  * instances.
  */
