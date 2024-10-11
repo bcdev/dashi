@@ -128,17 +128,17 @@ class CallbackHandler(DashiHandler):
     def post(self):
         data = tornado.escape.json_decode(self.request.body)
         # TODO: validate data
-        call_requests: list[dict] = data.get("callRequests") or []
+        callback_requests: list[dict] = data.get("callbackRequests") or []
 
         context: Context = self.settings[DASHI_CONTEXT_KEY]
 
         # TODO: assert correctness, set status code on error
-        change_requests: list[dict] = []
-        for call_request in call_requests:
-            contrib_point_name: str = call_request["contribPoint"]
-            contrib_index: int = call_request["contribIndex"]
-            callback_index: int = call_request["callbackIndex"]
-            input_values: list = call_request["inputValues"]
+        state_change_requests: list[dict] = []
+        for callback_request in callback_requests:
+            contrib_point_name: str = callback_request["contribPoint"]
+            contrib_index: int = callback_request["contribIndex"]
+            callback_index: int = callback_request["callbackIndex"]
+            input_values: list = callback_request["inputValues"]
 
             contribution_points = self.contribution_points
             contributions = contribution_points[contrib_point_name]
@@ -149,10 +149,10 @@ class CallbackHandler(DashiHandler):
             if len(callback.outputs) == 1:
                 output_values = (output_values,)
 
-            changes: list[dict] = []
+            state_changes: list[dict] = []
             for output_index, output in enumerate(callback.outputs):
                 output_value = output_values[output_index]
-                changes.append(
+                state_changes.append(
                     {
                         **output.to_dict(),
                         "value": (
@@ -165,16 +165,16 @@ class CallbackHandler(DashiHandler):
                     }
                 )
 
-            change_requests.append(
+            state_change_requests.append(
                 {
                     "contribPoint": contrib_point_name,
                     "contribIndex": contrib_index,
-                    "changes": changes,
+                    "stateChanges": state_changes,
                 }
             )
 
         self.set_header("Content-Type", "text/json")
-        self.write(json.dumps({"result":  change_requests}, cls=NumpyJSONEncoder))
+        self.write(json.dumps({"result":  state_change_requests}, cls=NumpyJSONEncoder))
 
 
 def print_usage(app, port):

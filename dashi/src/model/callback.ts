@@ -28,26 +28,47 @@ export interface Input extends InputOutput {}
 
 export interface Output extends InputOutput {}
 
+/**
+ * A reference to a specific contribution.
+ */
 export interface ContribRef {
-  // Identifies a contribution
+  // Contribution point name, e.g., "panels"
   contribPoint: string;
+  // Contribution index
   contribIndex: number;
 }
 
-export interface CallbackCall {
-  // The callback of the contribution
+/**
+ * A reference to a specific callback of a contribution.
+ */
+export interface CallbackRef {
+  // The callback index of the contribution
   callbackIndex: number;
-  // The input values for the callback
+  // The input values for the callback that will become server-side
+  // function call arguments. They have the same size and order
+  // as the callback's inputs.
   inputValues: unknown[];
 }
 
-export interface CallbackCallRequest extends ContribRef, CallbackCall {}
+/**
+ * A `CallbackRequest` is a request to invoke a server side-side callback.
+ * The result from invoking server-side callbacks is a list of `StateChangeRequest`
+ * instances.
+ */
+export interface CallbackRequest extends ContribRef, CallbackRef {}
 
-export interface ChangeRequest extends ContribRef {
-  // The changes requested by the contribution
-  changes: Change[];
+/**
+ * A `StateChangeRequest` is a request to change the application state.
+ * Instances of this interface are returned from invoking a server-side callback.
+ */
+export interface StateChangeRequest extends ContribRef {
+  // The stateChanges requested by the contribution
+  stateChanges: StateChange[];
 }
 
-export interface Change extends Output {
+/**
+ * A single state change.
+ */
+export interface StateChange extends Output {
   value: unknown;
 }
