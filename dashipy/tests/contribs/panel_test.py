@@ -1,6 +1,6 @@
 import unittest
 
-from dashipy.contribs import Panel
+from dashipy.demo.contribs import Panel
 from dashipy.lib.callback import Input, Callback, Output
 
 

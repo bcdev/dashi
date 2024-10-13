@@ -11,7 +11,6 @@ export interface DashiButtonProps extends Omit<ButtonState, "type"> {
 function DashiButton({
   id,
   name,
-  value,
   style,
   text,
   disabled,
@@ -33,7 +32,6 @@ function DashiButton({
     <Button
       id={id}
       name={name}
-      value={value}
       style={style}
       disabled={disabled}
       onClick={handleClick}
