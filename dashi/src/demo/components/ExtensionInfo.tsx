@@ -1,10 +1,10 @@
 import Typography from "@mui/material/Typography";
 
-import useAppStore from "../store/appStore";
+import { useExtensions, useContributionsResult } from "../../hooks";
 
 function ExtensionsInfo() {
-  const contributionsResult = useAppStore((state) => state.contributionsResult);
-  const extensions = useAppStore((state) => state.extensions);
+  const extensions = useExtensions();
+  const contributionsResult = useContributionsResult();
   if (contributionsResult.status === "ok") {
     return (
       <div style={{ display: "flex", gap: 5 }}>

@@ -1,12 +1,12 @@
-import appStore from "../store/appStore";
-import fetchApiResult from "../utils/fetchApiResult";
-import { fetchContributions } from "../api";
-import { Contribution } from "../model/contribution";
-import { ContributionState } from "../state/contribution";
-import { ContribPoint } from "../model/extension";
+import systemStore from "../system";
+import fetchApiResult from "../../utils/fetchApiResult";
+import { fetchContributions } from "../../api";
+import { Contribution } from "../../model/contribution";
+import { ContributionState } from "../../state/contribution";
+import { ContribPoint } from "../../model/extension";
 
-export function initAppStore() {
-  const set = appStore.setState;
+export function initSystemStore() {
+  const set = systemStore.setState;
 
   set({ contributionsResult: { status: "pending" } });
   fetchApiResult(fetchContributions).then((contributionsResult) => {

@@ -1,18 +1,17 @@
 import React from "react";
-import useAppStore from "../store/appStore";
-import applyPropertyChange from "../actions/applyPropertyChange";
-import { PropertyChangeEvent } from "../model/event";
+import {
+  useContributionModelsRecord,
+  useContributionStatesRecord,
+} from "../../hooks";
+import applyPropertyChange from "../../store/actions/applyPropertyChange";
+import { PropertyChangeEvent } from "../../model/event";
 import Panel from "./Panel";
 
 const contribPoint = "panels";
 
 function PanelsRow() {
-  const contributionModelsRecord = useAppStore(
-    (state) => state.contributionModelsRecord,
-  );
-  const contributionStatesRecord = useAppStore(
-    (state) => state.contributionStatesRecord,
-  );
+  const contributionModelsRecord = useContributionModelsRecord();
+  const contributionStatesRecord = useContributionStatesRecord();
   const panelModels = contributionModelsRecord[contribPoint];
   const panelStates = contributionStatesRecord[contribPoint];
   if (!panelModels || !panelStates) {

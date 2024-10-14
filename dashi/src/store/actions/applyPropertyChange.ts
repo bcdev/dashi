@@ -1,12 +1,12 @@
-import appStore from "../store/appStore";
-import { fetchStateChangeRequests } from "../api";
-import fetchApiResult from "../utils/fetchApiResult";
+import systemStore from "../system";
+import { fetchStateChangeRequests } from "../../api";
+import fetchApiResult from "../../utils/fetchApiResult";
 import {
   ComponentState,
   ContainerState,
   isContainerState,
-} from "../state/component";
-import { ContribPoint } from "../model/extension";
+} from "../../state/component";
+import { ContribPoint } from "../../model/extension";
 import {
   Callback,
   CallbackRef,
@@ -14,11 +14,12 @@ import {
   Input,
   StateChange,
   StateChangeRequest,
-} from "../model/callback";
-import { PropertyChangeEvent } from "../model/event";
-import { Contribution } from "../model/contribution";
-import { ContributionState } from "../state/contribution";
-import { updateArray } from "../utils/updateArray";
+} from "../../model/callback";
+import { PropertyChangeEvent } from "../../model/event";
+import { Contribution } from "../../model/contribution";
+import { ContributionState } from "../../state/contribution";
+import { updateArray } from "../../utils/updateArray";
+
 
 export default function applyPropertyChange(
   contribPoint: ContribPoint,
@@ -26,7 +27,7 @@ export default function applyPropertyChange(
   contribEvent: PropertyChangeEvent,
 ) {
   const { contributionModelsRecord, contributionStatesRecord } =
-    appStore.getState();
+    systemStore.getState();
   const contributionModels = contributionModelsRecord[contribPoint];
   const contributionStates = contributionStatesRecord[contribPoint];
   const contributionModel = contributionModels[contribIndex];
@@ -156,13 +157,13 @@ export function getInputValues(
 export function applyStateChangeRequests(
   stateChangeRequests: StateChangeRequest[],
 ) {
-  const { contributionStatesRecord } = appStore.getState();
+  const { contributionStatesRecord } = systemStore.getState();
   const contributionStatesRecordNew = applyContributionChangeRequests(
     contributionStatesRecord,
     stateChangeRequests,
   );
   if (contributionStatesRecordNew !== contributionStatesRecord) {
-    appStore.setState({
+    systemStore.setState({
       contributionStatesRecord: contributionStatesRecordNew,
     });
   }

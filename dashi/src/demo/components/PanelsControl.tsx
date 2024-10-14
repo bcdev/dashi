@@ -2,17 +2,15 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 
-import useAppStore from "../store/appStore";
-import { hidePanel } from "../actions/hidePanel";
-import { showPanel } from "../actions/showPanel";
-import { ContribPoint } from "../model/extension";
+import { useContributionStatesRecord } from "../../hooks";
+import { hidePanel } from "../../store/actions/hidePanel";
+import { showPanel } from "../../store/actions/showPanel";
+import { ContribPoint } from "../../model/extension";
 
 const contribPoint: ContribPoint = "panels";
 
 function PanelsControl() {
-  const contributionStatesRecord = useAppStore(
-    (state) => state.contributionStatesRecord,
-  );
+  const contributionStatesRecord = useContributionStatesRecord();
   const panelStates = contributionStatesRecord[contribPoint];
   if (!panelStates) {
     // Ok, not ready yet

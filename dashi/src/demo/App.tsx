@@ -1,12 +1,12 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import { initAppStore } from "../actions/initAppStore";
-import ExtensionsInfo from "./ExtensionInfo";
-import PanelsControl from "./PanelsControl";
-import PanelsRow from "./PanelsRow";
+import { initSystemStore } from "../store/actions/initSystemStore";
+import ExtensionsInfo from "./components/ExtensionInfo";
+import PanelsControl from "./components/PanelsControl";
+import PanelsRow from "./components/PanelsRow";
 
-initAppStore();
+initSystemStore();
 
 // MUI's default font family
 const fontFamily = "Roboto, Arial, sans-serif";
