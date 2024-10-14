@@ -18,6 +18,24 @@ export default defineConfig({
     },
   },
   publicDir: false,
+  build: {
+    rollupOptions: {
+      // make sure to externalize deps that shouldn't be bundled
+      // into the library
+      external: [
+        `${__dirname}/src/demo`,
+        "@emotion/react",
+        "@emotion/styled",
+        "@fontsource/roboto",
+        "@mui/material",
+        "plotly.js",
+        "react",
+        "react-dom",
+        "react-plotly.js",
+        "zustand",
+      ],
+    },
+  },
   test: {
     environment: "jsdom",
     onConsoleLog: (/*_log: string, _type: "stdout" | "stderr"*/):
