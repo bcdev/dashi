@@ -1,9 +1,9 @@
 import systemStore from "@/store/system";
 import { fetchInitialComponentState } from "@/api";
 import { ContribPoint } from "@/model/extension";
+import { Input } from "@/model/callback";
 import fetchApiResult from "@/utils/fetchApiResult";
 import { updateContributionState } from "./updateContributionState";
-import {Input}                        from "../model/callback";
 
 export function setComponentVisibility(
   contribPoint: ContribPoint,
