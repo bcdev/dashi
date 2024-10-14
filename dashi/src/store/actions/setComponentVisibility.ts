@@ -3,6 +3,7 @@ import { fetchInitialComponentState } from "@/api";
 import { ContribPoint } from "@/model/extension";
 import fetchApiResult from "@/utils/fetchApiResult";
 import { updateContributionState } from "./updateContributionState";
+import {Input}                        from "../model/callback";
 
 export function setComponentVisibility(
   contribPoint: ContribPoint,
@@ -48,10 +49,13 @@ function getLayoutInputValues(
   const contributionModel = contributionModels[contribIndex];
   const inputs = contributionModel.layout!.inputs;
   if (inputs && inputs.length > 0) {
-    // TODO: get inputValue from sources specified by input.kind.
-    //    For time being we use null as it is JSON-serializable
-    return inputs.map((input) => {
-      console.warn(`layout input not supported yet`, input);
+    return inputs.map((input: Input) => {
+      if (!input.kind || input.kind === "Component") {
+        console.warn(`input kind not supported in layout:`, input);
+      } else {
+        // TODO: Get value from another kind of input.
+        console.warn(`input kind not supported yet:`, input);
+      }
       return null;
     });
   } else {
