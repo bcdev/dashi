@@ -1,7 +1,7 @@
-import systemStore from "../system";
-import { fetchInitialComponentState } from "../../api";
-import { ContribPoint } from "../../model/extension";
-import fetchApiResult from "../../utils/fetchApiResult";
+import systemStore from "@/store/system";
+import { fetchInitialComponentState } from "@/api";
+import { ContribPoint } from "@/model/extension";
+import fetchApiResult from "@/utils/fetchApiResult";
 import { updateContributionState } from "./updateContributionState";
 
 export function setComponentVisibility(

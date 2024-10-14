@@ -1,7 +1,7 @@
-import { ComponentState } from "./state/component";
-import { ContribPoint, Contributions } from "./model/extension";
-import { CallbackRequest, StateChangeRequest } from "./model/callback";
-import { callApi } from "./utils/fetchApiResult";
+import { ComponentState } from "@/state/component";
+import { ContribPoint, Contributions } from "@/model/extension";
+import { CallbackRequest, StateChangeRequest } from "@/model/callback";
+import { callApi } from "@/utils/fetchApiResult";
 
 const defaultServerUrl = "http://localhost:8888";
 const defaultEndpointName = "dashi";
@@ -11,7 +11,9 @@ export interface ApiOptions {
   endpointName?: string;
 }
 
-export async function fetchContributions(options?: ApiOptions): Promise<Contributions> {
+export async function fetchContributions(
+  options?: ApiOptions,
+): Promise<Contributions> {
   return callApi(makeUrl("contributions", options));
 }
 
@@ -19,7 +21,7 @@ export async function fetchInitialComponentState(
   contribPoint: ContribPoint,
   contribIndex: number,
   inputValues: unknown[],
-  options?: ApiOptions
+  options?: ApiOptions,
 ): Promise<ComponentState> {
   return callApi(makeUrl(`layout/${contribPoint}/${contribIndex}`, options), {
     body: JSON.stringify({ inputValues }),
@@ -29,7 +31,7 @@ export async function fetchInitialComponentState(
 
 export async function fetchStateChangeRequests(
   callbackRequests: CallbackRequest[],
-  options?: ApiOptions
+  options?: ApiOptions,
 ): Promise<StateChangeRequest[]> {
   return callApi(makeUrl("callback", options), {
     body: JSON.stringify({ callbackRequests: callbackRequests }),
@@ -40,5 +42,5 @@ export async function fetchStateChangeRequests(
 function makeUrl(path: string, options?: ApiOptions): string {
   const serverUrl = options?.serverUrl || defaultServerUrl;
   const endpointName = options?.endpointName || defaultEndpointName;
-  return `${serverUrl}/${endpointName}/${path}`
+  return `${serverUrl}/${endpointName}/${path}`;
 }

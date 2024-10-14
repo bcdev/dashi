@@ -1,12 +1,12 @@
-import systemStore from "../system";
-import { fetchStateChangeRequests } from "../../api";
-import fetchApiResult from "../../utils/fetchApiResult";
+import systemStore from "@/store/system";
+import { fetchStateChangeRequests } from "@/api";
+import fetchApiResult from "@/utils/fetchApiResult";
 import {
   ComponentState,
   ContainerState,
   isContainerState,
-} from "../../state/component";
-import { ContribPoint } from "../../model/extension";
+} from "@/state/component";
+import { ContribPoint } from "@/model/extension";
 import {
   Callback,
   CallbackRef,
@@ -14,12 +14,11 @@ import {
   Input,
   StateChange,
   StateChangeRequest,
-} from "../../model/callback";
-import { PropertyChangeEvent } from "../../model/event";
-import { Contribution } from "../../model/contribution";
-import { ContributionState } from "../../state/contribution";
-import { updateArray } from "../../utils/updateArray";
-
+} from "@/model/callback";
+import { PropertyChangeEvent } from "@/model/event";
+import { Contribution } from "@/model/contribution";
+import { ContributionState } from "@/state/contribution";
+import { updateArray } from "@/utils/updateArray";
 
 export default function applyPropertyChange(
   contribPoint: ContribPoint,

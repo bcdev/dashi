@@ -1,4 +1,4 @@
-import { ApiResult } from "../utils/fetchApiResult";
+import { ApiResult } from "@/utils/fetchApiResult";
 import { ComponentState } from "./component";
 
 export interface ContributionState {

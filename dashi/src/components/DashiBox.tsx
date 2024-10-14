@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 
-import { BoxState } from "../state/component";
-import { PropertyChangeHandler } from "../model/event";
+import { BoxState } from "@//state/component";
+import { PropertyChangeHandler } from "@/model/event";
 import DashiChildren from "./DashiChildren";
 
 export interface DashiBoxProps extends Omit<BoxState, "type"> {

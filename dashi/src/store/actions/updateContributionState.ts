@@ -1,7 +1,7 @@
-import systemStore from "../system";
-import { updateArray } from "../../utils/updateArray";
-import { ContributionState } from "../../state/contribution";
-import { ContribPoint } from "../../model/extension";
+import systemStore from "@/store/system";
+import { updateArray } from "@/utils/updateArray";
+import { ContributionState } from "@/state/contribution";
+import { ContribPoint } from "@/model/extension";
 
 export function updateContributionState(
   contribPoint: ContribPoint,

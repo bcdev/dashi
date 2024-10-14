@@ -1,6 +1,6 @@
-import { ContribPoint, Contributions, Extension } from "../model/extension";
-import { Contribution } from "../model/contribution";
-import { ApiResult } from "../utils/fetchApiResult";
+import { ContribPoint, Contributions, Extension } from "@/model/extension";
+import { Contribution } from "@/model/contribution";
+import { ApiResult } from "@/utils/fetchApiResult";
 import { ContributionState } from "./contribution";
 
 export interface SystemState {
@@ -13,4 +13,3 @@ export interface SystemState {
   // A record that maps contribPoint --> ContributionState[]
   contributionStatesRecord: Record<ContribPoint, ContributionState[]>;
 }
-

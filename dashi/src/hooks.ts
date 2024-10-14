@@ -1,4 +1,4 @@
-import systemStore from "./store/system";
+import systemStore from "@/store/system";
 
 export const useSystemStore = systemStore;
 export const useExtensions = () => useSystemStore((state) => state.extensions);

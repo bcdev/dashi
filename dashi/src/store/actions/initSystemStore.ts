@@ -1,9 +1,9 @@
-import systemStore from "../system";
-import fetchApiResult from "../../utils/fetchApiResult";
-import { fetchContributions } from "../../api";
-import { Contribution } from "../../model/contribution";
-import { ContributionState } from "../../state/contribution";
-import { ContribPoint } from "../../model/extension";
+import systemStore from "@/store/system";
+import fetchApiResult from "@/utils/fetchApiResult";
+import { fetchContributions } from "@/api";
+import { Contribution } from "@/model/contribution";
+import { ContributionState } from "@/state/contribution";
+import { ContribPoint } from "@/model/extension";
 
 export function initSystemStore() {
   const set = systemStore.setState;

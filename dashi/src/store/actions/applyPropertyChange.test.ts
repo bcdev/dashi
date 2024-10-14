@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 
-import { ComponentState, PlotState } from "../../state/component";
-import { ContribPoint } from "../../model/extension";
-import { ContributionState } from "../../state/contribution";
-import { StateChangeRequest } from "../../model/callback";
+import { ContribPoint } from "@/model/extension";
+import { StateChangeRequest } from "@/model/callback";
+import { ComponentState, PlotState } from "@/state/component";
+import { ContributionState } from "@/state/contribution";
 import {
   applyComponentStateChange,
   applyContributionChangeRequests,

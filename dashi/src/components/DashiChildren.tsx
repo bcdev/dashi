@@ -1,5 +1,5 @@
-import { PropertyChangeHandler } from "../model/event";
-import { ComponentState } from "../state/component";
+import { PropertyChangeHandler } from "@/model/event";
+import { ComponentState } from "@/state/component";
 import DashiComponent from "./DashiComponent";
 
 export interface DashiChildrenProps {

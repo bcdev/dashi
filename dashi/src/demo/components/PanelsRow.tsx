@@ -2,9 +2,9 @@ import React from "react";
 import {
   useContributionModelsRecord,
   useContributionStatesRecord,
-} from "../../hooks";
-import applyPropertyChange from "../../store/actions/applyPropertyChange";
-import { PropertyChangeEvent } from "../../model/event";
+} from "@/hooks";
+import applyPropertyChange from "@/store/actions/applyPropertyChange";
+import { PropertyChangeEvent } from "@/model/event";
 import Panel from "./Panel";
 
 const contribPoint = "panels";

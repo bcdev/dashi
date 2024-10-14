@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 
-import { useExtensions, useContributionsResult } from "../../hooks";
+import { useExtensions, useContributionsResult } from "@/hooks";
 
 function ExtensionsInfo() {
   const extensions = useExtensions();

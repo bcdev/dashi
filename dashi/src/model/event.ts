@@ -1,4 +1,4 @@
-import { ComponentType } from "../state/component";
+import { ComponentType } from "@/state/component";
 
 export interface PropertyChangeEvent {
   componentType: ComponentType;

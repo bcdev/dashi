@@ -1,7 +1,7 @@
 import Plot from "react-plotly.js";
 
-import { PlotState } from "../state/component";
-import { PropertyChangeHandler } from "../model/event";
+import { PlotState } from "@/state/component";
+import { PropertyChangeHandler } from "@/model/event";
 
 export interface DashiPlotProps extends Omit<PlotState, "type"> {
   onPropertyChange: PropertyChangeHandler;
