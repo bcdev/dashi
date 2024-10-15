@@ -1,6 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-from dashipy.lib import Component
+from dashipy import Component
 
 
 @dataclass(frozen=True)

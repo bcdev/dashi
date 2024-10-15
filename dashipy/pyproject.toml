@@ -42,7 +42,7 @@ classifiers = [
 ]
 
 [project.scripts]
-dashipy = "dashipy.server"
+dashipy = "dashipy.demo.server:main"
 
 [tool.setuptools.dynamic]
 version = {attr = "dashipy.__version__"}

@@ -1,7 +1,7 @@
 import unittest
 from dataclasses import dataclass
 
-from dashipy.lib import Component, Container
+from dashipy import Component, Container
 
 
 @dataclass(frozen=True)

@@ -1,7 +1,7 @@
 import unittest
 
-from dashipy.contribs import Panel
-from dashipy.lib.callback import Input, Callback, Output
+from dashipy.demo.contribs import Panel
+from dashipy.callback import Input, Callback, Output
 
 
 def my_callback_1(ctx):

@@ -1,12 +1,7 @@
-import inspect
 import unittest
 from dataclasses import dataclass
-from typing import Any
 
-import pytest
-
-from dashipy.lib import Component
-from dashipy.lib.callback import Input, Callback
+from dashipy import Component
 
 
 @dataclass(frozen=True)

@@ -1,10 +1,9 @@
-import json
 from dataclasses import dataclass
 from typing import Any
 
 import plotly.graph_objects as go
 
-from dashipy.lib import Component
+from dashipy import Component
 
 
 @dataclass(frozen=True)

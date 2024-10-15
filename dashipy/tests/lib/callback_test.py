@@ -2,7 +2,7 @@ import unittest
 
 import pytest
 
-from dashipy.lib.callback import Input, Callback
+from dashipy.callback import Input, Callback
 
 
 def my_callback(

@@ -1,10 +1,10 @@
 import plotly.express as pe
 import plotly.graph_objects as go
 
-from dashipy.components import Plot, Box, Dropdown
-from dashipy.contribs import Panel
-from dashipy.context import Context
-from dashipy.lib import Output, Input, Component
+from dashipy import (Component, Input, Output)
+from dashipy.components import (Plot, Box, Dropdown)
+from dashipy.demo.contribs import Panel
+from dashipy.demo.context import Context
 
 
 panel = Panel(__name__, title="Panel B")
