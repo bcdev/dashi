@@ -9,12 +9,12 @@ import tornado.log
 import yaml
 
 from dashipy import __version__
-from dashipy.controllers import ExtensionContext
-from dashipy.controllers import Response
+from dashipy import ExtensionContext
+from dashipy import Response
+from dashipy import Extension
 from dashipy.controllers import get_callback_results
 from dashipy.controllers import get_contributions
 from dashipy.controllers import get_layout
-from dashipy.lib import Extension
 from dashipy.demo.context import Context
 from dashipy.demo.contribs import Panel
 from dashipy.demo.utils import NumpyJSONEncoder

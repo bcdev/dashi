@@ -1,6 +1,6 @@
 from typing import Any
 
-from dashipy.lib.contribution import Contribution
+from dashipy.contribution import Contribution
 
 
 class Extension:

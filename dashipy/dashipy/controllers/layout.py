@@ -1,7 +1,7 @@
 from typing import Any
 
-from .extensioncontext import ExtensionContext
-from .response import Response
+from dashipy.extensioncontext import ExtensionContext
+from dashipy.response import Response
 
 
 def get_layout(

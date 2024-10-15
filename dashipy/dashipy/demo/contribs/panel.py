@@ -1,6 +1,4 @@
-from typing import Any
-
-from dashipy.lib import Contribution
+from dashipy import Contribution
 
 
 class Panel(Contribution):

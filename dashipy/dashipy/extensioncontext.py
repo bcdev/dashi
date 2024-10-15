@@ -1,7 +1,7 @@
 import importlib
 from typing import Any
 
-from dashipy.lib import Extension, Contribution
+from dashipy import Extension, Contribution
 
 
 class ExtensionContext:
