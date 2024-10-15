@@ -1,15 +1,15 @@
 import systemStore from "@/store/system";
 import fetchApiResult from "@/utils/fetchApiResult";
-import { fetchContributions } from "@/api";
+import { ApiOptions, fetchContributions } from "@/api";
 import { Contribution } from "@/model/contribution";
 import { ContributionState } from "@/state/contribution";
 import { ContribPoint } from "@/model/extension";
 
-export function initSystemStore() {
+export function initSystemStore(apiOptions?: ApiOptions) {
   const set = systemStore.setState;
 
-  set({ contributionsResult: { status: "pending" } });
-  fetchApiResult(fetchContributions).then((contributionsResult) => {
+  set({ apiOptions, contributionsResult: { status: "pending" } });
+  fetchApiResult(fetchContributions, apiOptions).then((contributionsResult) => {
     // TODO: assert Boolean(contributionsResult.data)
     const { extensions, contributions: contributionModelsRecord } =
       contributionsResult.data!;

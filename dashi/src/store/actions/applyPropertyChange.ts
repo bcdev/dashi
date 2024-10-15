@@ -25,7 +25,7 @@ export default function applyPropertyChange(
   contribIndex: number,
   contribEvent: PropertyChangeEvent,
 ) {
-  const { contributionModelsRecord, contributionStatesRecord } =
+  const { apiOptions, contributionModelsRecord, contributionStatesRecord } =
     systemStore.getState();
   const contributionModels = contributionModelsRecord[contribPoint];
   const contributionStates = contributionStatesRecord[contribPoint];
@@ -61,7 +61,7 @@ export default function applyPropertyChange(
         ...callbackRef,
       }),
     );
-    fetchApiResult(fetchStateChangeRequests, callbackRequests).then(
+    fetchApiResult(fetchStateChangeRequests, callbackRequests, apiOptions).then(
       (changeRequestsResult) => {
         const secondaryChangeRequests = changeRequestsResult.data;
         if (secondaryChangeRequests) {
