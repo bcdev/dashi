@@ -2,12 +2,11 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 
-import { useContributionStatesRecord } from "@/hooks";
-import { hidePanel } from "@/store/actions/hidePanel";
-import { showPanel } from "@/store/actions/showPanel";
-import { ContribPoint } from "@/model/extension";
+import { useContributionStatesRecord } from "@/lib";
+import { hidePanel } from "@/demo/actions/hidePanel";
+import { showPanel } from "@/demo/actions/showPanel";
 
-const contribPoint: ContribPoint = "panels";
+const contribPoint = "panels";
 
 function PanelsControl() {
   const contributionStatesRecord = useContributionStatesRecord();

@@ -1,10 +1,11 @@
 import React from "react";
+
 import {
+  type PropertyChangeEvent,
+  applyPropertyChange,
   useContributionModelsRecord,
   useContributionStatesRecord,
-} from "@/hooks";
-import applyPropertyChange from "@/store/actions/applyPropertyChange";
-import { PropertyChangeEvent } from "@/model/event";
+} from "@/lib";
 import Panel from "./Panel";
 
 const contribPoint = "panels";

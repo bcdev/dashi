@@ -1,10 +1,12 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import { initSystemStore } from "@/store/actions/initSystemStore";
+import { configureLogging, initSystemStore } from "@/lib";
 import ExtensionsInfo from "./components/ExtensionInfo";
 import PanelsControl from "./components/PanelsControl";
 import PanelsRow from "./components/PanelsRow";
+
+configureLogging();
 
 initSystemStore();
 
