@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react-swc";
 import dts from "vite-plugin-dts";
 import { resolve } from "node:path";
 import { globSync } from "glob";
-import { visualizer } from "rollup-plugin-visualizer";
 
 function findFiles(root: string, pattern: string): string[] {
   return globSync(`${resolve(__dirname, root)}/${pattern}`).map((path) =>
@@ -37,7 +36,6 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
-      plugins: [visualizer()],
       // externalize deps that shouldn't be bundled into the library
       external: [
         "@emotion/react",
