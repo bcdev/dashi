@@ -20,4 +20,5 @@ export function DashiComponent({ type, ...props }: DashiComponentProps) {
   } else if (type === "Box") {
     return <DashiBox {...(props as DashiBoxProps)} />;
   }
+  return <></>;
 }
