@@ -33,7 +33,9 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: resolve(__dirname, "src/lib/index.ts"),
-      formats: ["es"],
+      name: "Dashi",
+      // the proper extensions will be added
+      fileName: "dashi",
     },
     rollupOptions: {
       // externalize deps that shouldn't be bundled into the library
@@ -42,6 +44,8 @@ export default defineConfig({
         "@emotion/styled",
         "@fontsource/roboto",
         "@mui/material",
+        "@mui/system",
+        "@mui/utils",
         "plotly.js",
         "microdiff",
         "react",
@@ -51,6 +55,24 @@ export default defineConfig({
         ...excludedTestFiles,
         ...excludedDemoFiles,
       ],
+      output: {
+        // Provide global variables to use in the UMD build
+        // for externalized deps
+        globals: {
+          "@emotion/react": "EmotionReact",
+          "@emotion/styled": "EmotionStyled",
+          "@fontsource/roboto": "FontsourceRoboto",
+          "@mui/material": "MuiMaterial",
+          "@mui/system": "MuiSystem",
+          "@mui/utils": "MuiUtils",
+          "plotly.js": "PlotlyJs",
+          microdiff: "Microdiff",
+          react: "React",
+          "react-dom": "ReactDom",
+          "react-plotly.js": "ReactPlotlyJs",
+          zustand: "Zustand",
+        },
+      },
     },
   },
   test: {
