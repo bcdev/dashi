@@ -4,18 +4,24 @@ import dts from "vite-plugin-dts";
 import { resolve } from "node:path";
 import { globSync } from "glob";
 
+import manifest from "./package.json";
+
 function findFiles(root: string, pattern: string): string[] {
   return globSync(`${resolve(__dirname, root)}/${pattern}`).map((path) =>
     resolve(__dirname, path),
   );
 }
-const excludedTestFiles = findFiles("src", "**/*.test.*");
-const excludedDemoFiles = findFiles("src/demo", "**/*");
-// console.log("excluded test files:", excludedTestFiles);
-// console.log("excluded demo files:", excludedDemoFiles);
 
-// https://vitejs.dev/config/
-// noinspection JSUnusedGlobalSymbols
+const externalModules = [
+  ...Object.keys(manifest.peerDependencies || {}),
+  ...Object.keys(manifest.dependencies || {}),
+];
+
+const externalFiles = [
+  ...findFiles("src", "**/*.test.*"),
+  ...findFiles("src/demo", "**/*"),
+];
+
 export default defineConfig({
   plugins: [
     react(),
@@ -39,38 +45,18 @@ export default defineConfig({
     },
     rollupOptions: {
       // externalize deps that shouldn't be bundled into the library
-      external: [
-        "@emotion/react",
-        "@emotion/styled",
-        "@fontsource/roboto",
-        "@mui/material",
-        "@mui/system",
-        "@mui/utils",
-        "plotly.js",
-        "microdiff",
-        "react",
-        "react-dom",
-        "react-plotly.js",
-        "zustand",
-        ...excludedTestFiles,
-        ...excludedDemoFiles,
-      ],
+      external: [...externalModules, ...externalFiles],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
         globals: {
-          "@emotion/react": "EmotionReact",
-          "@emotion/styled": "EmotionStyled",
-          "@fontsource/roboto": "FontsourceRoboto",
-          "@mui/material": "MuiMaterial",
-          "@mui/system": "MuiSystem",
-          "@mui/utils": "MuiUtils",
-          "plotly.js": "PlotlyJs",
-          microdiff: "Microdiff",
+          "@emotion/styled": "emStyled",
+          "@emotion/react": "emReact",
+          microdiff: "diff",
           react: "React",
-          "react-dom": "ReactDom",
-          "react-plotly.js": "ReactPlotlyJs",
-          zustand: "Zustand",
+          "react-dom": "ReactDOM",
+          "react-plotly.js": "Plot",
+          zustand: "zustand",
         },
       },
     },
