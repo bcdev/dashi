@@ -45,7 +45,7 @@ export default defineConfig({
     },
     rollupOptions: {
       // externalize deps that shouldn't be bundled into the library
-      external: [...externalModules, ...externalFiles],
+      external: [/^@emotion/, /^@mui/, ...externalModules, ...externalFiles],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
