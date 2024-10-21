@@ -1,8 +1,20 @@
 {
   "name": "dashi",
   "version": "0.0.3",
+  "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
-  "files": ["dist"],
+  "files": ["dist", "README.md"],
+  "keywords": [
+    "typescript",
+    "library",
+    "framework",
+    "dashboard",
+    "plotting",
+    "charting"
+  ],
+  "author": "Brockmann Consult GmbH",
+  "license": "MIT",
+  "types": "./dist/index.d.ts",
   "module": "./dist/dashi.js",
   "main": "./dist/dashi.umd.cjs",
   "exports": {
