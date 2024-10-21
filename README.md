@@ -1,2 +1,3 @@
 # dashi
-Dashboard experiments
+
+See [here](dashi/README.md).
