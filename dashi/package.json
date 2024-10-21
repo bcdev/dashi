@@ -1,5 +1,5 @@
 {
-  "name": "dashi",
+  "name": "dashipopashi",
   "version": "0.0.3",
   "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
@@ -12,6 +12,14 @@
     "plotting",
     "charting"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bcdev/dashi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bcdev/dashi/issues"
+  },
+  "homepage": "https://github.com/bcdev/dashi/blob/main/dashi/README.md",
   "author": "Brockmann Consult GmbH",
   "license": "MIT",
   "types": "./dist/index.d.ts",
@@ -33,12 +41,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
-    "@fontsource/roboto": "^5.1.0",
-    "@mui/material": "^6.1.4",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@fontsource/roboto": "^5.0.5",
+    "@mui/material": "^5.15",
     "microdiff": "^1.4.0",
-    "plotly.js": "^2.35.2",
+    "plotly.js-dist-min": "^2.35.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-plotly.js": "^2.6.0",
