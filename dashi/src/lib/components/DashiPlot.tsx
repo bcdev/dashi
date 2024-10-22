@@ -24,10 +24,13 @@ export function DashiPlot({
     mode: "vega-lite",
     spec: spec,
   });
+  const handleSignal = (signalName: string, value: unknown) => {
+    console.log("signalName", signalName, value);
+  };
   const VegaChartWrapper = ({ id, style }: VegaChartWrapperProps) => {
     return (
       <div id={id} style={style}>
-        <Plot data={datasets} />
+        <Plot data={datasets} signalListeners={{ onClick: handleSignal }} />
       </div>
     );
   };

@@ -1,5 +1,4 @@
-import plotly.express as pe
-import plotly.graph_objects as go
+import altair as alt
 
 from dashipy import (Component, Input, Output)
 from dashipy.components import (Plot, Box, Dropdown)
@@ -48,8 +47,25 @@ def render_panel(ctx: Context) -> Component:
     Input("selected_dataset"),
     Output("plot", "figure"),
 )
-def make_figure(ctx: Context, selected_dataset: int) -> go.Figure:
+def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
-    line = pe.line(x=[-1.0, 0.0, 1.0], y=dataset, title=f"DS #{selected_dataset + 1}")
-    line.update_layout(dict(margin=dict(t=40, r=4, b=4, l=4), autosize=True))
-    return line
+    slider = alt.binding_range(min=0, max=100, step=1, name='Cutoff ')
+    selector = alt.param(name='SelectorName', value=50, bind=slider)
+    fig = alt.Chart(dataset).mark_bar().encode(
+        x='a:N',
+        y='b:Q',
+        tooltip=['a:N','b:Q'],
+        color = alt.condition(
+            'datum.b < SelectorName',
+            alt.value('green'),
+            alt.value('yellow')
+        )
+    ).properties(
+    width=300,
+    height=300,
+    title="Vega charts using Shorthand syntax"
+    ).add_params(
+        selector,
+    ).interactive()
+    return fig
+

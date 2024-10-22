@@ -49,15 +49,21 @@ def render_panel(ctx: Context) -> Component:
 )
 def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
-    fig = alt.Chart(dataset).mark_bar().encode(
+    corner_slider = alt.binding_range(min=0, max=50, step=1)
+    corner_var = alt.param(bind=corner_slider, value=0, name="cornerRadius")
+    click_param = alt.selection_point(on="click", name="onClick", fields=["a", "b"])
+    fig = alt.Chart(dataset).mark_bar(cornerRadius=corner_var).encode(
         x=alt.X('a:N', title='a'),
         y=alt.Y('b:Q', title='b'),
         tooltip=[
-            alt.Tooltip('a:N', title='a'),
-            alt.Tooltip('b:Q', title='b'),
-        ]
+            alt.Tooltip('a:N'),
+            alt.Tooltip('b:Q'),
+        ],
+        color='b:Q',
     ).properties(
-    width=400,
-    height=400
-)
+        width=300,
+        height=300,
+        title="Vega charts"
+    ).add_params(corner_var, click_param)
+    print(fig.to_json())
     return fig
