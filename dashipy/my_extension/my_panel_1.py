@@ -1,5 +1,4 @@
-import plotly.graph_objects as go
-from plotly.graph_objs import Layout
+import altair as alt
 
 from dashipy import (Component, Input, Output)
 from dashipy.components import (Plot, Box, Dropdown)
@@ -48,14 +47,17 @@ def render_panel(ctx: Context) -> Component:
     Input("selected_dataset"),
     Output("plot", "figure"),
 )
-def make_figure(ctx: Context, selected_dataset: int = 0) -> go.Figure:
+def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
-    fig = go.Figure(
-        layout=Layout(
-            title=f"DS #{selected_dataset + 1}",
-            margin=dict(t=40, r=4, b=4, l=4),
-            autosize=True,
-        )
-    )
-    fig.add_trace(go.Bar(x=["A", "B", "C"], y=dataset))
+    fig = alt.Chart(dataset).mark_bar().encode(
+        x=alt.X('a:N', title='a'),
+        y=alt.Y('b:Q', title='b'),
+        tooltip=[
+            alt.Tooltip('a:N', title='a'),
+            alt.Tooltip('b:Q', title='b'),
+        ]
+    ).properties(
+    width=400,
+    height=400
+)
     return fig

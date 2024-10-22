@@ -1,5 +1,5 @@
 import { type CSSProperties } from "react";
-import { type Config, type Layout, type PlotData } from "plotly.js";
+import type { VisualizationSpec } from "react-vega";
 
 export type ComponentType = "Button" | "Checkbox" | "Dropdown" | "Plot" | "Box";
 
@@ -37,11 +37,9 @@ export interface CheckboxState extends ComponentState {
 
 export interface PlotState extends ComponentState {
   type: "Plot";
-  figure: {
-    data: PlotData[];
-    layout: Partial<Layout>;
-    config: Partial<Config>;
-  } | null;
+  figure: VisualizationSpec & {
+    datasets?: Record<string, unknown>; // Add the datasets property
+  };
 }
 
 export interface BoxState extends ContainerState {

@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from typing import Any
 
-import plotly.graph_objects as go
+import altair as alt
 
 from dashipy import Component
 
 
 @dataclass(frozen=True)
 class Plot(Component):
-    figure: go.Figure | None = None
+    figure: alt.Chart | None = None
 
     def to_dict(self) -> dict[str, Any]:
         d = super().to_dict()
