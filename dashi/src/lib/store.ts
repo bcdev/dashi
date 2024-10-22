@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from "zustand/index";
 
 import { type StoreState } from "@/lib/types/state/store";
 
