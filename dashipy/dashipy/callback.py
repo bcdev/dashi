@@ -205,7 +205,6 @@ _array_types = {
 }
 
 _object_types = {
-    "Figure": "Figure",
     "Component": "Component",
     "Chart": "Chart"
 }

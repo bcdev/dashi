@@ -1,32 +1,22 @@
-import { createClassFromSpec } from "react-vega";
+import { VegaLite } from "react-vega";
 
 import { type PlotState } from "@/lib/types/state/component";
 import { type PropertyChangeHandler } from "@/lib/types/model/event";
-import type { CSSProperties } from "react";
 
 export interface DashiPlotProps extends Omit<PlotState, "type"> {
   onPropertyChange: PropertyChangeHandler;
 }
 
-interface VegaChartWrapperProps {
-  id?: string;
-  style?: CSSProperties;
-}
-
 export function DashiPlot({
   id,
   style,
-  figure,
+  chart,
   onPropertyChange,
 }: DashiPlotProps) {
-  if (!figure) {
+  if (!chart) {
     return <div id={id} style={style} />;
   }
-  const { datasets, ...spec } = figure;
-  const Plot = createClassFromSpec({
-    mode: "vega-lite",
-    spec: spec,
-  });
+  const { datasets, ...spec } = chart;
   const handleSignal = (_signalName: string, value: unknown) => {
     if (id) {
       return onPropertyChange({
@@ -37,12 +27,13 @@ export function DashiPlot({
       });
     }
   };
-  const VegaChartWrapper = ({ id, style }: VegaChartWrapperProps) => {
-    return (
-      <div id={id} style={style}>
-        <Plot data={datasets} signalListeners={{ onClick: handleSignal }} />
-      </div>
-    );
-  };
-  return <VegaChartWrapper id={id} style={style} />;
+  return (
+    <VegaLite
+      spec={spec}
+      data={datasets}
+      style={style}
+      signalListeners={{ onClick: handleSignal }}
+      actions={false}
+    />
+  );
 }

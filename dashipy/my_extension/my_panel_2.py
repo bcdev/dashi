@@ -13,7 +13,7 @@ panel = Panel(__name__, title="Panel B")
 def render_panel(ctx: Context) -> Component:
     selected_dataset: int = 0
     plot = Plot(
-        id="plot", figure=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
+        id="plot", chart=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
     )
     dropdown = Dropdown(
         id="selected_dataset",
@@ -45,7 +45,7 @@ def render_panel(ctx: Context) -> Component:
 
 @panel.callback(
     Input("selected_dataset"),
-    Output("plot", "figure"),
+    Output("plot", "chart"),
 )
 def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
@@ -55,7 +55,7 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     # notation for setting x,y and the tooltip, although they both give the
     # same output. We also call interactive() on this chart object which allows
     # to zoom in and out as well as move the chart around.
-    fig = alt.Chart(dataset).mark_bar().encode(
+    chart = alt.Chart(dataset).mark_bar().encode(
         x='a:N',
         y='b:Q',
         tooltip=['a:N','b:Q'],
@@ -71,5 +71,5 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     ).add_params(
         selector
     ).interactive()
-    return fig
+    return chart
 

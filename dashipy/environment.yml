@@ -2,7 +2,7 @@ name: dashi
 channels:
   - conda-forge
 dependencies:
-  - python
+  - python >=3.12,<3.13
   # Dependencies
   - pandas
   - altair

@@ -13,7 +13,7 @@ panel = Panel(__name__, title="Panel A")
 def render_panel(ctx: Context) -> Component:
     selected_dataset: int = 0
     plot = Plot(
-        id="plot", figure=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
+        id="plot", chart=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
     )
     dropdown = Dropdown(
         id="selected_dataset",
@@ -45,7 +45,7 @@ def render_panel(ctx: Context) -> Component:
 
 @panel.callback(
     Input("selected_dataset"),
-    Output("plot", "figure"),
+    Output("plot", "chart"),
 )
 def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
@@ -60,7 +60,7 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
                                       fields=["a", "b"])
     # Create a chart type using mark_* where * could be any kind of chart
     # supported by Vega. We can add properties and parameters as shown below.
-    fig = alt.Chart(dataset).mark_bar(cornerRadius=corner_var).encode(
+    chart = alt.Chart(dataset).mark_bar(cornerRadius=corner_var).encode(
         x=alt.X('a:N', title='a'),
         y=alt.Y('b:Q', title='b'),
         tooltip=[
@@ -74,4 +74,4 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
         title="Vega charts"
     ).add_params(corner_var, click_param)
 
-    return fig
+    return chart
