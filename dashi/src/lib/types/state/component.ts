@@ -37,9 +37,11 @@ export interface CheckboxState extends ComponentState {
 
 export interface PlotState extends ComponentState {
   type: "Plot";
-  figure: VisualizationSpec & {
-    datasets?: Record<string, unknown>; // Add the datasets property
-  };
+  figure:
+    | (VisualizationSpec & {
+        datasets?: Record<string, unknown>; // Add the datasets property
+      })
+    | null;
 }
 
 export interface BoxState extends ContainerState {
