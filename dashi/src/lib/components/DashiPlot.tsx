@@ -20,12 +20,7 @@ export function DashiPlot({
   onPropertyChange,
 }: DashiPlotProps) {
   if (!figure) {
-    console.error(
-      "Rendering DashiPlot failed:",
-      "Expected figure, got",
-      figure,
-    );
-    return null;
+    return <div id={id} style={style} />;
   }
   const { datasets, ...spec } = figure;
   const Plot = createClassFromSpec({
