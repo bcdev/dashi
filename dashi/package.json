@@ -1,8 +1,28 @@
 {
-  "name": "dashi",
-  "version": "0.0.3",
+  "name": "dashipopashi",
+  "version": "0.0.5",
+  "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
-  "files": ["dist"],
+  "files": ["dist", "README.md"],
+  "keywords": [
+    "typescript",
+    "library",
+    "framework",
+    "dashboard",
+    "plotting",
+    "charting"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bcdev/dashi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bcdev/dashi/issues"
+  },
+  "homepage": "https://github.com/bcdev/dashi/blob/main/dashi/README.md",
+  "author": "Brockmann Consult GmbH",
+  "license": "MIT",
+  "types": "./dist/index.d.ts",
   "module": "./dist/dashi.js",
   "main": "./dist/dashi.umd.cjs",
   "exports": {
@@ -24,22 +44,26 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.1.0",
-    "@mui/material": "^6.1.4",
+    "@mui/material": "^6.1.5",
     "microdiff": "^1.4.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "zustand": "^4.5.5",
+    "plotly.js": "^2.35.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-plotly.js": "^2.6.0",
+    "zustand": "^5.0.0",
     "react-vega": "^7.6.0"
   },
   "peerDependencies": {
-    "react": ">=17",
-    "react-dom": ">=17"
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.2",
+    "@types/plotly.js": "^2.33.4",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
     "@types/react-vega": "^7.0.0",
+    "@types/react-plotly.js": "^2.6.3",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react-swc": "^3.7.0",
