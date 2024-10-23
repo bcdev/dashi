@@ -17,7 +17,7 @@ const componentState: ComponentState = {
   type: "Box",
   id: "b1",
   components: [
-    { type: "Plot", id: "p1", figure: null } as PlotState,
+    { type: "Plot", id: "p1", chart: null } as PlotState,
     {
       type: "Box",
       id: "b2",

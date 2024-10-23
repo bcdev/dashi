@@ -1,5 +1,4 @@
-import plotly.express as pe
-import plotly.graph_objects as go
+import altair as alt
 
 from dashipy import (Component, Input, Output)
 from dashipy.components import (Plot, Box, Dropdown)
@@ -14,7 +13,7 @@ panel = Panel(__name__, title="Panel B")
 def render_panel(ctx: Context) -> Component:
     selected_dataset: int = 0
     plot = Plot(
-        id="plot", figure=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
+        id="plot", chart=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
     )
     dropdown = Dropdown(
         id="selected_dataset",
@@ -46,10 +45,31 @@ def render_panel(ctx: Context) -> Component:
 
 @panel.callback(
     Input("selected_dataset"),
-    Output("plot", "figure"),
+    Output("plot", "chart"),
 )
-def make_figure(ctx: Context, selected_dataset: int) -> go.Figure:
+def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
-    line = pe.line(x=[-1.0, 0.0, 1.0], y=dataset, title=f"DS #{selected_dataset + 1}")
-    line.update_layout(dict(margin=dict(t=40, r=4, b=4, l=4), autosize=True))
-    return line
+    slider = alt.binding_range(min=0, max=100, step=1, name='Cutoff ')
+    selector = alt.param(name='SelectorName', value=50, bind=slider)
+    # Almost same as the chart in Panel 1, but here we use the Shorthand
+    # notation for setting x,y and the tooltip, although they both give the
+    # same output. We also call interactive() on this chart object which allows
+    # to zoom in and out as well as move the chart around.
+    chart = alt.Chart(dataset).mark_bar().encode(
+        x='a:N',
+        y='b:Q',
+        tooltip=['a:N','b:Q'],
+        color = alt.condition(
+            'datum.b < SelectorName',
+            alt.value('green'),
+            alt.value('yellow')
+        )
+    ).properties(
+    width=300,
+    height=300,
+    title="Vega charts using Shorthand syntax"
+    ).add_params(
+        selector
+    ).interactive()
+    return chart
+

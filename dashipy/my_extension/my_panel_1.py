@@ -1,5 +1,4 @@
-import plotly.graph_objects as go
-from plotly.graph_objs import Layout
+import altair as alt
 
 from dashipy import (Component, Input, Output)
 from dashipy.components import (Plot, Box, Dropdown)
@@ -14,7 +13,7 @@ panel = Panel(__name__, title="Panel A")
 def render_panel(ctx: Context) -> Component:
     selected_dataset: int = 0
     plot = Plot(
-        id="plot", figure=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
+        id="plot", chart=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
     )
     dropdown = Dropdown(
         id="selected_dataset",
@@ -46,16 +45,33 @@ def render_panel(ctx: Context) -> Component:
 
 @panel.callback(
     Input("selected_dataset"),
-    Output("plot", "figure"),
+    Output("plot", "chart"),
 )
-def make_figure(ctx: Context, selected_dataset: int = 0) -> go.Figure:
+def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
-    fig = go.Figure(
-        layout=Layout(
-            title=f"DS #{selected_dataset + 1}",
-            margin=dict(t=40, r=4, b=4, l=4),
-            autosize=True,
-        )
-    )
-    fig.add_trace(go.Bar(x=["A", "B", "C"], y=dataset))
-    return fig
+
+    # Create a slider
+    corner_slider = alt.binding_range(min=0, max=50, step=1)
+    # Create a parameter and bind that to the slider
+    corner_var = alt.param(bind=corner_slider, value=0, name="cornerRadius")
+    # Create another parameter to handle the click events and send the data as
+    # specified in the fields
+    click_param = alt.selection_point(on="click", name="onClick",
+                                      fields=["a", "b"])
+    # Create a chart type using mark_* where * could be any kind of chart
+    # supported by Vega. We can add properties and parameters as shown below.
+    chart = alt.Chart(dataset).mark_bar(cornerRadius=corner_var).encode(
+        x=alt.X('a:N', title='a'),
+        y=alt.Y('b:Q', title='b'),
+        tooltip=[
+            alt.Tooltip('a:N'),
+            alt.Tooltip('b:Q'),
+        ],
+        color='b:Q',
+    ).properties(
+        width=300,
+        height=300,
+        title="Vega charts"
+    ).add_params(corner_var, click_param)
+
+    return chart
