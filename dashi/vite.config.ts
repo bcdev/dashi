@@ -32,11 +32,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
-      // Alias 'plotly.js' to use the minified dist version instead of the source code.
-      "plotly.js": resolve(
-        __dirname,
-        "node_modules/plotly.js/dist/plotly.min.js",
-      ),
     },
   },
   publicDir: false,
@@ -60,7 +55,7 @@ export default defineConfig({
           microdiff: "diff",
           react: "React",
           "react-dom": "ReactDOM",
-          "react-plotly.js": "Plot",
+          "react-vega": "ReactVega",
           zustand: "zustand",
         },
       },

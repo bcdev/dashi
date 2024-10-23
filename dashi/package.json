@@ -1,6 +1,6 @@
 {
   "name": "dashipopashi",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
   "files": ["dist", "README.md"],
@@ -46,23 +46,27 @@
     "@fontsource/roboto": "^5.1.0",
     "@mui/material": "^6.1.5",
     "microdiff": "^1.4.0",
-    "plotly.js": "^2.35.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-plotly.js": "^2.6.0",
-    "zustand": "^5.0.0",
-    "react-vega": "^7.6.0"
+    "react-vega": "^7.6.0",
+    "zustand": "^5.0.0"
   },
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
   },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": false
+    },
+    "react-dom": {
+      "optional": false
+    }
+  },
   "devDependencies": {
     "@types/node": "^20.11.17",
-    "@types/plotly.js": "^2.33.4",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
-    "@types/react-plotly.js": "^2.6.3",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react-swc": "^3.7.0",
