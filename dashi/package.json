@@ -1,9 +1,13 @@
 {
   "name": "dashipopashi",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "typescript",
     "library",
