@@ -51,6 +51,10 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
     slider = alt.binding_range(min=0, max=100, step=1, name='Cutoff ')
     selector = alt.param(name='SelectorName', value=50, bind=slider)
+    # Almost same as the chart in Panel 1, but here we use the Shorthand
+    # notation for setting x,y and the tooltip, although they both give the
+    # same output. We also call interactive() on this chart object which allows
+    # to zoom in and out as well as move the chart around.
     fig = alt.Chart(dataset).mark_bar().encode(
         x='a:N',
         y='b:Q',
@@ -65,7 +69,7 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     height=300,
     title="Vega charts using Shorthand syntax"
     ).add_params(
-        selector,
+        selector
     ).interactive()
     return fig
 
