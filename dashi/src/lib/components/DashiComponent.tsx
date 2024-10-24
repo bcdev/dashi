@@ -10,7 +10,12 @@ export interface DashiComponentProps extends ComponentState {
 }
 
 export function DashiComponent({ type, ...props }: DashiComponentProps) {
-  // TODO: find way to avoid ugly type casts here
+  // TODO: allow for registering components via their types
+  //   and make following code generic.
+  //
+  // const DashiComp = Registry.getComponent(type);
+  // return return <DashiComp {...props} />;
+  //
   if (type === "Plot") {
     return <DashiPlot {...(props as DashiPlotProps)} />;
   } else if (type === "Dropdown") {
