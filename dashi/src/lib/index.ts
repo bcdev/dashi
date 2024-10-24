@@ -8,6 +8,7 @@ export { DashiComponent } from "@/lib/components/DashiComponent";
 export { initSystemStore } from "@/lib/actions/initSystemStore";
 export { applyPropertyChange } from "@/lib/actions/applyPropertyChange";
 export { setComponentVisibility } from "@/lib/actions/setComponentVisibility";
+export { updateContributionState } from "@/lib/actions/updateContributionState";
 export { configureLogging } from "@/lib/utils/configureLogging";
 export {
   useStore,
