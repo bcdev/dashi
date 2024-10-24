@@ -60,7 +60,7 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
                                       fields=["a", "b"])
     # Create a chart type using mark_* where * could be any kind of chart
     # supported by Vega. We can add properties and parameters as shown below.
-    chart = alt.Chart(dataset).mark_bar(cornerRadius=corner_var).encode(
+    chart = alt.Chart(dataset).mark_bar(clip=False, cornerRadius=22).encode(
         x=alt.X('a:N', title='a'),
         y=alt.Y('b:Q', title='b'),
         tooltip=[
@@ -71,7 +71,7 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     ).properties(
         width=300,
         height=300,
-        title="Vega charts"
-    ).add_params(corner_var, click_param)
+        title="Vega charts",
+    ).add_params(click_param)
 
     return chart
