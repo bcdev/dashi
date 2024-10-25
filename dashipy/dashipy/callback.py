@@ -3,7 +3,6 @@ import types
 from abc import ABC
 from typing import Callable, Any, Literal
 
-from .component import Component
 
 ComponentKind = Literal["Component"]
 AppStateKind = Literal["AppState"]
@@ -15,18 +14,23 @@ class InputOutput(ABC):
     # noinspection PyShadowingBuiltins
     def __init__(
         self,
-        id: str,
+        id: str | None = None,
         property: str | None = None,
         kind: InputOutputKind | None = None,
     ):
-        property = "value" if property is None else property
         kind = "Component" if kind is None else kind
-        assert id is None or (isinstance(id, str) and id != "")
-        assert isinstance(property, str) and property != ""
         assert kind in ("AppState", "State", "Component")
+        if kind == "Component":
+            assert id is not None and isinstance(id, str) and id != ""
+            property = "value" if property is None else property
+            assert isinstance(property, str) and property != ""
+        else:
+            assert id is None or (isinstance(id, str) and id != "")
+            assert property is None or (isinstance(property, str) and property != "")
+
+        self.kind = kind
         self.id = id
         self.property = property
-        self.kind = kind
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -155,12 +159,17 @@ class Callback:
         num_values = len(values)
         delta = num_inputs - num_values
         if delta != 0:
-            raise TypeError(
-                f"too {'few' if delta < 0 else 'many'} input values"
+            message = (
+                f"too {'few' if delta > 0 else 'many'} input values"
                 f" given for function {self.function.__qualname__!r}:"
                 f" expected {num_inputs},"
                 f" but got {num_values}"
             )
+            if delta > 0:
+                values = (*values, *(delta * (None,)))
+                print(f"WARNING: {message}")  # TODO use logging
+            else:
+                raise TypeError(message)
 
         param_names = self.param_names[1:]
         args = [context]
@@ -204,10 +213,7 @@ _array_types = {
     "list[Component]": "Component[]",
 }
 
-_object_types = {
-    "Component": "Component",
-    "Chart": "Chart"
-}
+_object_types = {"Component": "Component", "Chart": "Chart"}
 
 
 def _annotation_to_str(annotation: Any) -> str | list[str]:

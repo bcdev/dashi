@@ -1,8 +1,8 @@
 import { store } from "@/lib/store";
 import { fetchInitialComponentState } from "@/lib/api";
 import { type ContribPoint } from "@/lib/types/model/extension";
-import { type Input } from "@/lib/types/model/callback";
 import { fetchApiResult } from "@/lib/utils/fetchApiResult";
+import { getInputValues } from "@/lib/actions/common";
 import { updateContributionState } from "./updateContributionState";
 
 export function setComponentVisibility(
@@ -45,20 +45,19 @@ function getLayoutInputValues(
   contribPoint: ContribPoint,
   contribIndex: number,
 ): unknown[] {
-  const { contributionModelsRecord } = store.getState();
+  const { configuration, contributionModelsRecord, contributionStatesRecord } =
+    store.getState();
   const contributionModels = contributionModelsRecord[contribPoint];
+  const contributionStates = contributionStatesRecord[contribPoint];
   const contributionModel = contributionModels[contribIndex];
+  const contributionState = contributionStates[contribIndex];
   const inputs = contributionModel.layout!.inputs;
   if (inputs && inputs.length > 0) {
-    return inputs.map((input: Input) => {
-      if (!input.kind || input.kind === "Component") {
-        console.warn(`input kind not supported in layout:`, input);
-      } else {
-        // TODO: Get value from another kind of input.
-        console.warn(`input kind not supported yet:`, input);
-      }
-      return null;
-    });
+    return getInputValues(
+      inputs,
+      contributionState,
+      configuration.hostStore?.getState,
+    );
   } else {
     return [];
   }

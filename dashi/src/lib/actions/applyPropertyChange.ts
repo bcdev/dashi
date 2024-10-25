@@ -10,7 +10,6 @@ import {
   type Callback,
   type CallbackRef,
   type CallbackRequest,
-  type Input,
   type StateChange,
   type StateChangeRequest,
 } from "@/lib/types/model/callback";
@@ -19,7 +18,7 @@ import { type Contribution } from "@/lib/types/model/contribution";
 import { type ContributionState } from "@/lib/types/state/contribution";
 import { updateArray } from "@/lib/utils/updateArray";
 import { isContainerState } from "@/lib/utils/isContainerState";
-import { isSubscriptable } from "@/lib/utils/isSubscriptable";
+import { getInputValues } from "@/lib/actions/common";
 
 export function applyPropertyChange(
   contribPoint: ContribPoint,
@@ -97,7 +96,7 @@ function generateCallbackRefs(
   // Prepare calling all callbacks of the contribution
   // that are triggered by the property change
   (contributionModel.callbacks || []).forEach((callback, callbackIndex) => {
-    const inputValues = getInputValues(
+    const inputValues = getCallbackInputValues(
       contributionState,
       contribEvent,
       callback,
@@ -111,14 +110,14 @@ function generateCallbackRefs(
 }
 
 // we export for testing only
-export function getInputValues(
+export function getCallbackInputValues(
   contributionState: ContributionState,
   contribEvent: PropertyChangeEvent,
   callback: Callback,
   getHostState?: () => unknown,
 ): unknown[] | undefined {
-  // No inputs defined
   if (!callback.inputs || !callback.inputs.length) {
+    // No inputs defined
     return undefined;
   }
 
@@ -129,50 +128,24 @@ export function getInputValues(
       input.id === contribEvent.componentId &&
       input.property === contribEvent.propertyName,
   );
-  // No trigger index found --> this callback is not applicable
   if (triggerIndex < 0) {
+    // No trigger index found --> this callback is not applicable
     return undefined;
   }
 
-  // Compute input values
-  return callback.inputs.map((input, inputIndex) => {
-    let inputValue: unknown = undefined;
-    if (!input.kind || input.kind === "Component") {
-      if (inputIndex === triggerIndex) {
-        // Return the property value of the trigger event
-        inputValue = contribEvent.propertyValue;
-      } else if (contributionState.componentState) {
-        // Return value of a property of some component in the tree
-        inputValue = getComponentStateValue(
-          contributionState.componentState,
-          input,
-        );
-      }
-    } else if (input.kind === "State") {
-      // Note, it is actually not ok to pass contributionState here directly.
-      // We may use sub-state of contributionState later that holds
-      // the extra state required here.
-      inputValue = getInputValue(input, contributionState);
-    } else if (input.kind === "AppState") {
-      if (getHostState) {
-        inputValue = getInputValue(input, getHostState());
-      } else {
-        console.warn(
-          "missing configuration 'hostState'," +
-            " which is need to resolve inputs of kind 'AppState'",
-          input,
-        );
-      }
-    } else {
-      console.warn(`unknown input kind:`, input);
-    }
-    if (inputValue === undefined) {
-      // We use null, because undefined is not JSON-serializable.
-      inputValue = null;
-      console.warn(`value is undefined for input`, input);
-    }
-    return inputValue;
-  });
+  const inputValues = getInputValues(
+    callback.inputs,
+    contributionState,
+    getHostState,
+  );
+
+  if (inputValues[triggerIndex] === contribEvent.propertyValue) {
+    // No change --> this callback is not applicable
+    return undefined;
+  }
+
+  inputValues[triggerIndex] = contribEvent.propertyValue;
+  return inputValues;
 }
 
 function applyStateChangeRequests(stateChangeRequests: StateChangeRequest[]) {
@@ -260,42 +233,4 @@ export function applyComponentStateChange(
     return containerStateNew;
   }
   return componentState;
-}
-
-const noValue = {};
-
-// we export for testing only
-export function getComponentStateValue(
-  componentState: ComponentState,
-  input: Input,
-): unknown {
-  if (componentState.id === input.id && input.property) {
-    return (componentState as unknown as Record<string, unknown>)[
-      input.property
-    ];
-  } else if (isContainerState(componentState)) {
-    for (let i = 0; i < componentState.components.length; i++) {
-      const item = componentState.components[i];
-      const itemValue = getComponentStateValue(item, input);
-      if (itemValue !== noValue) {
-        return itemValue;
-      }
-    }
-  }
-  return noValue;
-}
-
-// we export for testing only
-export function getInputValue(
-  input: Input,
-  state: unknown,
-): unknown | undefined {
-  let inputValue: unknown = state;
-  if (input.id && isSubscriptable(inputValue)) {
-    inputValue = inputValue[input.id];
-  }
-  if (input.property && isSubscriptable(inputValue)) {
-    inputValue = inputValue[input.property];
-  }
-  return inputValue;
 }

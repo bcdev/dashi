@@ -10,8 +10,6 @@ import { type ContributionState } from "@/lib/types/state/contribution";
 import {
   applyComponentStateChange,
   applyContributionChangeRequests,
-  getComponentStateValue,
-  getInputValue,
 } from "./applyPropertyChange";
 
 const componentState: ComponentState = {
@@ -101,71 +99,5 @@ describe("Test that applyComponentStateChange()", () => {
       value: true,
     });
     expect(newState).toBe(componentState);
-  });
-});
-
-describe("Test that getComponentStateValue()", () => {
-  it("works on 1st level", () => {
-    expect(
-      getComponentStateValue(componentState, {
-        kind: "Component",
-        id: "b1",
-        property: "value",
-      }),
-    ).toBeUndefined();
-  });
-
-  it("works on 2nd level", () => {
-    expect(
-      getComponentStateValue(componentState, {
-        kind: "Component",
-        id: "p1",
-        property: "figure",
-      }),
-    ).toEqual(null);
-  });
-
-  it("works on 3rd level", () => {
-    expect(
-      getComponentStateValue(componentState, {
-        kind: "Component",
-        id: "cb1",
-        property: "value",
-      }),
-    ).toEqual(true);
-
-    expect(
-      getComponentStateValue(componentState, {
-        kind: "Component",
-        id: "dd1",
-        property: "value",
-      }),
-    ).toEqual(13);
-  });
-});
-
-describe("Test that getInputValue()", () => {
-  it("works with input.id and input.property", () => {
-    const state = { x: { y: 26 } };
-    expect(
-      getInputValue({ kind: "State", id: "x", property: "y" }, state),
-    ).toEqual(26);
-  });
-
-  it("works with arrays indexes", () => {
-    const state = { x: [4, 5, 6] };
-    expect(
-      getInputValue({ kind: "State", id: "x", property: "1" }, state),
-    ).toEqual(5);
-  });
-
-  it("works without input.property", () => {
-    const state = { x: [4, 5, 6] };
-    expect(getInputValue({ kind: "State", id: "x" }, state)).toEqual([4, 5, 6]);
-  });
-
-  it("works without input.id and input.property", () => {
-    const state = { x: [4, 5, 6] };
-    expect(getInputValue({ kind: "State" }, state)).toBe(state);
   });
 });

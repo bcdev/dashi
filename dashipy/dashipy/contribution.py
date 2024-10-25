@@ -51,4 +51,3 @@ class Contribution(ABC):
 
     def __str__(self):
         return self.name
-

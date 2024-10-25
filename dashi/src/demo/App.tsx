@@ -3,15 +3,10 @@ import Typography from "@mui/material/Typography";
 
 import { initializeContributions } from "@/lib";
 import ExtensionsInfo from "./components/ExtensionInfo";
+import ControlBar from "@/demo/components/ControlBar";
 import PanelsControl from "./components/PanelsControl";
 import PanelsRow from "./components/PanelsRow";
-import { create } from "zustand/react";
-
-interface AppState {
-  datasetIndex: number;
-}
-
-const appStore = create<AppState>(() => ({ datasetIndex: 0 }));
+import { appStore } from "@/demo/store";
 
 initializeContributions({
   hostStore: appStore,
@@ -40,6 +35,7 @@ function App() {
         Dashi Demo
       </Typography>
       <ExtensionsInfo />
+      <ControlBar />
       <PanelsControl />
       <PanelsRow />
     </ThemeProvider>
