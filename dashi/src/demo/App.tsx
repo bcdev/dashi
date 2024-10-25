@@ -1,14 +1,22 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import { configureLogging, initializeContributions } from "@/lib";
+import { initializeContributions } from "@/lib";
 import ExtensionsInfo from "./components/ExtensionInfo";
 import PanelsControl from "./components/PanelsControl";
 import PanelsRow from "./components/PanelsRow";
+import { create } from "zustand/react";
 
-configureLogging();
+interface AppState {
+  datasetIndex: number;
+}
 
-initializeContributions();
+const appStore = create<AppState>(() => ({ datasetIndex: 0 }));
+
+initializeContributions({
+  hostStore: appStore,
+  logging: { enabled: true },
+});
 
 // MUI's default font family
 const fontFamily = "Roboto, Arial, sans-serif";

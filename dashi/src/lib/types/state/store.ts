@@ -8,26 +8,20 @@ import type { ApiResult } from "@/lib/utils/fetchApiResult";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ApiOptions } from "@/lib/api";
 import type { LoggingOptions } from "@/lib/utils/configureLogging";
+import type { StoreApi } from "zustand";
 
-export interface HostStore<
-  T extends Record<string, unknown> = Record<string, unknown>,
-> {
-  getState: () => T;
-  setState: (state: Partial<T>) => void;
-}
-
-export interface FrameworkOptions {
+export interface FrameworkOptions<S> {
   /** The host applications state management store. */
-  hostStore?: HostStore;
+  hostStore?: StoreApi<S>;
   /** API options to configure backend. */
   api?: ApiOptions;
   /** Logging options. */
   logging?: LoggingOptions;
 }
 
-export interface StoreState {
+export interface StoreState<S = unknown> {
   /** Framework configuration */
-  configuration: FrameworkOptions;
+  configuration: FrameworkOptions<S>;
   /** API call result from `GET /contributions`. */
   contributionsResult: ApiResult<Contributions>;
   /** All extensions */
