@@ -10,7 +10,7 @@ import type { ApiOptions } from "@/lib/api";
 import type { LoggingOptions } from "@/lib/utils/configureLogging";
 
 export interface HostStore<
-  T extends Record<string, unknown> = Record<string, never>,
+  T extends Record<string, unknown> = Record<string, unknown>,
 > {
   getState: () => T;
   setState: (state: Partial<T>) => void;

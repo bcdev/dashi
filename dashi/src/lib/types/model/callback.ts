@@ -19,9 +19,20 @@ export interface CbParameter {
 export type InputOutputKind = "AppState" | "State" | "Component";
 
 export interface InputOutput {
+  /** The kind of input or output. */
   kind: InputOutputKind;
-  id: string;
-  property: string;
+  /**
+   * The identifier of a subcomponent.
+   * `id` is not needed if kind == "AppState" | "State".
+   */
+  id?: string;
+  // Note, we may allow `property` to be a constant
+  // expression of the form: name {"." name | index}
+  /**
+   * The property of an object or array index.
+   * `property` may not be needed if `id` is sufficient.
+   */
+  property?: string;
 }
 
 export interface Input extends InputOutput {}

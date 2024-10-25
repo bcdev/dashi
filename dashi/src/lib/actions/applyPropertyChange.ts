@@ -19,6 +19,7 @@ import { type Contribution } from "@/lib/types/model/contribution";
 import { type ContributionState } from "@/lib/types/state/contribution";
 import { updateArray } from "@/lib/utils/updateArray";
 import { isContainerState } from "@/lib/utils/isContainerState";
+import { isSubscriptable } from "@/lib/utils/isSubscriptable";
 
 export function applyPropertyChange(
   contribPoint: ContribPoint,
@@ -35,6 +36,7 @@ export function applyPropertyChange(
     contributionModel,
     contributionState,
     contribEvent,
+    store.getState().configuration.hostStore?.getState,
   );
   // The primary state change request corresponds
   // to the original property change event.
@@ -89,6 +91,7 @@ function generateCallbackRefs(
   contributionModel: Contribution,
   contributionState: ContributionState,
   contribEvent: PropertyChangeEvent,
+  getHostState?: () => unknown,
 ): CallbackRef[] {
   const callbackRefs: CallbackRef[] = [];
   // Prepare calling all callbacks of the contribution
@@ -98,6 +101,7 @@ function generateCallbackRefs(
       contributionState,
       contribEvent,
       callback,
+      getHostState,
     );
     if (inputValues) {
       callbackRefs.push({ callbackIndex, inputValues });
@@ -106,10 +110,12 @@ function generateCallbackRefs(
   return callbackRefs;
 }
 
+// we export for testing only
 export function getInputValues(
   contributionState: ContributionState,
   contribEvent: PropertyChangeEvent,
   callback: Callback,
+  getHostState?: () => unknown,
 ): unknown[] | undefined {
   // No inputs defined
   if (!callback.inputs || !callback.inputs.length) {
@@ -142,9 +148,23 @@ export function getInputValues(
           input,
         );
       }
+    } else if (input.kind === "State") {
+      // Note, it is actually not ok to pass contributionState here directly.
+      // We may use sub-state of contributionState later that holds
+      // the extra state required here.
+      inputValue = getInputValue(input, contributionState);
+    } else if (input.kind === "AppState") {
+      if (getHostState) {
+        inputValue = getInputValue(input, getHostState());
+      } else {
+        console.warn(
+          "missing configuration 'hostState'," +
+            " which is need to resolve inputs of kind 'AppState'",
+          input,
+        );
+      }
     } else {
-      // TODO: Get value from another kind of input.
-      console.warn(`input kind not supported yet:`, input);
+      console.warn(`unknown input kind:`, input);
     }
     if (inputValue === undefined) {
       // We use null, because undefined is not JSON-serializable.
@@ -155,9 +175,7 @@ export function getInputValues(
   });
 }
 
-export function applyStateChangeRequests(
-  stateChangeRequests: StateChangeRequest[],
-) {
+function applyStateChangeRequests(stateChangeRequests: StateChangeRequest[]) {
   const { contributionStatesRecord } = store.getState();
   const contributionStatesRecordNew = applyContributionChangeRequests(
     contributionStatesRecord,
@@ -171,6 +189,7 @@ export function applyStateChangeRequests(
   // TODO: Set value of another kind of output.
 }
 
+// we export for testing only
 export function applyContributionChangeRequests(
   contributionStatesRecord: Record<ContribPoint, ContributionState[]>,
   stateChangeRequests: StateChangeRequest[],
@@ -209,16 +228,18 @@ export function applyContributionChangeRequests(
   return contributionStatesRecord;
 }
 
+// we export for testing only
 export function applyComponentStateChange(
   componentState: ComponentState,
   stateChange: StateChange,
 ): ComponentState {
   if (componentState.id === stateChange.id) {
+    const property = stateChange.property || "value";
     const oldValue = (componentState as unknown as Record<string, unknown>)[
-      stateChange.property
+      property
     ];
     if (oldValue !== stateChange.value) {
-      return { ...componentState, [stateChange.property]: stateChange.value };
+      return { ...componentState, [property]: stateChange.value };
     }
   } else if (isContainerState(componentState)) {
     const containerStateOld: ContainerState = componentState;
@@ -243,11 +264,12 @@ export function applyComponentStateChange(
 
 const noValue = {};
 
+// we export for testing only
 export function getComponentStateValue(
   componentState: ComponentState,
   input: Input,
 ): unknown {
-  if (componentState.id === input.id) {
+  if (componentState.id === input.id && input.property) {
     return (componentState as unknown as Record<string, unknown>)[
       input.property
     ];
@@ -261,4 +283,19 @@ export function getComponentStateValue(
     }
   }
   return noValue;
+}
+
+// we export for testing only
+export function getInputValue(
+  input: Input,
+  state: unknown,
+): unknown | undefined {
+  let inputValue: unknown = state;
+  if (input.id && isSubscriptable(inputValue)) {
+    inputValue = inputValue[input.id];
+  }
+  if (input.property && isSubscriptable(inputValue)) {
+    inputValue = inputValue[input.property];
+  }
+  return inputValue;
 }
