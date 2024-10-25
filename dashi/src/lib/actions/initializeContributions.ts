@@ -11,7 +11,7 @@ export function initializeContributions(options?: FrameworkOptions) {
   if (options) {
     configureFramework(options);
   }
-  const apiOptions = store.getState().apiOptions;
+  const apiOptions = store.getState().configuration.api;
   store.setState({ contributionsResult: { status: "pending" } });
   fetchApiResult(fetchContributions, apiOptions).then((contributionsResult) => {
     // TODO: validate contributionsResult and contributionsResult.data

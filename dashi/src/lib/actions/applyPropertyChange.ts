@@ -25,7 +25,7 @@ export function applyPropertyChange(
   contribIndex: number,
   contribEvent: PropertyChangeEvent,
 ) {
-  const { apiOptions, contributionModelsRecord, contributionStatesRecord } =
+  const { configuration, contributionModelsRecord, contributionStatesRecord } =
     store.getState();
   const contributionModels = contributionModelsRecord[contribPoint];
   const contributionStates = contributionStatesRecord[contribPoint];
@@ -61,25 +61,27 @@ export function applyPropertyChange(
         ...callbackRef,
       }),
     );
-    fetchApiResult(fetchStateChangeRequests, callbackRequests, apiOptions).then(
-      (changeRequestsResult) => {
-        const secondaryChangeRequests = changeRequestsResult.data;
-        if (secondaryChangeRequests) {
-          applyStateChangeRequests(
-            [primaryChangeRequest].concat(secondaryChangeRequests),
-          );
-        } else {
-          // Note, we do not even apply the primaryChangeRequest
-          // in order to avoid an inconsistent state.
-          console.error(
-            "callback failed:",
-            changeRequestsResult.error,
-            "for call requests:",
-            callbackRefs,
-          );
-        }
-      },
-    );
+    fetchApiResult(
+      fetchStateChangeRequests,
+      callbackRequests,
+      configuration.api,
+    ).then((changeRequestsResult) => {
+      const secondaryChangeRequests = changeRequestsResult.data;
+      if (secondaryChangeRequests) {
+        applyStateChangeRequests(
+          [primaryChangeRequest].concat(secondaryChangeRequests),
+        );
+      } else {
+        // Note, we do not even apply the primaryChangeRequest
+        // in order to avoid an inconsistent state.
+        console.error(
+          "callback failed:",
+          changeRequestsResult.error,
+          "for call requests:",
+          callbackRefs,
+        );
+      }
+    });
   }
 }
 

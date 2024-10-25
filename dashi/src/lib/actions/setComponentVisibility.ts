@@ -10,7 +10,7 @@ export function setComponentVisibility(
   panelIndex: number,
   visible: boolean,
 ) {
-  const { apiOptions, contributionStatesRecord } = store.getState();
+  const { configuration, contributionStatesRecord } = store.getState();
   const contributionStates = contributionStatesRecord[contribPoint];
   const contributionState = contributionStates[panelIndex];
   if (contributionState.visible === visible) {
@@ -30,7 +30,7 @@ export function setComponentVisibility(
       contribPoint,
       panelIndex,
       inputValues,
-      apiOptions,
+      configuration.api,
     ).then((componentModelResult) => {
       const componentState = componentModelResult?.data;
       updateContributionState(contribPoint, panelIndex, {

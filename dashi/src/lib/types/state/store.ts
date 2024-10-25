@@ -7,8 +7,11 @@ import type { Contribution } from "@/lib/types/model/contribution";
 import type { ApiResult } from "@/lib/utils/fetchApiResult";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ApiOptions } from "@/lib/api";
+import type { LoggingOptions } from "@/lib/utils/configureLogging";
 
-export interface HostStore<T extends Record<string, unknown> = object> {
+export interface HostStore<
+  T extends Record<string, unknown> = Record<string, never>,
+> {
   getState: () => T;
   setState: (state: Partial<T>) => void;
 }
@@ -17,10 +20,14 @@ export interface FrameworkOptions {
   /** The host applications state management store. */
   hostStore?: HostStore;
   /** API options to configure backend. */
-  apiOptions?: ApiOptions;
+  api?: ApiOptions;
+  /** Logging options. */
+  logging?: LoggingOptions;
 }
 
-export interface StoreState extends FrameworkOptions {
+export interface StoreState {
+  /** Framework configuration */
+  configuration: FrameworkOptions;
   /** API call result from `GET /contributions`. */
   contributionsResult: ApiResult<Contributions>;
   /** All extensions */
