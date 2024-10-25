@@ -1,14 +1,20 @@
 import { store } from "@/lib/store";
 import { fetchApiResult } from "@/lib/utils/fetchApiResult";
-import { type ApiOptions, fetchContributions } from "@/lib/api";
+import { fetchContributions } from "@/lib/api";
 import { type Contribution } from "@/lib/types/model/contribution";
 import { type ContributionState } from "@/lib/types/state/contribution";
 import { type ContribPoint } from "@/lib/types/model/extension";
+import type { FrameworkOptions } from "@/lib/types/state/store";
+import { configureFramework } from "@/lib";
 
-export function initSystemStore(apiOptions?: ApiOptions) {
-  store.setState({ apiOptions, contributionsResult: { status: "pending" } });
+export function initializeContributions(options?: FrameworkOptions) {
+  if (options) {
+    configureFramework(options);
+  }
+  const apiOptions = store.getState().apiOptions;
+  store.setState({ contributionsResult: { status: "pending" } });
   fetchApiResult(fetchContributions, apiOptions).then((contributionsResult) => {
-    // TODO: assert Boolean(contributionsResult.data)
+    // TODO: validate contributionsResult and contributionsResult.data
     const { extensions, contributions: contributionModelsRecord } =
       contributionsResult.data!;
     const contributionStatesRecord: Record<ContribPoint, ContributionState[]> =
