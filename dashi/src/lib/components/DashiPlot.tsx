@@ -1,62 +1,26 @@
-import { VegaLite, type VisualizationSpec } from "react-vega";
+import { VegaLite } from "react-vega";
+import { type PropertyChangeHandler } from "@/lib/types/model/event";
 
 import { type PlotState } from "@/lib/types/state/component";
-import { type PropertyChangeHandler } from "@/lib/types/model/event";
-import { useEffect, useState } from "react";
-import type { TopLevelParameter } from "vega-lite/build/src/spec/toplevel";
-import Button from "@mui/material/Button";
+import { DashiPlotToolbar } from "@/lib/components/DashiPlotToolbar";
 
 export interface DashiPlotProps extends Omit<PlotState, "type"> {
   onPropertyChange: PropertyChangeHandler;
+  panelIndex: number;
 }
 
 export function DashiPlot({
   id,
   style,
   chart,
+  panelIndex,
   onPropertyChange,
 }: DashiPlotProps) {
-  const [updatedSpec, setupdatedSpec] = useState<
-    | (VisualizationSpec & {
-        params?: TopLevelParameter[];
-      })
-    | null
-  >();
-  const enableClickMode = () => {
-    const panAndZoom: { params: TopLevelParameter[] } = {
-      params: [
-        {
-          name: "grid",
-          select: "interval",
-          bind: "scales",
-        },
-      ],
-    };
-    const spec = {
-      ...updatedSpec,
-      params: [...(updatedSpec?.params || []), ...panAndZoom.params],
-    };
-    setupdatedSpec(spec);
-  };
-
-  useEffect(() => {
-    if (chart) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { datasets, ...specification } = chart;
-      setupdatedSpec(specification);
-    }
-  }, [chart]);
-
   if (!chart) {
     return <div id={id} style={style} />;
   }
+  const { datasets, ...specification } = chart;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { datasets } = chart;
-  if (!updatedSpec) {
-    return null;
-  }
-  console.log("spec::", updatedSpec.params, updatedSpec);
   const handleSignal = (_signalName: string, value: unknown) => {
     if (id) {
       return onPropertyChange({
@@ -68,17 +32,19 @@ export function DashiPlot({
     }
   };
   return (
-    <>
-      <Button onClick={enableClickMode}>Click me</Button>
-
+    <DashiPlotToolbar
+      style={{ position: "relative", display: "inline-block" }}
+      onPropertyChange={onPropertyChange}
+      panelIndex={panelIndex}
+    >
       <VegaLite
-        spec={updatedSpec}
+        spec={specification}
         data={datasets}
         style={style}
         signalListeners={{ onClick: handleSignal }}
         actions={false}
         renderer={"svg"}
       />
-    </>
+    </DashiPlotToolbar>
   );
 }

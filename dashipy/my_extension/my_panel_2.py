@@ -67,7 +67,7 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     ).properties(
     width=300,
     height=300,
-    title="Vega charts using Shorthand syntax"
+    title="Vega charts using Shorthand syntax",
     ).add_params(
         selector
     )

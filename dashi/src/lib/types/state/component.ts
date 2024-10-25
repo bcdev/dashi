@@ -38,13 +38,15 @@ export interface CheckboxState extends ComponentState {
 
 export interface PlotState extends ComponentState {
   type: "Plot";
-  chart?:
-    | (VisualizationSpec & {
-        datasets?: Record<string, unknown>; // Add the datasets property
-        params?: TopLevelParameter[];
-      })
-    | null;
+  chart?: Specification;
 }
+
+export type Specification =
+  | (VisualizationSpec & {
+      datasets?: Record<string, unknown>;
+      params?: TopLevelParameter[];
+    })
+  | null;
 
 export interface BoxState extends ContainerState {
   type: "Box";

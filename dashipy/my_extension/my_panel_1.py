@@ -50,17 +50,13 @@ def render_panel(ctx: Context) -> Component:
 def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
 
-    # Create a slider
-    corner_slider = alt.binding_range(min=0, max=50, step=1)
-    # Create a parameter and bind that to the slider
-    corner_var = alt.param(bind=corner_slider, value=0, name="cornerRadius")
     # Create another parameter to handle the click events and send the data as
     # specified in the fields
     click_param = alt.selection_point(on="click", name="onClick",
                                       fields=["a", "b"])
     # Create a chart type using mark_* where * could be any kind of chart
     # supported by Vega. We can add properties and parameters as shown below.
-    chart = alt.Chart(dataset).mark_bar(clip=False, cornerRadius=22).encode(
+    chart = alt.Chart(dataset).mark_bar().encode(
         x=alt.X('a:N', title='a'),
         y=alt.Y('b:Q', title='b'),
         tooltip=[

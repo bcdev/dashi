@@ -8,6 +8,7 @@ import { type PropertyChangeHandler } from "@/lib/types/model/event";
 
 export interface DashiDropdownProps extends Omit<DropdownState, "type"> {
   onPropertyChange: PropertyChangeHandler;
+  panelIndex: number;
 }
 
 export function DashiDropdown({
@@ -46,6 +47,7 @@ export function DashiDropdown({
         value={`${value}`}
         disabled={disabled}
         onChange={handleChange}
+        variant={"standard"}
       >
         {options.map(([text, value], index) => (
           <MenuItem key={index} value={value}>
