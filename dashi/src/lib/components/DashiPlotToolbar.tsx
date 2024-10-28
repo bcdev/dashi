@@ -3,10 +3,12 @@ import type { TopLevelParameter } from "vega-lite/build/src/spec/toplevel";
 import LoupeIcon from "@mui/icons-material/Loupe";
 import ReplayIcon from "@mui/icons-material/Replay";
 import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import { Tooltip } from "@mui/material";
 import { type PropertyChangeHandler } from "@/lib";
 import type { PlotState } from "@/lib/types/state/component";
 import { store } from "@/lib/store";
+import type { Transform } from "vega-lite/build/src/transform";
 
 export interface DashiPlotToolbarProps {
   style: CSSProperties;
@@ -26,7 +28,12 @@ export function DashiPlotToolbar({
   const handleMouseEnter = () => setShowTooltip(true);
   const handleMouseLeave = () => setShowTooltip(false);
 
-  const getLatestChart = () => {
+  enum ChartStatus {
+    ORIGINAL,
+    CURRENT,
+  }
+
+  const getLatestChart = (chartStatus: ChartStatus) => {
     const { contributionStatesRecord } = store.getState();
     const contribPoint = "panels";
     const contributionState =
@@ -34,10 +41,17 @@ export function DashiPlotToolbar({
     const plot = contributionState?.componentState?.components?.find(
       (component) => component.type === "Plot",
     ) as PlotState;
-    return plot?.chart;
+    switch (chartStatus) {
+      case ChartStatus.ORIGINAL: {
+        return plot?.originalChart;
+      }
+      case ChartStatus.CURRENT: {
+        return plot?.chart;
+      }
+    }
   };
 
-  let chart = getLatestChart();
+  let chart = getLatestChart(ChartStatus.CURRENT);
 
   // TODO: Try to memoize the following
   // const chart = useMemo(() => {
@@ -63,11 +77,15 @@ export function DashiPlotToolbar({
   enum Toolbar {
     PanAndZoom,
     Brush,
+    MiniMapZoom,
   }
 
-  const getToolbarSpec = (
-    toolbar: Toolbar,
-  ): { params: TopLevelParameter[] } => {
+  interface ToolbarSpec {
+    params: TopLevelParameter[];
+    transform?: Transform[];
+  }
+
+  const getToolbarSpec = (toolbar: Toolbar): ToolbarSpec => {
     switch (toolbar) {
       case Toolbar.PanAndZoom:
         return {
@@ -88,17 +106,66 @@ export function DashiPlotToolbar({
             },
           ],
         };
+      case Toolbar.MiniMapZoom:
+        return {
+          params: [
+            {
+              name: "brush",
+              select: { type: "interval", encodings: ["x"] },
+            },
+          ],
+          transform: [
+            {
+              filter: { param: "brush" },
+            },
+          ],
+        };
+    }
+  };
+
+  const enableMiniMap = () => {
+    resetMode();
+    chart = getLatestChart(ChartStatus.CURRENT);
+    const minimapZoom = getToolbarSpec(Toolbar.MiniMapZoom);
+    if (!chart) {
+      return null;
+    }
+    if (!chart?.params?.find((param) => param.name === "grid")) {
+      const { $schema, config, data, datasets, ...rest } = chart;
+      const updatedChart = {
+        $schema,
+        config,
+        data,
+        datasets,
+        vconcat: [
+          {
+            ...rest,
+            transform: minimapZoom.transform,
+          },
+          {
+            ...rest,
+            height: 60,
+            params: minimapZoom.params,
+          },
+        ],
+      };
+      return onPropertyChange({
+        componentType: "Plot",
+        componentId: "plot",
+        propertyName: "chart",
+        propertyValue: updatedChart,
+      });
     }
   };
 
   const enablePanAndZoomMode = () => {
     resetMode();
-    chart = getLatestChart();
-    console.log("chart in zoom::", chart);
+    chart = getLatestChart(ChartStatus.CURRENT);
+
     const panAndZoom = getToolbarSpec(Toolbar.PanAndZoom);
 
     if (!chart?.params?.find((param) => param.name === "grid")) {
-      const updatedSpec = {
+      const updatedChart = {
         ...chart,
         params: [...(chart?.params || []), ...panAndZoom.params],
       };
@@ -106,37 +173,28 @@ export function DashiPlotToolbar({
         componentType: "Plot",
         componentId: "plot",
         propertyName: "chart",
-        propertyValue: updatedSpec,
+        propertyValue: updatedChart,
       });
     }
   };
 
   const resetMode = () => {
-    const filteredParams = chart?.params?.filter(
-      (param) => !(param.name === "grid" || param.name === "brush"),
-    );
-
-    if (filteredParams !== chart?.params) {
-      const spec = {
-        ...chart,
-        params: filteredParams,
-      };
-      return onPropertyChange({
-        componentType: "Plot",
-        componentId: "plot",
-        propertyName: "chart",
-        propertyValue: spec,
-      });
-    }
+    chart = getLatestChart(ChartStatus.ORIGINAL);
+    return onPropertyChange({
+      componentType: "Plot",
+      componentId: "plot",
+      propertyName: "chart",
+      propertyValue: chart,
+    });
   };
 
   const enableBrushMode = () => {
     resetMode();
-    chart = getLatestChart();
+    chart = getLatestChart(ChartStatus.CURRENT);
     const brush = getToolbarSpec(Toolbar.Brush);
 
     if (!chart?.params?.find((param) => param.name === "brush")) {
-      const updatedSpec = {
+      const updatedChart = {
         ...chart,
         params: [...(chart?.params || []), ...brush.params],
       };
@@ -144,7 +202,7 @@ export function DashiPlotToolbar({
         componentType: "Plot",
         componentId: "plot",
         propertyName: "chart",
-        propertyValue: updatedSpec,
+        propertyValue: updatedChart,
       });
     }
   };
@@ -169,6 +227,12 @@ export function DashiPlotToolbar({
               fontSize={"small"}
               onClick={enablePanAndZoomMode}
             ></LoupeIcon>
+          </Tooltip>
+          <Tooltip title={"Minimap Zoom"}>
+            <BarChartIcon
+              fontSize={"small"}
+              onClick={enableMiniMap}
+            ></BarChartIcon>
           </Tooltip>
           <Tooltip title={"Brush"}>
             <HighlightAltIcon

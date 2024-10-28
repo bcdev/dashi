@@ -39,6 +39,7 @@ export interface CheckboxState extends ComponentState {
 export interface PlotState extends ComponentState {
   type: "Plot";
   chart?: Specification;
+  originalChart?: Specification;
 }
 
 export type Specification =
