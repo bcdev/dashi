@@ -1,14 +1,19 @@
 import React, { type CSSProperties, useState } from "react";
 import type { TopLevelParameter } from "vega-lite/build/src/spec/toplevel";
+import { Tooltip } from "@mui/material";
+import { type PropertyChangeHandler } from "@/lib";
+import type { PlotState } from "@/lib/types/state/component";
+import type { Transform } from "vega-lite/build/src/transform";
 import LoupeIcon from "@mui/icons-material/Loupe";
 import ReplayIcon from "@mui/icons-material/Replay";
 import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import { Tooltip } from "@mui/material";
-import { type PropertyChangeHandler } from "@/lib";
-import type { PlotState } from "@/lib/types/state/component";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import SignalCellular4BarIcon from "@mui/icons-material/SignalCellular4Bar";
+
 import { store } from "@/lib/store";
-import type { Transform } from "vega-lite/build/src/transform";
 
 export interface DashiPlotToolbarProps {
   style: CSSProperties;
@@ -209,6 +214,27 @@ export function DashiPlotToolbar({
     }
   };
 
+  enum MarkTypes {
+    POINT = "point",
+    BAR = "bar",
+    LINE = "line",
+    AREA = "area",
+  }
+
+  const switchToMark = (markType: MarkTypes): void => {
+    chart = getLatestChart(ChartStatus.ORIGINAL);
+    const updatedChart = {
+      ...chart,
+      mark: { type: markType },
+    };
+    return onPropertyChange({
+      componentType: "Plot",
+      componentId: "plot",
+      propertyName: "chart",
+      propertyValue: updatedChart,
+    });
+  };
+
   return (
     <div
       style={style}
@@ -219,11 +245,35 @@ export function DashiPlotToolbar({
         <div
           style={{
             position: "absolute",
-            top: 0,
+            top: -25,
             right: 8,
             zIndex: 10,
           }}
         >
+          <Tooltip title={"Convert Mark to Point"}>
+            <ScatterPlotIcon
+              fontSize={"small"}
+              onClick={() => switchToMark(MarkTypes.POINT)}
+            ></ScatterPlotIcon>
+          </Tooltip>
+          <Tooltip title={"Convert Mark to Line"}>
+            <ShowChartIcon
+              fontSize={"small"}
+              onClick={() => switchToMark(MarkTypes.LINE)}
+            ></ShowChartIcon>
+          </Tooltip>
+          <Tooltip title={"Convert Mark to Area"}>
+            <SignalCellular4BarIcon
+              fontSize={"small"}
+              onClick={() => switchToMark(MarkTypes.AREA)}
+            ></SignalCellular4BarIcon>
+          </Tooltip>
+          <Tooltip title={"Convert Mark to Bar"}>
+            <BarChartIcon
+              fontSize={"small"}
+              onClick={() => switchToMark(MarkTypes.BAR)}
+            ></BarChartIcon>
+          </Tooltip>
           <Tooltip title={"Pan and Zoom"}>
             <LoupeIcon
               fontSize={"small"}
@@ -231,10 +281,10 @@ export function DashiPlotToolbar({
             ></LoupeIcon>
           </Tooltip>
           <Tooltip title={"Minimap Zoom"}>
-            <BarChartIcon
+            <LibraryAddIcon
               fontSize={"small"}
               onClick={enableMiniMap}
-            ></BarChartIcon>
+            ></LibraryAddIcon>
           </Tooltip>
           <Tooltip title={"Brush"}>
             <HighlightAltIcon
