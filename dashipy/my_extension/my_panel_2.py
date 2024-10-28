@@ -1,7 +1,7 @@
 import altair as alt
 
-from dashipy import (Component, Input, Output)
-from dashipy.components import (Plot, Box, Dropdown)
+from dashipy import Component, Input, Output
+from dashipy.components import Plot, Box, Dropdown
 from dashipy.demo.contribs import Panel
 from dashipy.demo.context import Context
 
@@ -49,27 +49,28 @@ def render_panel(ctx: Context) -> Component:
 )
 def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset = ctx.datasets[selected_dataset]
-    slider = alt.binding_range(min=0, max=100, step=1, name='Cutoff ')
-    selector = alt.param(name='SelectorName', value=50, bind=slider)
+    slider = alt.binding_range(min=0, max=100, step=1, name="Cutoff ")
+    selector = alt.param(name="SelectorName", value=50, bind=slider)
     # Almost same as the chart in Panel 1, but here we use the Shorthand
     # notation for setting x,y and the tooltip, although they both give the
     # same output. We also call interactive() on this chart object which allows
     # to zoom in and out as well as move the chart around.
-    chart = alt.Chart(dataset).mark_bar().encode(
-        x='a:N',
-        y='b:Q',
-        tooltip=['a:N','b:Q'],
-        color = alt.condition(
-            'datum.b < SelectorName',
-            alt.value('green'),
-            alt.value('yellow')
+    chart = (
+        alt.Chart(dataset)
+        .mark_point()
+        .encode(
+            x="a:N",
+            y="b:Q",
+            tooltip=["a:N", "b:Q"],
+            color=alt.condition(
+                "datum.b < SelectorName", alt.value("green"), alt.value("red")
+            ),
         )
-    ).properties(
-    width=300,
-    height=300,
-    title="Vega charts using Shorthand syntax",
-    ).add_params(
-        selector
+        .properties(
+            width=300,
+            height=300,
+            title="Vega charts using Shorthand syntax",
+        )
+        .add_params(selector)
     )
     return chart
-

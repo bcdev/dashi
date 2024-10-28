@@ -14,6 +14,8 @@ class Plot(Component):
         d = super().to_dict()
         if self.chart is not None:
             d.update(chart=self.chart.to_dict())
+            d.update(originalChart=self.chart.to_dict())
         else:
             d.update(chart=None)
+            d.update(originalChart=None)
         return d
