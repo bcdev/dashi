@@ -60,26 +60,48 @@ export function DashiPlotToolbar({
     return null;
   }
 
+  enum Toolbar {
+    PanAndZoom,
+    Brush,
+  }
+
+  const getToolbarSpec = (
+    toolbar: Toolbar,
+  ): { params: TopLevelParameter[] } => {
+    switch (toolbar) {
+      case Toolbar.PanAndZoom:
+        return {
+          params: [
+            {
+              name: "grid",
+              select: "interval",
+              bind: "scales",
+            },
+          ],
+        };
+      case Toolbar.Brush:
+        return {
+          params: [
+            {
+              name: "brush",
+              select: "interval",
+            },
+          ],
+        };
+    }
+  };
+
   const enablePanAndZoomMode = () => {
     resetMode();
     chart = getLatestChart();
     console.log("chart in zoom::", chart);
-    const panAndZoom: { params: TopLevelParameter[] } = {
-      params: [
-        {
-          name: "grid",
-          select: "interval",
-          bind: "scales",
-        },
-      ],
-    };
+    const panAndZoom = getToolbarSpec(Toolbar.PanAndZoom);
 
     if (!chart?.params?.find((param) => param.name === "grid")) {
       const updatedSpec = {
         ...chart,
         params: [...(chart?.params || []), ...panAndZoom.params],
       };
-      console.log("updatedSpec", updatedSpec);
       return onPropertyChange({
         componentType: "Plot",
         componentId: "plot",
@@ -111,15 +133,7 @@ export function DashiPlotToolbar({
   const enableBrushMode = () => {
     resetMode();
     chart = getLatestChart();
-    console.log("chart in brush:", chart);
-    const brush: { params: TopLevelParameter[] } = {
-      params: [
-        {
-          name: "brush",
-          select: "interval",
-        },
-      ],
-    };
+    const brush = getToolbarSpec(Toolbar.Brush);
 
     if (!chart?.params?.find((param) => param.name === "brush")) {
       const updatedSpec = {
