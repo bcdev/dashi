@@ -141,6 +141,7 @@ export function DashiPlotToolbar({
           {
             ...rest,
             transform: minimapZoom.transform,
+            params: [],
           },
           {
             ...rest,
@@ -149,6 +150,7 @@ export function DashiPlotToolbar({
           },
         ],
       };
+      console.log("after::", updatedChart);
       return onPropertyChange({
         componentType: "Plot",
         componentId: "plot",
