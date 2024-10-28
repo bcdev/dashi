@@ -1,5 +1,6 @@
 import { type CSSProperties } from "react";
 import type { VisualizationSpec } from "react-vega";
+import type { TopLevelParameter } from "vega-lite/src/spec/toplevel";
 
 export type ComponentType = "Button" | "Checkbox" | "Dropdown" | "Plot" | "Box";
 
@@ -37,12 +38,16 @@ export interface CheckboxState extends ComponentState {
 
 export interface PlotState extends ComponentState {
   type: "Plot";
-  chart:
-    | (VisualizationSpec & {
-        datasets?: Record<string, unknown>; // Add the datasets property
-      })
-    | null;
+  chart?: Specification;
+  originalChart?: Specification;
 }
+
+export type Specification =
+  | (VisualizationSpec & {
+      datasets?: Record<string, unknown>;
+      params?: TopLevelParameter[];
+    })
+  | null;
 
 export interface BoxState extends ContainerState {
   type: "Box";

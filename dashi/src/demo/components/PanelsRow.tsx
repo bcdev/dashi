@@ -38,6 +38,7 @@ function PanelsRow() {
           key={panelIndex}
           panelState={panelState}
           panelModel={panelModels[panelIndex]}
+          panelIndex={panelIndex}
           onPropertyChange={(e) => handlePropertyChange(panelIndex, e)}
         />,
       );

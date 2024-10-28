@@ -7,6 +7,7 @@ import { DashiDropdown, type DashiDropdownProps } from "./DashiDropdown";
 
 export interface DashiComponentProps extends ComponentState {
   onPropertyChange: PropertyChangeHandler;
+  panelIndex: number;
 }
 
 export function DashiComponent({ type, ...props }: DashiComponentProps) {

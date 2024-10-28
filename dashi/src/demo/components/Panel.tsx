@@ -34,11 +34,17 @@ const panelContentStyle: CSSProperties = {
 
 interface PanelProps {
   panelModel: Contribution;
+  panelIndex: number;
   panelState: ContributionState;
   onPropertyChange: PropertyChangeHandler;
 }
 
-function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
+function Panel({
+  panelModel,
+  panelIndex,
+  panelState,
+  onPropertyChange,
+}: PanelProps) {
   if (!panelState.visible) {
     return null;
   }
@@ -47,7 +53,11 @@ function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
   const componentModelResult = panelState.componentStateResult;
   if (componentModelResult.data && componentState) {
     panelElement = (
-      <DashiComponent {...componentState} onPropertyChange={onPropertyChange} />
+      <DashiComponent
+        {...componentState}
+        onPropertyChange={onPropertyChange}
+        panelIndex={panelIndex}
+      />
     );
   } else if (componentModelResult.error) {
     panelElement = (

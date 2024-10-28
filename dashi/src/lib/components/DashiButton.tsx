@@ -6,6 +6,7 @@ import { type PropertyChangeHandler } from "@/lib/types/model/event";
 
 export interface DashiButtonProps extends Omit<ButtonState, "type"> {
   onPropertyChange: PropertyChangeHandler;
+  panelIndex: number;
 }
 
 export function DashiButton({
