@@ -6,5 +6,3 @@ export const useContributionsResult = () =>
   useStore((state) => state.contributionsResult);
 export const useContributionStatesRecord = () =>
   useStore((state) => state.contributionStatesRecord);
-export const useContributionModelsRecord = () =>
-  useStore((state) => state.contributionModelsRecord);

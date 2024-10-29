@@ -14,7 +14,6 @@ import {
   type StateChangeRequest,
 } from "@/lib/types/model/callback";
 import { type PropertyChangeEvent } from "@/lib/types/model/event";
-import { type Contribution } from "@/lib/types/model/contribution";
 import { type ContributionState } from "@/lib/types/state/contribution";
 import { updateArray } from "@/lib/utils/updateArray";
 import { isContainerState } from "@/lib/utils/isContainerState";
@@ -25,14 +24,10 @@ export function applyPropertyChange(
   contribIndex: number,
   contribEvent: PropertyChangeEvent,
 ) {
-  const { configuration, contributionModelsRecord, contributionStatesRecord } =
-    store.getState();
-  const contributionModels = contributionModelsRecord[contribPoint];
+  const { configuration, contributionStatesRecord } = store.getState();
   const contributionStates = contributionStatesRecord[contribPoint];
-  const contributionModel = contributionModels[contribIndex];
   const contributionState = contributionStates[contribIndex];
   const callbackRefs = generateCallbackRefs(
-    contributionModel,
     contributionState,
     contribEvent,
     store.getState().configuration.hostStore?.getState,
@@ -87,7 +82,6 @@ export function applyPropertyChange(
 }
 
 function generateCallbackRefs(
-  contributionModel: Contribution,
   contributionState: ContributionState,
   contribEvent: PropertyChangeEvent,
   getHostState?: () => unknown,
@@ -95,7 +89,7 @@ function generateCallbackRefs(
   const callbackRefs: CallbackRef[] = [];
   // Prepare calling all callbacks of the contribution
   // that are triggered by the property change
-  (contributionModel.callbacks || []).forEach((callback, callbackIndex) => {
+  (contributionState.callbacks || []).forEach((callback, callbackIndex) => {
     const inputValues = getCallbackInputValues(
       contributionState,
       contribEvent,
