@@ -6,6 +6,5 @@ export const store = create<StoreState>(() => ({
   configuration: {},
   contributionsResult: {},
   extensions: [],
-  contributionModelsRecord: {},
   contributionStatesRecord: {},
 }));
