@@ -1,12 +1,12 @@
-import { type CSSProperties, type ReactElement } from "react";
+import type { CSSProperties, ReactElement } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import {
-  type Contribution,
-  type ContributionState,
   type PropertyChangeHandler,
+  type ContributionState,
   DashiComponent,
 } from "@/lib";
+import type { PanelState } from "@/demo/types";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",
@@ -33,13 +33,12 @@ const panelContentStyle: CSSProperties = {
 };
 
 interface PanelProps {
-  panelModel: Contribution;
-  panelState: ContributionState;
+  panelState: ContributionState<PanelState>;
   onPropertyChange: PropertyChangeHandler;
 }
 
-function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
-  if (!panelState.visible) {
+function Panel({ panelState, onPropertyChange }: PanelProps) {
+  if (!panelState.state.visible) {
     return null;
   }
   const componentState = panelState.componentState;
@@ -52,20 +51,20 @@ function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
   } else if (componentModelResult.error) {
     panelElement = (
       <span>
-        Error loading {panelModel.name}: {componentModelResult.error.message}
+        Error loading {panelState.name}: {componentModelResult.error.message}
       </span>
     );
   } else if (componentModelResult.status === "pending") {
     panelElement = (
       <span>
         <CircularProgress size={30} color="secondary" /> Loading{" "}
-        {panelModel.name}...
+        {panelState.name}...
       </span>
     );
   }
   return (
     <div style={panelContainerStyle}>
-      <div style={panelHeaderStyle}>{panelState.title}</div>
+      <div style={panelHeaderStyle}>{panelState.state.title}</div>
       <div style={panelContentStyle}>{panelElement}</div>
     </div>
   );

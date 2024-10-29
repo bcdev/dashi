@@ -1,12 +1,9 @@
 import { type Callback } from "./callback";
 
-export interface Contribution {
+export interface Contribution<S extends object = object> {
   name: string;
   extension: string;
   layout?: Callback;
   callbacks?: Callback[];
-  // The following properties will become the
-  // initial contribution state
-  title?: string;
-  visible?: boolean;
+  initialState?: S;
 }

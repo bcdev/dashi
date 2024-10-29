@@ -25,8 +25,8 @@ export function initializeContributions<T>(options?: FrameworkOptions<T>) {
           contributionModelsRecord[contribPoint];
         contributionStatesRecord[contribPoint] = contributionModels.map(
           (contribution) => ({
-            title: contribution.title,
-            visible: contribution.visible,
+            ...contribution,
+            state: { ...contribution.initialState },
             componentStateResult: {},
           }),
         );
@@ -35,7 +35,6 @@ export function initializeContributions<T>(options?: FrameworkOptions<T>) {
     store.setState({
       contributionsResult,
       extensions,
-      contributionModelsRecord,
       contributionStatesRecord,
     });
   });

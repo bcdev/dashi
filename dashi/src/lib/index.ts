@@ -9,7 +9,6 @@ export {
 export { initializeContributions } from "@/lib/actions/initializeContributions";
 export { configureFramework } from "@/lib/actions/configureFramework";
 export { applyPropertyChange } from "@/lib/actions/applyPropertyChange";
-export { setComponentVisibility } from "@/lib/actions/setComponentVisibility";
 export { updateContributionState } from "@/lib/actions/updateContributionState";
 // React Components
 export { DashiComponent } from "@/lib/components/DashiComponent";
@@ -18,7 +17,6 @@ export {
   useStore,
   useExtensions,
   useContributionsResult,
-  useContributionModelsRecord,
   useContributionStatesRecord,
 } from "@/lib/hooks";
 // Utilities

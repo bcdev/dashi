@@ -31,7 +31,13 @@ const componentState: ComponentState = {
 describe("Test that applyContributionChangeRequests()", () => {
   const contributionStatesRecord: Record<ContribPoint, ContributionState[]> = {
     panels: [
-      { componentStateResult: { status: "ok" }, visible: true, componentState },
+      {
+        name: "",
+        extension: "",
+        componentStateResult: { status: "ok" },
+        state: { visible: true },
+        componentState,
+      },
     ],
   };
 

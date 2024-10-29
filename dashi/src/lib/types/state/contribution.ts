@@ -1,10 +1,11 @@
-import { type ApiResult } from "@/lib/utils/fetchApiResult";
-import { type ComponentState } from "./component";
+import type { ApiResult } from "@/lib/utils/fetchApiResult";
+import type { Contribution } from "@/lib/types/model/contribution";
+import type { ComponentState } from "./component";
 
-export interface ContributionState {
-  title?: string;
-  visible?: boolean;
+export interface ContributionState<S extends object = object>
+  extends Contribution<S> {
+  state: S;
   componentStateResult: ApiResult<ComponentState>;
-  // componentStateResult.data
+  // The value of componentStateResult.data, once it is available
   componentState?: ComponentState;
 }

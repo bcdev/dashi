@@ -2,15 +2,12 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 
-import { useContributionStatesRecord } from "@/lib";
 import { hidePanel } from "@/demo/actions/hidePanel";
 import { showPanel } from "@/demo/actions/showPanel";
-
-const contribPoint = "panels";
+import { usePanelStates } from "@/demo/hooks";
 
 function PanelsControl() {
-  const contributionStatesRecord = useContributionStatesRecord();
-  const panelStates = contributionStatesRecord[contribPoint];
+  const panelStates = usePanelStates();
   if (!panelStates) {
     // Ok, not ready yet
     return null;
@@ -23,12 +20,12 @@ function PanelsControl() {
         return (
           <FormControlLabel
             key={panelIndex}
-            label={panelState.title}
+            label={panelState.state.title}
             control={
               <Checkbox
                 color="secondary"
                 id={id}
-                checked={panelState.visible || false}
+                checked={panelState.state.visible || false}
                 value={panelIndex}
                 onChange={(e) => {
                   if (e.currentTarget.checked) {

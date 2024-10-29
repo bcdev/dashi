@@ -1,44 +1,30 @@
-import React from "react";
+import type { JSX } from "react";
 
-import {
-  type PropertyChangeEvent,
-  applyPropertyChange,
-  useContributionModelsRecord,
-  useContributionStatesRecord,
-} from "@/lib";
+import { type PropertyChangeEvent, applyPropertyChange } from "@/lib";
+import { usePanelStates } from "@/demo/hooks";
 import Panel from "./Panel";
 
-const contribPoint = "panels";
-
 function PanelsRow() {
-  const contributionModelsRecord = useContributionModelsRecord();
-  const contributionStatesRecord = useContributionStatesRecord();
-  const panelModels = contributionModelsRecord[contribPoint];
-  const panelStates = contributionStatesRecord[contribPoint];
-  if (!panelModels || !panelStates) {
+  const panelStates = usePanelStates();
+  if (!panelStates) {
     // Ok, not ready yet
     return null;
   }
-  // TODO: assert panelModels.length === panelStates.length
-  if (panelModels.length != panelStates?.length) {
-    throw Error("internal state error");
-  }
 
-  const handlePropertyChange = (
+  const handlePanelPropertyChange = (
     panelIndex: number,
     panelEvent: PropertyChangeEvent,
   ) => {
-    applyPropertyChange(contribPoint, panelIndex, panelEvent);
+    applyPropertyChange("panels", panelIndex, panelEvent);
   };
-  const visiblePanels: React.JSX.Element[] = [];
+  const visiblePanels: JSX.Element[] = [];
   panelStates.forEach((panelState, panelIndex) => {
-    if (panelState.visible) {
+    if (panelState.state.visible) {
       visiblePanels.push(
         <Panel
           key={panelIndex}
           panelState={panelState}
-          panelModel={panelModels[panelIndex]}
-          onPropertyChange={(e) => handlePropertyChange(panelIndex, e)}
+          onPropertyChange={(e) => handlePanelPropertyChange(panelIndex, e)}
         />,
       );
     }
