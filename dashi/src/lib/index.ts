@@ -17,7 +17,7 @@ export {
   useStore,
   useExtensions,
   useContributionsResult,
-  useContributionStatesRecord,
+  useContributionsRecord,
 } from "@/lib/hooks";
 // Utilities
 export { configureLogging } from "@/lib/utils/configureLogging";

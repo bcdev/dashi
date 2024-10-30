@@ -29,7 +29,7 @@ const componentState: ComponentState = {
 };
 
 describe("Test that applyContributionChangeRequests()", () => {
-  const contributionStatesRecord: Record<ContribPoint, ContributionState[]> = {
+  const contributionsRecord: Record<ContribPoint, ContributionState[]> = {
     panels: [
       {
         name: "",
@@ -68,20 +68,20 @@ describe("Test that applyContributionChangeRequests()", () => {
   };
 
   it("changes state if values are different", () => {
-    const newState = applyContributionChangeRequests(contributionStatesRecord, [
+    const newState = applyContributionChangeRequests(contributionsRecord, [
       stateChangeRequest1,
     ]);
-    expect(newState).not.toBe(contributionStatesRecord);
+    expect(newState).not.toBe(contributionsRecord);
     expect(
       newState["panels"][0].componentState!.components![1].components![1].value,
     ).toEqual(14);
   });
 
   it("doesn't change the state if value stays the same", () => {
-    const newState = applyContributionChangeRequests(contributionStatesRecord, [
+    const newState = applyContributionChangeRequests(contributionsRecord, [
       stateChangeRequest2,
     ]);
-    expect(newState).toBe(contributionStatesRecord);
+    expect(newState).toBe(contributionsRecord);
   });
 });
 

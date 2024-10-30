@@ -12,8 +12,8 @@ export function updateContributionState<S extends object = object>(
   contribState: Partial<S>,
   requireComponent: boolean = true,
 ) {
-  const { configuration, contributionStatesRecord } = store.getState();
-  const contributionStates = contributionStatesRecord[contribPoint];
+  const { configuration, contributionsRecord } = store.getState();
+  const contributionStates = contributionsRecord[contribPoint];
   const contributionState = contributionStates[contribIndex];
   if (contributionState.state === contribState) {
     return; // nothing to do
@@ -50,8 +50,8 @@ function getLayoutInputValues(
   contribPoint: ContribPoint,
   contribIndex: number,
 ): unknown[] {
-  const { configuration, contributionStatesRecord } = store.getState();
-  const contributionStates = contributionStatesRecord[contribPoint];
+  const { configuration, contributionsRecord } = store.getState();
+  const contributionStates = contributionsRecord[contribPoint];
   const contributionState = contributionStates[contribIndex];
   const inputs = contributionState.layout!.inputs;
   if (inputs && inputs.length > 0) {
@@ -70,8 +70,8 @@ function _updateContributionState(
   contribIndex: number,
   contribState: Partial<ContributionState>,
 ) {
-  const { contributionStatesRecord } = store.getState();
-  const contribStates = contributionStatesRecord[contribPoint]!;
+  const { contributionsRecord } = store.getState();
+  const contribStates = contributionsRecord[contribPoint]!;
   const contribStateOld = contribStates[contribIndex];
   const contribStateNew = contribState.state
     ? {
@@ -80,8 +80,8 @@ function _updateContributionState(
       }
     : contribState;
   store.setState({
-    contributionStatesRecord: {
-      ...contributionStatesRecord,
+    contributionsRecord: {
+      ...contributionsRecord,
       [contribPoint]: updateArray<ContributionState>(
         contribStates,
         contribIndex,

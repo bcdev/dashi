@@ -15,27 +15,27 @@ export function initializeContributions<T>(options?: FrameworkOptions<T>) {
   store.setState({ contributionsResult: { status: "pending" } });
   fetchApiResult(fetchContributions, apiOptions).then((contributionsResult) => {
     // TODO: validate contributionsResult and contributionsResult.data
-    const { extensions, contributions: contributionModelsRecord } =
+    const { extensions, contributions: rawContributionsRecord } =
       contributionsResult.data!;
-    const contributionStatesRecord: Record<ContribPoint, ContributionState[]> =
-      {};
-    Object.getOwnPropertyNames(contributionModelsRecord).forEach(
+    const contributionsRecord: Record<ContribPoint, ContributionState[]> = {};
+    Object.getOwnPropertyNames(rawContributionsRecord).forEach(
       (contribPoint: ContribPoint) => {
-        const contributionModels: Contribution[] =
-          contributionModelsRecord[contribPoint];
-        contributionStatesRecord[contribPoint] = contributionModels.map(
-          (contribution) => ({
-            ...contribution,
-            state: { ...contribution.initialState },
+        const rawContributions: Contribution[] =
+          rawContributionsRecord[contribPoint];
+        contributionsRecord[contribPoint] = rawContributions.map(
+          // Contribution --> ContributionState
+          (rawContribution) => ({
+            ...rawContribution,
+            state: { ...rawContribution.initialState },
             componentStateResult: {},
           }),
         );
       },
     );
     store.setState({
-      contributionsResult,
       extensions,
-      contributionStatesRecord,
+      contributionsResult,
+      contributionsRecord,
     });
   });
 }

@@ -24,11 +24,11 @@ export function applyPropertyChange(
   contribIndex: number,
   contribEvent: PropertyChangeEvent,
 ) {
-  const { configuration, contributionStatesRecord } = store.getState();
-  const contributionStates = contributionStatesRecord[contribPoint];
-  const contributionState = contributionStates[contribIndex];
+  const { configuration, contributionsRecord } = store.getState();
+  const contributions = contributionsRecord[contribPoint];
+  const contribution = contributions[contribIndex];
   const callbackRefs = generateCallbackRefs(
-    contributionState,
+    contribution,
     contribEvent,
     store.getState().configuration.hostStore?.getState,
   );
@@ -82,16 +82,16 @@ export function applyPropertyChange(
 }
 
 function generateCallbackRefs(
-  contributionState: ContributionState,
+  contribution: ContributionState,
   contribEvent: PropertyChangeEvent,
   getHostState?: () => unknown,
 ): CallbackRef[] {
   const callbackRefs: CallbackRef[] = [];
   // Prepare calling all callbacks of the contribution
   // that are triggered by the property change
-  (contributionState.callbacks || []).forEach((callback, callbackIndex) => {
+  (contribution.callbacks || []).forEach((callback, callbackIndex) => {
     const inputValues = getCallbackInputValues(
-      contributionState,
+      contribution,
       contribEvent,
       callback,
       getHostState,
@@ -105,7 +105,7 @@ function generateCallbackRefs(
 
 // we export for testing only
 export function getCallbackInputValues(
-  contributionState: ContributionState,
+  contribution: ContributionState,
   contribEvent: PropertyChangeEvent,
   callback: Callback,
   getHostState?: () => unknown,
@@ -129,7 +129,7 @@ export function getCallbackInputValues(
 
   const inputValues = getInputValues(
     callback.inputs,
-    contributionState,
+    contribution,
     getHostState,
   );
 
@@ -143,14 +143,14 @@ export function getCallbackInputValues(
 }
 
 function applyStateChangeRequests(stateChangeRequests: StateChangeRequest[]) {
-  const { contributionStatesRecord } = store.getState();
-  const contributionStatesRecordNew = applyContributionChangeRequests(
-    contributionStatesRecord,
+  const { contributionsRecord } = store.getState();
+  const contributionsRecordNew = applyContributionChangeRequests(
+    contributionsRecord,
     stateChangeRequests,
   );
-  if (contributionStatesRecordNew !== contributionStatesRecord) {
+  if (contributionsRecordNew !== contributionsRecord) {
     store.setState({
-      contributionStatesRecord: contributionStatesRecordNew,
+      contributionsRecord: contributionsRecordNew,
     });
   }
   // TODO: Set value of another kind of output.
@@ -158,14 +158,13 @@ function applyStateChangeRequests(stateChangeRequests: StateChangeRequest[]) {
 
 // we export for testing only
 export function applyContributionChangeRequests(
-  contributionStatesRecord: Record<ContribPoint, ContributionState[]>,
+  contributionsRecord: Record<ContribPoint, ContributionState[]>,
   stateChangeRequests: StateChangeRequest[],
 ): Record<ContribPoint, ContributionState[]> {
   stateChangeRequests.forEach(
     ({ contribPoint, contribIndex, stateChanges }) => {
-      const contributionState =
-        contributionStatesRecord[contribPoint][contribIndex];
-      const componentStateOld = contributionState.componentState;
+      const contribution = contributionsRecord[contribPoint][contribIndex];
+      const componentStateOld = contribution.componentState;
       let componentState = componentStateOld;
       if (componentState) {
         stateChanges
@@ -180,51 +179,51 @@ export function applyContributionChangeRequests(
             );
           });
         if (componentState !== componentStateOld) {
-          contributionStatesRecord = {
-            ...contributionStatesRecord,
+          contributionsRecord = {
+            ...contributionsRecord,
             [contribPoint]: updateArray<ContributionState>(
-              contributionStatesRecord[contribPoint],
+              contributionsRecord[contribPoint],
               contribIndex,
-              { ...contributionState, componentState },
+              { ...contribution, componentState },
             ),
           };
         }
       }
     },
   );
-  return contributionStatesRecord;
+  return contributionsRecord;
 }
 
 // we export for testing only
 export function applyComponentStateChange(
-  componentState: ComponentState,
+  component: ComponentState,
   stateChange: StateChange,
 ): ComponentState {
-  if (componentState.id === stateChange.id) {
+  if (component.id === stateChange.id) {
     const property = stateChange.property || "value";
-    const oldValue = (componentState as unknown as Record<string, unknown>)[
+    const oldValue = (component as unknown as Record<string, unknown>)[
       property
     ];
     if (oldValue !== stateChange.value) {
-      return { ...componentState, [property]: stateChange.value };
+      return { ...component, [property]: stateChange.value };
     }
-  } else if (isContainerState(componentState)) {
-    const containerStateOld: ContainerState = componentState;
-    let containerStateNew: ContainerState = containerStateOld;
-    for (let i = 0; i < containerStateOld.components.length; i++) {
-      const itemOld = containerStateOld.components[i];
+  } else if (isContainerState(component)) {
+    const containerOld: ContainerState = component;
+    let containerNew: ContainerState = containerOld;
+    for (let i = 0; i < containerOld.components.length; i++) {
+      const itemOld = containerOld.components[i];
       const itemNew = applyComponentStateChange(itemOld, stateChange);
       if (itemNew !== itemOld) {
-        if (containerStateNew === containerStateOld) {
-          containerStateNew = {
-            ...containerStateOld,
-            components: [...containerStateOld.components],
+        if (containerNew === containerOld) {
+          containerNew = {
+            ...containerOld,
+            components: [...containerOld.components],
           };
         }
-        containerStateNew.components[i] = itemNew;
+        containerNew.components[i] = itemNew;
       }
     }
-    return containerStateNew;
+    return containerNew;
   }
-  return componentState;
+  return component;
 }

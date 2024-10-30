@@ -4,7 +4,7 @@ import { type StoreState } from "@/lib/types/state/store";
 
 export const store = create<StoreState>(() => ({
   configuration: {},
-  contributionsResult: {},
   extensions: [],
-  contributionStatesRecord: {},
+  contributionsResult: {},
+  contributionsRecord: {},
 }));

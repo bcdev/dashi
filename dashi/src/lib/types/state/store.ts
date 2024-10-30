@@ -26,5 +26,5 @@ export interface StoreState<S = unknown> {
   /** All extensions */
   extensions: Extension[];
   /** A record that maps contribPoint --> ContributionState[].*/
-  contributionStatesRecord: Record<ContribPoint, ContributionState[]>;
+  contributionsRecord: Record<ContribPoint, ContributionState[]>;
 }
