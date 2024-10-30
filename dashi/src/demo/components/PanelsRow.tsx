@@ -23,7 +23,7 @@ function PanelsRow() {
       visiblePanels.push(
         <Panel
           key={panelIndex}
-          panelState={panelState}
+          {...panelState}
           onPropertyChange={(e) => handlePanelPropertyChange(panelIndex, e)}
         />,
       );

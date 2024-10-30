@@ -18,7 +18,7 @@ export function updateContributionState<S extends object = object>(
   if (contributionState.state === contribState) {
     return; // nothing to do
   }
-  const componentStatus = contributionState.componentStateResult.status;
+  const componentStatus = contributionState.componentResult.status;
   if (!requireComponent || componentStatus) {
     _updateContributionState(contribPoint, contribIndex, {
       state: contribState,
@@ -27,7 +27,7 @@ export function updateContributionState<S extends object = object>(
     // No status yet, so we must load the component
     _updateContributionState(contribPoint, contribIndex, {
       state: contribState,
-      componentStateResult: { status: "pending" },
+      componentResult: { status: "pending" },
     });
     const inputValues = getLayoutInputValues(contribPoint, contribIndex);
     fetchApiResult(
@@ -36,11 +36,10 @@ export function updateContributionState<S extends object = object>(
       contribIndex,
       inputValues,
       configuration.api,
-    ).then((componentModelResult) => {
-      const componentState = componentModelResult?.data;
+    ).then((componentResult) => {
       _updateContributionState(contribPoint, contribIndex, {
-        componentStateResult: componentModelResult,
-        componentState,
+        componentResult,
+        componentState: componentResult.data,
       });
     });
   }

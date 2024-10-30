@@ -5,7 +5,6 @@ import type { ComponentState } from "./component";
 export interface ContributionState<S extends object = object>
   extends Contribution<S> {
   state: S;
-  componentStateResult: ApiResult<ComponentState>;
-  // The value of componentStateResult.data, once it is available
+  componentResult: ApiResult<ComponentState>;
   componentState?: ComponentState;
 }

@@ -27,7 +27,7 @@ export function initializeContributions<T>(options?: FrameworkOptions<T>) {
           (rawContribution) => ({
             ...rawContribution,
             state: { ...rawContribution.initialState },
-            componentStateResult: {},
+            componentResult: {},
           }),
         );
       },

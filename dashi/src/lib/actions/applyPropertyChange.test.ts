@@ -34,7 +34,7 @@ describe("Test that applyContributionChangeRequests()", () => {
       {
         name: "",
         extension: "",
-        componentStateResult: { status: "ok" },
+        componentResult: { status: "ok" },
         state: { visible: true },
         componentState,
       },

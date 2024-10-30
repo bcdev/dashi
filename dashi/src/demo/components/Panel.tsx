@@ -32,39 +32,41 @@ const panelContentStyle: CSSProperties = {
   padding: 2,
 };
 
-interface PanelProps {
-  panelState: ContributionState<PanelState>;
+interface PanelProps extends ContributionState<PanelState> {
   onPropertyChange: PropertyChangeHandler;
 }
 
-function Panel({ panelState, onPropertyChange }: PanelProps) {
-  if (!panelState.state.visible) {
+function Panel({
+  name,
+  state,
+  componentState,
+  componentResult,
+  onPropertyChange,
+}: PanelProps) {
+  if (!state.visible) {
     return null;
   }
-  const componentState = panelState.componentState;
   let panelElement: ReactElement | null = null;
-  const componentModelResult = panelState.componentStateResult;
-  if (componentModelResult.data && componentState) {
+  if (componentState) {
     panelElement = (
       <DashiComponent {...componentState} onPropertyChange={onPropertyChange} />
     );
-  } else if (componentModelResult.error) {
+  } else if (componentResult.error) {
     panelElement = (
       <span>
-        Error loading {panelState.name}: {componentModelResult.error.message}
+        Error loading {name}: {componentResult.error.message}
       </span>
     );
-  } else if (componentModelResult.status === "pending") {
+  } else if (componentResult.status === "pending") {
     panelElement = (
       <span>
-        <CircularProgress size={30} color="secondary" /> Loading{" "}
-        {panelState.name}...
+        <CircularProgress size={30} color="secondary" /> Loading {name}...
       </span>
     );
   }
   return (
     <div style={panelContainerStyle}>
-      <div style={panelHeaderStyle}>{panelState.state.title}</div>
+      <div style={panelHeaderStyle}>{state.title}</div>
       <div style={panelContentStyle}>{panelElement}</div>
     </div>
   );
