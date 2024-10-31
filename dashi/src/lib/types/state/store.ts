@@ -9,7 +9,7 @@ import type { ApiOptions } from "@/lib/api";
 import type { LoggingOptions } from "@/lib/utils/configureLogging";
 import type { StoreApi } from "zustand";
 
-export interface FrameworkOptions<S> {
+export interface FrameworkOptions<S extends object = object> {
   /** The host applications state management store. */
   hostStore?: StoreApi<S>;
   /** API options to configure backend. */
@@ -18,7 +18,7 @@ export interface FrameworkOptions<S> {
   logging?: LoggingOptions;
 }
 
-export interface StoreState<S = unknown> {
+export interface StoreState<S extends object = object> {
   /** Framework configuration */
   configuration: FrameworkOptions<S>;
   /** API call result from `GET /contributions`. */

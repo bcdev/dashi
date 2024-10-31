@@ -153,7 +153,44 @@ function applyStateChangeRequests(stateChangeRequests: StateChangeRequest[]) {
       contributionsRecord: contributionsRecordNew,
     });
   }
-  // TODO: Set value of another kind of output.
+  applyHostStateChanges(stateChangeRequests);
+}
+
+function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
+  const hostStore = store.getState().configuration.hostStore;
+  const getHostState = hostStore?.getState;
+  const setHostState = hostStore?.setState;
+  if (getHostState && setHostState) {
+    const hostStateOld = getHostState();
+    let hostState = hostStateOld;
+    stateChangeRequests.forEach((stateChangeRequest) => {
+      hostState = applyStateChanges(
+        hostState,
+        stateChangeRequest.stateChanges,
+        "AppState",
+      );
+    });
+    if (hostState !== hostStateOld) {
+      setHostState(hostState);
+    }
+  }
+}
+
+function applyComponentStateChanges(
+  componentOld: ComponentState | undefined,
+  stateChanges: StateChange[],
+) {
+  let component = componentOld;
+  if (component) {
+    stateChanges
+      .filter(
+        (stateChange) => !stateChange.kind || stateChange.kind === "Component",
+      )
+      .forEach((stateChange) => {
+        component = applyComponentStateChange(component!, stateChange);
+      });
+  }
+  return component;
 }
 
 // we export for testing only
@@ -164,30 +201,31 @@ export function applyContributionChangeRequests(
   stateChangeRequests.forEach(
     ({ contribPoint, contribIndex, stateChanges }) => {
       const contribution = contributionsRecord[contribPoint][contribIndex];
-      const componentOld = contribution.component;
-      let component = componentOld;
-      if (component) {
-        stateChanges
-          .filter(
-            (stateChange) =>
-              !stateChange.kind || stateChange.kind === "Component",
-          )
-          .forEach((stateChange) => {
-            component = applyComponentStateChange(component!, stateChange);
-          });
-        if (component !== componentOld) {
-          contributionsRecord = {
-            ...contributionsRecord,
-            [contribPoint]: updateArray<ContributionState>(
-              contributionsRecord[contribPoint],
-              contribIndex,
-              { ...contribution, component },
-            ),
-          };
-        }
+      const state = applyStateChanges(
+        contribution.state,
+        stateChanges,
+        "State",
+      );
+      const component = applyComponentStateChanges(
+        contribution.component,
+        stateChanges,
+      );
+      if (
+        state !== contribution.state ||
+        component !== contribution.component
+      ) {
+        contributionsRecord = {
+          ...contributionsRecord,
+          [contribPoint]: updateArray<ContributionState>(
+            contributionsRecord[contribPoint],
+            contribIndex,
+            { ...contribution, state, component },
+          ),
+        };
       }
     },
   );
+
   return contributionsRecord;
 }
 
@@ -198,11 +236,10 @@ export function applyComponentStateChange(
 ): ComponentState {
   if (component.id === stateChange.id) {
     const property = stateChange.property || "value";
-    const oldValue = (component as unknown as Record<string, unknown>)[
-      property
-    ];
-    if (oldValue !== stateChange.value) {
-      return { ...component, [property]: stateChange.value };
+    const valueOld = (component as object)[property];
+    const valueNew = stateChange.value;
+    if (valueOld !== valueNew) {
+      return { ...component, [property]: valueNew };
     }
   } else if (isContainerState(component)) {
     const containerOld: ContainerState = component;
@@ -223,4 +260,21 @@ export function applyComponentStateChange(
     return containerNew;
   }
   return component;
+}
+
+// we export for testing only
+export function applyStateChanges<S extends object>(
+  state: S | undefined,
+  stateChanges: StateChange[],
+  kind: "State" | "AppState",
+): S | undefined {
+  stateChanges.forEach((stateChange) => {
+    if (
+      stateChange.kind === kind &&
+      (!state || state[stateChange.property] !== stateChange.value)
+    ) {
+      state = { ...state, [stateChange.property]: stateChange.value };
+    }
+  });
+  return state;
 }
