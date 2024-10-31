@@ -39,7 +39,7 @@ export function updateContributionState<S extends object = object>(
     ).then((componentResult) => {
       _updateContributionState(contribPoint, contribIndex, {
         componentResult,
-        componentState: componentResult.data,
+        component: componentResult.data,
       });
     });
   }

@@ -164,27 +164,24 @@ export function applyContributionChangeRequests(
   stateChangeRequests.forEach(
     ({ contribPoint, contribIndex, stateChanges }) => {
       const contribution = contributionsRecord[contribPoint][contribIndex];
-      const componentStateOld = contribution.componentState;
-      let componentState = componentStateOld;
-      if (componentState) {
+      const componentOld = contribution.component;
+      let component = componentOld;
+      if (component) {
         stateChanges
           .filter(
             (stateChange) =>
               !stateChange.kind || stateChange.kind === "Component",
           )
           .forEach((stateChange) => {
-            componentState = applyComponentStateChange(
-              componentState!,
-              stateChange,
-            );
+            component = applyComponentStateChange(component!, stateChange);
           });
-        if (componentState !== componentStateOld) {
+        if (component !== componentOld) {
           contributionsRecord = {
             ...contributionsRecord,
             [contribPoint]: updateArray<ContributionState>(
               contributionsRecord[contribPoint],
               contribIndex,
-              { ...contribution, componentState },
+              { ...contribution, component },
             ),
           };
         }

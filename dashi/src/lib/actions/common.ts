@@ -22,12 +22,9 @@ export function getInputValue(
   let inputValue: unknown = undefined;
 
   if (!input.kind || input.kind === "Component") {
-    if (contributionState.componentState) {
+    if (contributionState.component) {
       // Return value of a property of some component in the tree
-      inputValue = getComponentStateValue(
-        contributionState.componentState,
-        input,
-      );
+      inputValue = getComponentStateValue(contributionState.component, input);
     }
   } else if (input.kind === "State") {
     // Note, it is actually not ok to pass contributionState here directly.

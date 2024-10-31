@@ -12,7 +12,7 @@ import {
   applyContributionChangeRequests,
 } from "./applyPropertyChange";
 
-const componentState: ComponentState = {
+const componentTree: ComponentState = {
   type: "Box",
   id: "b1",
   components: [
@@ -36,7 +36,7 @@ describe("Test that applyContributionChangeRequests()", () => {
         extension: "",
         componentResult: { status: "ok" },
         state: { visible: true },
-        componentState,
+        component: componentTree,
       },
     ],
   };
@@ -73,7 +73,7 @@ describe("Test that applyContributionChangeRequests()", () => {
     ]);
     expect(newState).not.toBe(contributionsRecord);
     expect(
-      newState["panels"][0].componentState!.components![1].components![1].value,
+      newState["panels"][0].component!.components![1].components![1].value,
     ).toEqual(14);
   });
 
@@ -87,23 +87,23 @@ describe("Test that applyContributionChangeRequests()", () => {
 
 describe("Test that applyComponentStateChange()", () => {
   it("changes state if values are different", () => {
-    const newState = applyComponentStateChange(componentState, {
+    const newState = applyComponentStateChange(componentTree, {
       kind: "Component",
       id: "cb1",
       property: "value",
       value: false,
     });
-    expect(newState).not.toBe(componentState);
+    expect(newState).not.toBe(componentTree);
     expect(newState.components![1].components![0].value).toEqual(false);
   });
 
   it("doesn't change the state if value stays the same", () => {
-    const newState = applyComponentStateChange(componentState, {
+    const newState = applyComponentStateChange(componentTree, {
       kind: "Component",
       id: "cb1",
       property: "value",
       value: true,
     });
-    expect(newState).toBe(componentState);
+    expect(newState).toBe(componentTree);
   });
 });

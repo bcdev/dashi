@@ -39,7 +39,7 @@ interface PanelProps extends ContributionState<PanelState> {
 function Panel({
   name,
   state,
-  componentState,
+  component,
   componentResult,
   onPropertyChange,
 }: PanelProps) {
@@ -47,9 +47,9 @@ function Panel({
     return null;
   }
   let panelElement: ReactElement | null = null;
-  if (componentState) {
+  if (component) {
     panelElement = (
-      <DashiComponent {...componentState} onPropertyChange={onPropertyChange} />
+      <DashiComponent {...component} onPropertyChange={onPropertyChange} />
     );
   } else if (componentResult.error) {
     panelElement = (
