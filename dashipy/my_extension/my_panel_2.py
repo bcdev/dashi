@@ -13,11 +13,11 @@ panel = Panel(__name__, title="Panel B")
 @panel.layout(Input(kind="AppState", property="selectedDatasetId"))
 def render_panel(
     ctx: Context,
-    selected_dataset_id: str = None,
+    selected_dataset_id: str = "",
 ) -> Component:
     dataset = ctx.datasets.get(selected_dataset_id)
-    variable_names, selected_variable_name = get_variable_names(dataset)
-
+    variable_names = get_variable_names(dataset)
+    selected_variable_name = variable_names[0] if variable_names else ""
     plot = Plot(
         id="plot",
         chart=make_figure(ctx, selected_dataset_id, selected_variable_name),
@@ -27,7 +27,7 @@ def render_panel(
         id="selected_variable_name",
         value=selected_variable_name,
         label="Variable",
-        options=[(variable_name, variable_name) for variable_name in variable_names],
+        options=[(v, v) for v in variable_names],
         style={"flexGrow": 0, "minWidth": 120},
     )
     control_group = Box(
@@ -95,16 +95,14 @@ def make_figure(
 )
 def update_variable_selector(
     ctx: Context, selected_dataset_id: str = None
-) -> tuple[list[str], str | None]:
+) -> tuple[list[tuple[str, str]], str]:
     dataset = ctx.datasets.get(selected_dataset_id)
-    return get_variable_names(dataset)
+    variable_names = get_variable_names(dataset)
+    return [(v, v) for v in variable_names], variable_names[0] if variable_names else ""
 
 
-def get_variable_names(dataset: pd.DataFrame) -> tuple[list[str], str | None]:
+def get_variable_names(dataset: pd.DataFrame) -> list[str]:
     if dataset is not None:
-        variable_names = [v for v in dataset.keys() if v != "x"]
-        selected_variable_name = variable_names[0]
+        return [v for v in dataset.keys() if v != "x"]
     else:
-        variable_names = []
-        selected_variable_name = None
-    return variable_names, selected_variable_name
+        return []
