@@ -4,7 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import {
   type ComponentChangeHandler,
   type ContributionState,
-  DashiComponent,
+  Component,
 } from "@/lib";
 import type { PanelState } from "@/demo/types";
 
@@ -48,7 +48,7 @@ function Panel({
   }
   let panelElement: ReactElement | null = null;
   if (component) {
-    panelElement = <DashiComponent {...component} onChange={onChange} />;
+    panelElement = <Component {...component} onChange={onChange} />;
   } else if (componentResult.error) {
     panelElement = (
       <span>

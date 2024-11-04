@@ -11,7 +11,7 @@ export { configureFramework } from "@/lib/actions/configureFramework";
 export { handleComponentChange } from "@/lib/actions/handleComponentChange";
 export { updateContributionState } from "@/lib/actions/updateContributionState";
 // React Components
-export { DashiComponent } from "@/lib/components/DashiComponent";
+export { Component } from "@/lib/components/Component";
 // React Hooks
 export {
   useStore,

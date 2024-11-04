@@ -6,11 +6,11 @@ import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import { type DropdownState } from "@/lib/types/state/component";
 import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
-export interface DashiDropdownProps extends Omit<DropdownState, "type"> {
+export interface DropdownProps extends Omit<DropdownState, "type"> {
   onChange: ComponentChangeHandler;
 }
 
-export function DashiDropdown({
+export function Dropdown({
   id,
   name,
   value,
@@ -19,7 +19,7 @@ export function DashiDropdown({
   style,
   label,
   onChange,
-}: DashiDropdownProps) {
+}: DropdownProps) {
   const handleChange = (event: SelectChangeEvent) => {
     if (!id) {
       return;

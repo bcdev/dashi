@@ -1,13 +1,16 @@
 import { type ComponentChangeHandler } from "@/lib/types/model/event";
 import { type ComponentState } from "@/lib/types/state/component";
-import { DashiComponent } from "./DashiComponent";
+import { Component } from "./Component";
 
-export interface DashiChildrenProps {
+export interface ComponentChildrenProps {
   components?: ComponentState[];
   onChange: ComponentChangeHandler;
 }
 
-export function DashiChildren({ components, onChange }: DashiChildrenProps) {
+export function ComponentChildren({
+  components,
+  onChange,
+}: ComponentChildrenProps) {
   if (!components || components.length === 0) {
     return null;
   }
@@ -15,7 +18,7 @@ export function DashiChildren({ components, onChange }: DashiChildrenProps) {
     <>
       {components.map((component, index) => {
         const key = component.id || index;
-        return <DashiComponent key={key} {...component} onChange={onChange} />;
+        return <Component key={key} {...component} onChange={onChange} />;
       })}
     </>
   );

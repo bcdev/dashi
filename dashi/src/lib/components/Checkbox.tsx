@@ -1,27 +1,27 @@
 import { type ChangeEvent } from "react";
-import Checkbox from "@mui/material/Checkbox";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import MuiCheckbox from "@mui/material/Checkbox";
+import MuiFormControl from "@mui/material/FormControl";
+import MuiFormControlLabel from "@mui/material/FormControlLabel";
 
 import { type CheckboxState } from "@/lib/types/state/component";
 import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
-export interface DashiCheckboxProps extends Omit<CheckboxState, "type"> {
-  onPropertyChange: ComponentChangeHandler;
+export interface CheckboxProps extends Omit<CheckboxState, "type"> {
+  onChange: ComponentChangeHandler;
 }
 
-export function DashiCheckbox({
+export function Checkbox({
   id,
   name,
   value,
   disabled,
   style,
   label,
-  onPropertyChange,
-}: DashiCheckboxProps) {
+  onChange,
+}: CheckboxProps) {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (id) {
-      return onPropertyChange({
+      return onChange({
         componentType: "Checkbox",
         componentId: id,
         propertyName: "value",
@@ -30,11 +30,11 @@ export function DashiCheckbox({
     }
   };
   return (
-    <FormControl variant="filled" size="small" style={style}>
-      <FormControlLabel
+    <MuiFormControl variant="filled" size="small" style={style}>
+      <MuiFormControlLabel
         label={label}
         control={
-          <Checkbox
+          <MuiCheckbox
             id={id}
             name={name}
             checked={Boolean(value)}
@@ -43,6 +43,6 @@ export function DashiCheckbox({
           />
         }
       />
-    </FormControl>
+    </MuiFormControl>
   );
 }
