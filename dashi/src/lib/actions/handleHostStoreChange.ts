@@ -1,5 +1,6 @@
 import { store } from "@/lib/store";
 import type { ContribRef, Input } from "@/lib/types/model/callback";
+import { getValue } from "@/lib/actions/common";
 
 interface InputRef extends ContribRef {
   // The callback index of the contribution
@@ -20,7 +21,7 @@ function getHostStoreInputRefs(): InputRef[] {
       (contribution.callbacks || []).forEach(
         (callback, callbackIndex) =>
           (callback.inputs || []).forEach((input, inputIndex) => {
-            if (input.kind === "AppState" && input.property) {
+            if (input.kind === "AppState") {
               appStateRefs.push({
                 contribPoint,
                 contribIndex,
@@ -55,19 +56,7 @@ function isEffectiveInputRef<S extends object = object>(
   prevState: S,
 ): boolean {
   const propertyPath = inputRef.propertyPath;
-  const currValue = get(currState, propertyPath);
-  const prevValue = get(prevState, propertyPath);
+  const currValue = getValue(currState, propertyPath);
+  const prevValue = getValue(prevState, propertyPath);
   return !Object.is(currValue, prevValue);
-}
-
-function get(obj: object, path: (string | number)[]): unknown {
-  let value: unknown = obj;
-  for (let key of path) {
-    if (typeof value === "object") {
-      value = (value as object)[key];
-    } else {
-      return undefined;
-    }
-  }
-  return value;
 }

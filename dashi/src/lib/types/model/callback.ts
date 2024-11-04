@@ -30,9 +30,8 @@ export interface InputOutput {
   // expression of the form: name {"." name | index}
   /**
    * The property of an object or array index.
-   * `property` may not be needed if `id` is sufficient.
    */
-  property?: string;
+  property: string;
 }
 
 export interface Input extends InputOutput {}

@@ -84,8 +84,20 @@ export function getInputValueFromState(
   if (input.id && isSubscriptable(inputValue)) {
     inputValue = inputValue[input.id];
   }
-  if (input.property && isSubscriptable(inputValue)) {
+  if (isSubscriptable(inputValue)) {
     inputValue = inputValue[input.property];
   }
   return inputValue;
+}
+
+export function getValue(obj: object, path: (string | number)[]): unknown {
+  let value: unknown = obj;
+  for (const key of path) {
+    if (typeof value === "object") {
+      value = (value as unknown as Record<string, unknown>)[key];
+    } else {
+      return undefined;
+    }
+  }
+  return value;
 }

@@ -7,7 +7,9 @@ import { type ContribPoint } from "@/lib/types/model/extension";
 import type { FrameworkOptions } from "@/lib/types/state/store";
 import { configureFramework } from "@/lib";
 
-export function initializeContributions<T>(options?: FrameworkOptions<T>) {
+export function initializeContributions<S extends object = object>(
+  options?: FrameworkOptions<S>,
+) {
   if (options) {
     configureFramework(options);
   }

@@ -75,15 +75,10 @@ describe("Test that getInputValueFromState()", () => {
     ).toEqual(5);
   });
 
-  it("works without input.property", () => {
+  it("works without input.id", () => {
     const state = { x: [4, 5, 6] };
-    expect(getInputValueFromState({ kind: "State", id: "x" }, state)).toEqual([
-      4, 5, 6,
-    ]);
-  });
-
-  it("works without input.id and input.property", () => {
-    const state = { x: [4, 5, 6] };
-    expect(getInputValueFromState({ kind: "State" }, state)).toBe(state);
+    expect(
+      getInputValueFromState({ kind: "State", property: "x" }, state),
+    ).toEqual([4, 5, 6]);
   });
 });

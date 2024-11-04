@@ -162,7 +162,7 @@ function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
   const setHostState = hostStore?.setState;
   if (getHostState && setHostState) {
     const hostStateOld = getHostState();
-    let hostState = hostStateOld;
+    let hostState: object | undefined = hostStateOld;
     stateChangeRequests.forEach((stateChangeRequest) => {
       hostState = applyStateChanges(
         hostState,
@@ -235,8 +235,10 @@ export function applyComponentStateChange(
   stateChange: StateChange,
 ): ComponentState {
   if (component.id === stateChange.id) {
-    const property = stateChange.property || "value";
-    const valueOld = (component as object)[property];
+    const property = stateChange.property;
+    const valueOld = (component as unknown as Record<string, unknown>)[
+      property
+    ];
     const valueNew = stateChange.value;
     if (valueOld !== valueNew) {
       return { ...component, [property]: valueNew };
@@ -271,9 +273,11 @@ export function applyStateChanges<S extends object>(
   stateChanges.forEach((stateChange) => {
     if (
       stateChange.kind === kind &&
-      (!state || state[stateChange.property] !== stateChange.value)
+      (!state ||
+        (state as unknown as Record<string, unknown>)[stateChange.property] !==
+          stateChange.value)
     ) {
-      state = { ...state, [stateChange.property]: stateChange.value };
+      state = { ...state, [stateChange.property]: stateChange.value } as S;
     }
   });
   return state;
