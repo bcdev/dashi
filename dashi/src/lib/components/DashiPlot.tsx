@@ -1,10 +1,10 @@
 import { VegaLite } from "react-vega";
 
 import { type PlotState } from "@/lib/types/state/component";
-import { type PropertyChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
 export interface DashiPlotProps extends Omit<PlotState, "type"> {
-  onPropertyChange: PropertyChangeHandler;
+  onPropertyChange: ComponentChangeHandler;
 }
 
 export function DashiPlot({

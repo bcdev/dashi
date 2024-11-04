@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 
-import { type PropertyChangeEvent, handleComponentChange } from "@/lib";
+import { type ComponentChangeEvent, handleComponentChange } from "@/lib";
 import { usePanelStates } from "@/demo/hooks";
 import Panel from "./Panel";
 
@@ -13,7 +13,7 @@ function PanelsRow() {
 
   const handlePanelChange = (
     panelIndex: number,
-    panelEvent: PropertyChangeEvent,
+    panelEvent: ComponentChangeEvent,
   ) => {
     handleComponentChange("panels", panelIndex, panelEvent);
   };

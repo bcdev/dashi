@@ -8,7 +8,7 @@ import {
   type CallbackRequest,
   type StateChangeRequest,
 } from "@/lib/types/model/callback";
-import { type PropertyChangeEvent } from "@/lib/types/model/event";
+import { type ComponentChangeEvent } from "@/lib/types/model/event";
 import { type ContributionState } from "@/lib/types/state/contribution";
 import { getInputValues } from "@/lib/actions/common";
 import { applyStateChangeRequests } from "@/lib/actions/applyStateChangeRequests";
@@ -16,7 +16,7 @@ import { applyStateChangeRequests } from "@/lib/actions/applyStateChangeRequests
 export function handleComponentChange(
   contribPoint: ContribPoint,
   contribIndex: number,
-  contribEvent: PropertyChangeEvent,
+  contribEvent: ComponentChangeEvent,
 ) {
   const { configuration, contributionsRecord } = store.getState();
   const { hostStore } = configuration;
@@ -78,7 +78,7 @@ export function handleComponentChange(
 
 function generateCallbackRefs<S extends object>(
   contribution: ContributionState,
-  contribEvent: PropertyChangeEvent,
+  contribEvent: ComponentChangeEvent,
   hostState?: S | undefined,
 ): CallbackRef[] {
   const callbackRefs: CallbackRef[] = [];
@@ -101,7 +101,7 @@ function generateCallbackRefs<S extends object>(
 // we export for testing only
 export function getCallbackInputValues<S extends object>(
   contribution: ContributionState,
-  contribEvent: PropertyChangeEvent,
+  contribEvent: ComponentChangeEvent,
   callback: Callback,
   hostState?: S | undefined,
 ): unknown[] | undefined {

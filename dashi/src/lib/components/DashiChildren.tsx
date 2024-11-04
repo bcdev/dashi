@@ -1,10 +1,10 @@
-import { type PropertyChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/model/event";
 import { type ComponentState } from "@/lib/types/state/component";
 import { DashiComponent } from "./DashiComponent";
 
 export interface DashiChildrenProps {
   components?: ComponentState[];
-  onPropertyChange: PropertyChangeHandler;
+  onPropertyChange: ComponentChangeHandler;
 }
 
 export function DashiChildren({

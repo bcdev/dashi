@@ -4,10 +4,10 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
 import { type CheckboxState } from "@/lib/types/state/component";
-import { type PropertyChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
 export interface DashiCheckboxProps extends Omit<CheckboxState, "type"> {
-  onPropertyChange: PropertyChangeHandler;
+  onPropertyChange: ComponentChangeHandler;
 }
 
 export function DashiCheckbox({

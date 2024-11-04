@@ -4,10 +4,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 
 import { type DropdownState } from "@/lib/types/state/component";
-import { type PropertyChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
 export interface DashiDropdownProps extends Omit<DropdownState, "type"> {
-  onPropertyChange: PropertyChangeHandler;
+  onPropertyChange: ComponentChangeHandler;
 }
 
 export function DashiDropdown({

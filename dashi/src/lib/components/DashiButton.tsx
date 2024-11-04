@@ -2,10 +2,10 @@ import { type MouseEvent } from "react";
 import Button from "@mui/material/Button";
 
 import { type ButtonState } from "@/lib/types/state/component";
-import { type PropertyChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
 export interface DashiButtonProps extends Omit<ButtonState, "type"> {
-  onPropertyChange: PropertyChangeHandler;
+  onPropertyChange: ComponentChangeHandler;
 }
 
 export function DashiButton({

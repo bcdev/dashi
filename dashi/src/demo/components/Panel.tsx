@@ -2,7 +2,7 @@ import type { CSSProperties, ReactElement } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import {
-  type PropertyChangeHandler,
+  type ComponentChangeHandler,
   type ContributionState,
   DashiComponent,
 } from "@/lib";
@@ -33,7 +33,7 @@ const panelContentStyle: CSSProperties = {
 };
 
 interface PanelProps extends ContributionState<PanelState> {
-  onPropertyChange: PropertyChangeHandler;
+  onPropertyChange: ComponentChangeHandler;
 }
 
 function Panel({
