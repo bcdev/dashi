@@ -9,11 +9,10 @@ export function configureFramework<S extends object = object>(
   if (options.logging) {
     configureLogging(options.logging);
   }
-  const { configuration } = store.getState();
-  if (configuration.hostStore) {
-    configuration.hostStore.subscribe(handleHostStoreChange);
+  if (options.hostStore) {
+    options.hostStore.subscribe(handleHostStoreChange);
   }
   store.setState({
-    configuration: { ...configuration, ...options },
+    configuration: { ...options, ...options },
   });
 }
