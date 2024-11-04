@@ -24,7 +24,7 @@ function PanelsRow() {
         <Panel
           key={panelIndex}
           {...panelState}
-          onPropertyChange={(e) => handlePanelChange(panelIndex, e)}
+          onChange={(e) => handlePanelChange(panelIndex, e)}
         />,
       );
     }

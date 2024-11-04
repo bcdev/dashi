@@ -5,7 +5,7 @@ import { type ButtonState } from "@/lib/types/state/component";
 import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
 export interface DashiButtonProps extends Omit<ButtonState, "type"> {
-  onPropertyChange: ComponentChangeHandler;
+  onChange: ComponentChangeHandler;
 }
 
 export function DashiButton({
@@ -14,11 +14,11 @@ export function DashiButton({
   style,
   text,
   disabled,
-  onPropertyChange,
+  onChange,
 }: DashiButtonProps) {
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (id) {
-      onPropertyChange({
+      onChange({
         componentType: "Button",
         componentId: id,
         // Compat with plotly/dash

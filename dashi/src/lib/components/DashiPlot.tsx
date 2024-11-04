@@ -4,22 +4,17 @@ import { type PlotState } from "@/lib/types/state/component";
 import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
 export interface DashiPlotProps extends Omit<PlotState, "type"> {
-  onPropertyChange: ComponentChangeHandler;
+  onChange: ComponentChangeHandler;
 }
 
-export function DashiPlot({
-  id,
-  style,
-  chart,
-  onPropertyChange,
-}: DashiPlotProps) {
+export function DashiPlot({ id, style, chart, onChange }: DashiPlotProps) {
   if (!chart) {
     return <div id={id} style={style} />;
   }
   const { datasets, ...spec } = chart;
   const handleSignal = (_signalName: string, value: unknown) => {
     if (id) {
-      return onPropertyChange({
+      return onChange({
         componentType: "Plot",
         componentId: id,
         propertyName: "points",

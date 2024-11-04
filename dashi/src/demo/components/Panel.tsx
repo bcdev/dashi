@@ -33,7 +33,7 @@ const panelContentStyle: CSSProperties = {
 };
 
 interface PanelProps extends ContributionState<PanelState> {
-  onPropertyChange: ComponentChangeHandler;
+  onChange: ComponentChangeHandler;
 }
 
 function Panel({
@@ -41,16 +41,14 @@ function Panel({
   state,
   component,
   componentResult,
-  onPropertyChange,
+  onChange,
 }: PanelProps) {
   if (!state.visible) {
     return null;
   }
   let panelElement: ReactElement | null = null;
   if (component) {
-    panelElement = (
-      <DashiComponent {...component} onPropertyChange={onPropertyChange} />
-    );
+    panelElement = <DashiComponent {...component} onChange={onChange} />;
   } else if (componentResult.error) {
     panelElement = (
       <span>

@@ -4,13 +4,10 @@ import { DashiComponent } from "./DashiComponent";
 
 export interface DashiChildrenProps {
   components?: ComponentState[];
-  onPropertyChange: ComponentChangeHandler;
+  onChange: ComponentChangeHandler;
 }
 
-export function DashiChildren({
-  components,
-  onPropertyChange,
-}: DashiChildrenProps) {
+export function DashiChildren({ components, onChange }: DashiChildrenProps) {
   if (!components || components.length === 0) {
     return null;
   }
@@ -18,13 +15,7 @@ export function DashiChildren({
     <>
       {components.map((component, index) => {
         const key = component.id || index;
-        return (
-          <DashiComponent
-            key={key}
-            {...component}
-            onPropertyChange={onPropertyChange}
-          />
-        );
+        return <DashiComponent key={key} {...component} onChange={onChange} />;
       })}
     </>
   );

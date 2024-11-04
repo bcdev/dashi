@@ -7,7 +7,7 @@ import { type DropdownState } from "@/lib/types/state/component";
 import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
 export interface DashiDropdownProps extends Omit<DropdownState, "type"> {
-  onPropertyChange: ComponentChangeHandler;
+  onChange: ComponentChangeHandler;
 }
 
 export function DashiDropdown({
@@ -18,7 +18,7 @@ export function DashiDropdown({
   disabled,
   style,
   label,
-  onPropertyChange,
+  onChange,
 }: DashiDropdownProps) {
   const handleChange = (event: SelectChangeEvent) => {
     if (!id) {
@@ -29,7 +29,7 @@ export function DashiDropdown({
       newValue = Number.parseInt(newValue);
     }
 
-    return onPropertyChange({
+    return onChange({
       componentType: "Dropdown",
       componentId: id,
       propertyName: "value",

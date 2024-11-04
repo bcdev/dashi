@@ -5,21 +5,13 @@ import { type ComponentChangeHandler } from "@/lib/types/model/event";
 import { DashiChildren } from "./DashiChildren";
 
 export interface DashiBoxProps extends Omit<BoxState, "type"> {
-  onPropertyChange: ComponentChangeHandler;
+  onChange: ComponentChangeHandler;
 }
 
-export function DashiBox({
-  id,
-  style,
-  components,
-  onPropertyChange,
-}: DashiBoxProps) {
+export function DashiBox({ id, style, components, onChange }: DashiBoxProps) {
   return (
     <Box id={id} style={style}>
-      <DashiChildren
-        components={components}
-        onPropertyChange={onPropertyChange}
-      />
+      <DashiChildren components={components} onChange={onChange} />
     </Box>
   );
 }

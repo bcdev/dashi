@@ -6,7 +6,7 @@ import { DashiBox, type DashiBoxProps } from "./DashiBox";
 import { DashiDropdown, type DashiDropdownProps } from "./DashiDropdown";
 
 export interface DashiComponentProps extends ComponentState {
-  onPropertyChange: ComponentChangeHandler;
+  onChange: ComponentChangeHandler;
 }
 
 export function DashiComponent({ type, ...props }: DashiComponentProps) {
