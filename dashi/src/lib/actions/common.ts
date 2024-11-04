@@ -4,20 +4,20 @@ import type { ComponentState } from "@/lib/types/state/component.js";
 import { isSubscriptable } from "@/lib/utils/isSubscriptable.js";
 import { isContainerState } from "@/lib/utils/isContainerState.js";
 
-export function getInputValues(
+export function getInputValues<S extends object = object>(
   inputs: Input[],
   contributionState: ContributionState,
-  getHostState?: () => unknown,
+  hostState?: S | undefined,
 ): unknown[] {
   return inputs.map((input) =>
-    getInputValue(input, contributionState, getHostState),
+    getInputValue(input, contributionState, hostState),
   );
 }
 
-export function getInputValue(
+export function getInputValue<S extends object = object>(
   input: Input,
   contributionState: ContributionState,
-  getHostState?: () => unknown,
+  hostState?: S | undefined,
 ): unknown {
   let inputValue: unknown = undefined;
 
@@ -32,11 +32,11 @@ export function getInputValue(
     // the extra state required here.
     inputValue = getInputValueFromState(input, contributionState);
   } else if (input.kind === "AppState") {
-    if (getHostState) {
-      inputValue = getInputValueFromState(input, getHostState());
+    if (hostState) {
+      inputValue = getInputValueFromState(input, hostState);
     } else {
       console.warn(
-        "missing configuration 'hostState'," +
+        "missing 'hostState'," +
           " which is need to resolve inputs of kind 'AppState'",
         input,
       );

@@ -10,7 +10,7 @@ import { type ContributionState } from "@/lib/types/state/contribution";
 import {
   applyComponentStateChange,
   applyContributionChangeRequests,
-} from "./applyPropertyChange";
+} from "./applyStateChangeRequests";
 
 const componentTree: ComponentState = {
   type: "Box",

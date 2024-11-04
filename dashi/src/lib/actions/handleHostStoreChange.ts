@@ -1,6 +1,13 @@
 import { store } from "@/lib/store";
-import type { ContribRef, Input } from "@/lib/types/model/callback";
-import { getValue } from "@/lib/actions/common";
+import type {
+  CallbackRequest,
+  ContribRef,
+  Input,
+} from "@/lib/types/model/callback";
+import { getInputValues, getValue } from "@/lib/actions/common";
+import { fetchApiResult } from "@/lib/utils/fetchApiResult";
+import { fetchStateChangeRequests } from "@/lib/api";
+import { applyStateChangeRequests } from "@/lib/actions/applyStateChangeRequests";
 
 interface InputRef extends ContribRef {
   // The callback index of the contribution
@@ -9,6 +16,54 @@ interface InputRef extends ContribRef {
   inputIndex: number;
   // The property path
   propertyPath: string[];
+}
+
+export function handleHostStoreChange<S extends object = object>(
+  currState: S,
+  prevState: S,
+) {
+  const effectiveInputRefs = getHostStoreInputRefs().filter((inputRef) =>
+    isEffectiveInputRef(inputRef, currState, prevState),
+  );
+  if (effectiveInputRefs.length === 0) {
+    return;
+  }
+  const { configuration, contributionsRecord } = store.getState();
+  const { hostStore } = configuration;
+  const callbackRequests: CallbackRequest[] = effectiveInputRefs.map(
+    (inputRef) => {
+      const contribution =
+        contributionsRecord[inputRef.contribPoint][inputRef.contribIndex];
+      const callback = contribution.callbacks
+        ? contribution.callbacks[inputRef.callbackIndex]
+        : undefined;
+      const inputValues =
+        callback && callback.inputs
+          ? getInputValues(
+              callback.inputs,
+              contribution,
+              hostStore ? hostStore.getState() : undefined,
+            )
+          : [];
+      return { ...inputRef, inputValues };
+    },
+  );
+  fetchApiResult(
+    fetchStateChangeRequests,
+    callbackRequests,
+    configuration.api,
+  ).then((changeRequestsResult) => {
+    if (changeRequestsResult.data) {
+      applyStateChangeRequests(changeRequestsResult.data);
+    } else {
+      console.error(
+        "callback failed:",
+        changeRequestsResult.error,
+        "for call requests:",
+        callbackRequests,
+      );
+    }
+  });
 }
 
 // TODO: use memo
@@ -36,18 +91,6 @@ function getHostStoreInputRefs(): InputRef[] {
     });
   });
   return appStateRefs;
-}
-
-export function handleHostStoreChange<S extends object = object>(
-  currState: S,
-  prevState: S,
-) {
-  const effectiveInputRefs = getHostStoreInputRefs().filter((inputRef) =>
-    isEffectiveInputRef(inputRef, currState, prevState),
-  );
-  if (effectiveInputRefs.length === 0) {
-    return;
-  }
 }
 
 function isEffectiveInputRef<S extends object = object>(

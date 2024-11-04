@@ -8,7 +8,7 @@ export {
 // Actions (store changes)
 export { initializeContributions } from "@/lib/actions/initializeContributions";
 export { configureFramework } from "@/lib/actions/configureFramework";
-export { applyPropertyChange } from "@/lib/actions/applyPropertyChange";
+export { handleComponentChange } from "@/lib/actions/handleComponentChange";
 export { updateContributionState } from "@/lib/actions/updateContributionState";
 // React Components
 export { DashiComponent } from "@/lib/components/DashiComponent";

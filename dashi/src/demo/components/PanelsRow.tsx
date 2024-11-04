@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 
-import { type PropertyChangeEvent, applyPropertyChange } from "@/lib";
+import { type PropertyChangeEvent, handleComponentChange } from "@/lib";
 import { usePanelStates } from "@/demo/hooks";
 import Panel from "./Panel";
 
@@ -11,11 +11,11 @@ function PanelsRow() {
     return null;
   }
 
-  const handlePanelPropertyChange = (
+  const handlePanelChange = (
     panelIndex: number,
     panelEvent: PropertyChangeEvent,
   ) => {
-    applyPropertyChange("panels", panelIndex, panelEvent);
+    handleComponentChange("panels", panelIndex, panelEvent);
   };
   const visiblePanels: JSX.Element[] = [];
   panelStates.forEach((panelState, panelIndex) => {
@@ -24,7 +24,7 @@ function PanelsRow() {
         <Panel
           key={panelIndex}
           {...panelState}
-          onPropertyChange={(e) => handlePanelPropertyChange(panelIndex, e)}
+          onPropertyChange={(e) => handlePanelChange(panelIndex, e)}
         />,
       );
     }
