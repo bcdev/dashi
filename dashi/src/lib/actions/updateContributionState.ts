@@ -30,6 +30,7 @@ export function updateContributionState<S extends object = object>(
       componentResult: { status: "pending" },
     });
     const inputValues = getLayoutInputValues(contribPoint, contribIndex);
+    console.log("inputValues:", inputValues);
     fetchApiResult(
       fetchInitialComponentState,
       contribPoint,
@@ -50,15 +51,12 @@ function getLayoutInputValues(
   contribIndex: number,
 ): unknown[] {
   const { configuration, contributionsRecord } = store.getState();
-  const contributionStates = contributionsRecord[contribPoint];
-  const contributionState = contributionStates[contribIndex];
-  const inputs = contributionState.layout!.inputs;
+  const { hostStore } = configuration;
+  const contributions = contributionsRecord[contribPoint];
+  const contribution = contributions[contribIndex];
+  const inputs = contribution.layout!.inputs;
   if (inputs && inputs.length > 0) {
-    return getInputValues(
-      inputs,
-      contributionState,
-      configuration.hostStore?.getState,
-    );
+    return getInputValues(inputs, contribution, hostStore?.getState());
   } else {
     return [];
   }

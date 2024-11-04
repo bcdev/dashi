@@ -39,11 +39,7 @@ export function handleHostStoreChange<S extends object = object>(
         : undefined;
       const inputValues =
         callback && callback.inputs
-          ? getInputValues(
-              callback.inputs,
-              contribution,
-              hostStore ? hostStore.getState() : undefined,
-            )
+          ? getInputValues(callback.inputs, contribution, hostStore?.getState())
           : [];
       return { ...inputRef, inputValues };
     },
@@ -66,7 +62,8 @@ export function handleHostStoreChange<S extends object = object>(
   });
 }
 
-// TODO: use memo
+// TODO: memoize this function,
+//  its output should stay constant
 function getHostStoreInputRefs(): InputRef[] {
   const { contributionsRecord } = store.getState();
   const appStateRefs: InputRef[] = [];
