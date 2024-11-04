@@ -22,6 +22,7 @@ export function handleHostStoreChange<S extends object = object>(
   currState: S,
   prevState: S,
 ) {
+  console.log("handleHostStoreChange:", currState, prevState);
   const effectiveInputRefs = getHostStoreInputRefs().filter((inputRef) =>
     isEffectiveInputRef(inputRef, currState, prevState),
   );

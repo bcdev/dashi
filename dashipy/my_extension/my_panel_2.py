@@ -60,8 +60,8 @@ def make_figure(
     ctx: Context, selected_dataset_id: str = None, selected_variable_name: str = None
 ) -> alt.Chart:
     dataset = ctx.datasets.get(selected_dataset_id)
-    print("Panel 2, dataset:", dataset)
-
+    # print("selected_dataset_id:", selected_dataset_id)
+    # print("selected_variable_name:", selected_variable_name)
     slider = alt.binding_range(min=0, max=100, step=1, name="Cutoff ")
     selector = alt.param(name="SelectorName", value=50, bind=slider)
     # Almost same as the chart in Panel 1, but here we use the Shorthand
@@ -90,8 +90,8 @@ def make_figure(
 
 @panel.callback(
     Input(kind="AppState", property="selectedDatasetId"),
-    Output("selected_variable_name", "value"),
     Output("selected_variable_name", "options"),
+    Output("selected_variable_name", "value"),
 )
 def update_variable_selector(
     ctx: Context, selected_dataset_id: str = None
