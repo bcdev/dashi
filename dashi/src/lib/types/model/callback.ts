@@ -4,15 +4,29 @@ export interface Callback {
   outputs?: Output[];
 }
 
+export type JsonTypeName =
+  | "null"
+  | "boolean"
+  | "integer"
+  | "number"
+  | "string"
+  | "object"
+  | "array";
+
+export interface JsonSchema {
+  type?: JsonTypeName | JsonTypeName[];
+  [property: string]: unknown;
+}
+
 export interface CbFunction {
   name: string;
   parameters: CbParameter[];
-  returnType: string | string[];
+  returnType: JsonSchema;
 }
 
 export interface CbParameter {
   name: string;
-  type?: string | string[];
+  type?: JsonSchema;
   default?: unknown;
 }
 
