@@ -1,4 +1,5 @@
 import altair as alt
+import pandas as pd
 
 from dashipy import Component, Input, Output
 from dashipy.components import Plot, Box, Dropdown
@@ -14,14 +15,8 @@ def render_panel(
     ctx: Context,
     selected_dataset_id: str = None,
 ) -> Component:
-
     dataset = ctx.datasets.get(selected_dataset_id)
-    if dataset is not None:
-        variable_names = [v for v in dataset.keys() if v != "x"]
-        selected_variable_name = variable_names[0]
-    else:
-        variable_names = []
-        selected_variable_name = None
+    variable_names, selected_variable_name = get_variable_names(dataset)
 
     plot = Plot(
         id="plot",
@@ -65,6 +60,7 @@ def make_figure(
     ctx: Context, selected_dataset_id: str = None, selected_variable_name: str = None
 ) -> alt.Chart:
     dataset = ctx.datasets.get(selected_dataset_id)
+    print("Panel 2, dataset:", dataset)
 
     slider = alt.binding_range(min=0, max=100, step=1, name="Cutoff ")
     selector = alt.param(name="SelectorName", value=50, bind=slider)
@@ -90,3 +86,25 @@ def make_figure(
         .interactive()
     )
     return chart
+
+
+@panel.callback(
+    Input(kind="AppState", property="selectedDatasetId"),
+    Output("selected_variable_name", "value"),
+    Output("selected_variable_name", "options"),
+)
+def update_variable_selector(
+    ctx: Context, selected_dataset_id: str = None
+) -> tuple[list[str], str | None]:
+    dataset = ctx.datasets.get(selected_dataset_id)
+    return get_variable_names(dataset)
+
+
+def get_variable_names(dataset: pd.DataFrame) -> tuple[list[str], str | None]:
+    if dataset is not None:
+        variable_names = [v for v in dataset.keys() if v != "x"]
+        selected_variable_name = variable_names[0]
+    else:
+        variable_names = []
+        selected_variable_name = None
+    return variable_names, selected_variable_name
