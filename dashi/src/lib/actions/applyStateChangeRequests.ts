@@ -29,11 +29,10 @@ export function applyStateChangeRequests(
 }
 
 function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
-  const hostStore = store.getState().configuration.hostStore;
-  const getHostState = hostStore?.getState;
-  const setHostState = hostStore?.setState;
-  if (getHostState && setHostState) {
-    const hostStateOld = getHostState();
+  const { configuration } = store.getState();
+  const { hostStore } = configuration;
+  if (hostStore) {
+    const hostStateOld = hostStore.getState();
     let hostState: object | undefined = hostStateOld;
     stateChangeRequests.forEach((stateChangeRequest) => {
       hostState = applyStateChanges(
@@ -43,7 +42,7 @@ function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
       );
     });
     if (hostState !== hostStateOld) {
-      setHostState(hostState);
+      hostStore.setState(hostState);
     }
   }
 }
