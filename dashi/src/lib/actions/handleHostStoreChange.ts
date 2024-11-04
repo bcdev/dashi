@@ -22,7 +22,6 @@ export function handleHostStoreChange<S extends object = object>(
   currState: S,
   prevState: S,
 ) {
-  console.log("handleHostStoreChange:", currState, prevState);
   const effectiveInputRefs = getHostStoreInputRefs().filter((inputRef) =>
     isEffectiveInputRef(inputRef, currState, prevState),
   );
@@ -45,12 +44,14 @@ export function handleHostStoreChange<S extends object = object>(
       return { ...inputRef, inputValues };
     },
   );
+  // console.log("handleHostStoreChange request:", callbackRequests);
   fetchApiResult(
     fetchStateChangeRequests,
     callbackRequests,
     configuration.api,
   ).then((changeRequestsResult) => {
     if (changeRequestsResult.data) {
+      // console.log("handleHostStoreChange response:", changeRequestsResult.data);
       applyStateChangeRequests(changeRequestsResult.data);
     } else {
       console.error(
