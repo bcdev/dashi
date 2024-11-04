@@ -47,11 +47,12 @@ export function Dropdown({
         disabled={disabled}
         onChange={handleChange}
       >
-        {options.map(([text, value], index) => (
-          <MenuItem key={index} value={value}>
-            {text}
-          </MenuItem>
-        ))}
+        {options &&
+          options.map(([text, value], index) => (
+            <MenuItem key={index} value={value}>
+              {text}
+            </MenuItem>
+          ))}
       </Select>
     </FormControl>
   );
