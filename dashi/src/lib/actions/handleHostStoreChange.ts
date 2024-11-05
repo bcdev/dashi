@@ -1,3 +1,5 @@
+import memoizeOne from "memoize-one";
+
 import { store } from "@/lib/store";
 import type {
   CallbackRef,
@@ -7,7 +9,7 @@ import type {
   InputRef,
 } from "@/lib/types/model/callback";
 import { getInputValues } from "@/lib/actions/helpers/getInputValues";
-import { getValue } from "@/lib/utils/getValue";
+import { getValue, type PropertyPath } from "@/lib/utils/getValue";
 import { invokeCallbacks } from "@/lib/actions/helpers/invokeCallbacks";
 import type { ContributionState } from "@/lib";
 
@@ -16,14 +18,13 @@ import type { ContributionState } from "@/lib";
  */
 export interface PropertyRef extends ContribRef, CallbackRef, InputRef {
   /** The property name as path. */
-  propertyPath: string[];
+  propertyPath: PropertyPath;
 }
 
 export function handleHostStoreChange<S extends object = object>(
   currState: S,
   prevState: S,
 ) {
-  console.log("Aaaaaaaarghhh!");
   const { contributionsRecord } = store.getState();
   const callbackRequests = getCallbackRequests(
     contributionsRecord,
@@ -56,9 +57,9 @@ function getCallbackRequests<S extends object = object>(
   return callbackRequest;
 }
 
-// TODO: memoize this function,
-//  its return value should stay constant.
-function getHostStorePropertyRefs(): PropertyRef[] {
+const getHostStorePropertyRefs = memoizeOne(_getHostStorePropertyRefs);
+
+function _getHostStorePropertyRefs(): PropertyRef[] {
   const { contributionsRecord } = store.getState();
   const propertyRefs: PropertyRef[] = [];
   Object.getOwnPropertyNames(contributionsRecord).forEach((contribPoint) => {
@@ -85,7 +86,7 @@ function getHostStorePropertyRefs(): PropertyRef[] {
 }
 
 function hasPropertyChanged<S extends object = object>(
-  propertyPath: string[],
+  propertyPath: PropertyPath,
   currState: S,
   prevState: S,
 ): boolean {
