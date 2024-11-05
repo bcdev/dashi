@@ -1,21 +1,15 @@
 import { store } from "@/lib/store";
-import { fetchStateChangeRequests } from "@/lib/api";
-import { fetchApiResult } from "@/lib/utils/fetchApiResult";
 import { type ContribPoint } from "@/lib/types/model/extension";
-import {
-  type Callback,
-  type CallbackRef,
-  type CallbackRequest,
-} from "@/lib/types/model/callback";
+import { type CallbackRequest } from "@/lib/types/model/callback";
 import { type ComponentChangeEvent } from "@/lib/types/model/event";
-import { type ContributionState } from "@/lib/types/state/contribution";
-import { getInputValues } from "@/lib/actions/common";
-import { applyStateChangeRequests } from "@/lib/actions/applyStateChangeRequests";
+import { getInputValues } from "@/lib/actions/helpers/getInputValues";
+import { applyStateChangeRequests } from "@/lib/actions/helpers/applyStateChangeRequests";
+import { invokeCallbacks } from "@/lib/actions/helpers/invokeCallbacks";
 
 export function handleComponentChange(
   contribPoint: ContribPoint,
   contribIndex: number,
-  contribEvent: ComponentChangeEvent,
+  changeEvent: ComponentChangeEvent,
 ) {
   applyStateChangeRequests([
     {
@@ -24,96 +18,59 @@ export function handleComponentChange(
       stateChanges: [
         {
           kind: "Component",
-          id: contribEvent.componentId,
-          property: contribEvent.propertyName,
-          value: contribEvent.propertyValue,
+          id: changeEvent.componentId,
+          property: changeEvent.propertyName,
+          value: changeEvent.propertyValue,
         },
       ],
     },
   ]);
+  const callbackRequests = getCallbackRequests(
+    contribPoint,
+    contribIndex,
+    changeEvent,
+  );
+  invokeCallbacks(callbackRequests);
+}
 
+/**
+ * Collect callback requests for the callbacks of
+ * the contribution that are triggered by the change event.
+ *
+ * @param contribPoint Name of the contribution point.
+ * @param contribIndex Index of the contribution.
+ * @param changeEvent The change event.
+ */
+function getCallbackRequests(
+  contribPoint: ContribPoint,
+  contribIndex: number,
+  changeEvent: ComponentChangeEvent,
+): CallbackRequest[] {
   const { configuration, contributionsRecord } = store.getState();
   const { hostStore } = configuration;
+  const hostState = hostStore?.getState();
   const contributions = contributionsRecord[contribPoint];
   const contribution = contributions[contribIndex];
-  const callbackRefs = generateCallbackRefs(
-    contribution,
-    contribEvent,
-    hostStore?.getState(),
-  );
-  // console.debug("callRequests", callRequests);
-  if (callbackRefs.length) {
-    const callbackRequests: CallbackRequest[] = callbackRefs.map(
-      (callbackRef) => ({
-        contribPoint,
-        contribIndex,
-        ...callbackRef,
-      }),
-    );
-    fetchApiResult(
-      fetchStateChangeRequests,
-      callbackRequests,
-      configuration.api,
-    ).then((changeRequestsResult) => {
-      if (changeRequestsResult.data) {
-        applyStateChangeRequests(changeRequestsResult.data);
-      } else {
-        console.error(
-          "callback failed:",
-          changeRequestsResult.error,
-          "for call requests:",
-          callbackRequests,
-        );
-      }
-    });
-  }
-}
-
-function generateCallbackRefs<S extends object>(
-  contribution: ContributionState,
-  contribEvent: ComponentChangeEvent,
-  hostState?: S | undefined,
-): CallbackRef[] {
-  const callbackRefs: CallbackRef[] = [];
-  // Prepare calling all callbacks of the contribution
-  // that are triggered by the property change
+  const callbackRequests: CallbackRequest[] = [];
   (contribution.callbacks || []).forEach((callback, callbackIndex) => {
-    const inputValues = getCallbackInputValues(
-      contribution,
-      contribEvent,
-      callback,
-      hostState,
-    );
-    if (inputValues) {
-      callbackRefs.push({ callbackIndex, inputValues });
+    if (callback.inputs && callback.inputs.length) {
+      const inputs = callback.inputs;
+      const inputIndex = inputs.findIndex(
+        (input) =>
+          (!input.kind || input.kind === "Component") &&
+          input.id === changeEvent.componentId &&
+          input.property === changeEvent.propertyName,
+      );
+      if (inputIndex >= 0) {
+        callbackRequests.push({
+          contribPoint,
+          contribIndex,
+          callbackIndex,
+          inputIndex,
+          inputValues: getInputValues(inputs, contribution, hostState),
+        });
+      }
     }
   });
-  return callbackRefs;
-}
-
-// we export for testing only
-export function getCallbackInputValues<S extends object>(
-  contribution: ContributionState,
-  contribEvent: ComponentChangeEvent,
-  callback: Callback,
-  hostState?: S | undefined,
-): unknown[] | undefined {
-  if (!callback.inputs || !callback.inputs.length) {
-    // No inputs defined
-    return undefined;
-  }
-
-  // Find the index of input that is a trigger
-  const triggerIndex: number = callback.inputs.findIndex(
-    (input) =>
-      (!input.kind || input.kind === "Component") &&
-      input.id === contribEvent.componentId &&
-      input.property === contribEvent.propertyName,
-  );
-  if (triggerIndex < 0) {
-    // No trigger index found --> this callback is not applicable
-    return undefined;
-  }
-
-  return getInputValues(callback.inputs, contribution, hostState);
+  return callbackRequests;
 }

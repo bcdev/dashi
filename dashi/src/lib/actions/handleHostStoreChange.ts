@@ -1,20 +1,21 @@
 import { store } from "@/lib/store";
 import type {
+  CallbackRef,
   CallbackRequest,
   ContribRef,
   Input,
+  InputRef,
 } from "@/lib/types/model/callback";
-import { getInputValues, getValue } from "@/lib/actions/common";
-import { fetchApiResult } from "@/lib/utils/fetchApiResult";
-import { fetchStateChangeRequests } from "@/lib/api";
-import { applyStateChangeRequests } from "@/lib/actions/applyStateChangeRequests";
+import { getInputValues } from "@/lib/actions/helpers/getInputValues";
+import { getValue } from "@/lib/utils/getValue";
+import { invokeCallbacks } from "@/lib/actions/helpers/invokeCallbacks";
+import type { ContributionState } from "@/lib";
 
-interface InputRef extends ContribRef {
-  // The callback index of the contribution
-  callbackIndex: number;
-  // The index of an input
-  inputIndex: number;
-  // The property path
+/**
+ * A reference to a property of an input of a callback of a contribution.
+ */
+export interface PropertyRef extends ContribRef, CallbackRef, InputRef {
+  /** The property name as path. */
   propertyPath: string[];
 }
 
@@ -22,53 +23,44 @@ export function handleHostStoreChange<S extends object = object>(
   currState: S,
   prevState: S,
 ) {
-  const effectiveInputRefs = getHostStoreInputRefs().filter((inputRef) =>
-    isEffectiveInputRef(inputRef, currState, prevState),
+  console.log("Aaaaaaaarghhh!");
+  const { contributionsRecord } = store.getState();
+  const callbackRequests = getCallbackRequests(
+    contributionsRecord,
+    currState,
+    prevState,
   );
-  if (effectiveInputRefs.length === 0) {
-    return;
-  }
-  const { configuration, contributionsRecord } = store.getState();
-  const { hostStore } = configuration;
-  const callbackRequests: CallbackRequest[] = effectiveInputRefs.map(
-    (inputRef) => {
-      const contribution =
-        contributionsRecord[inputRef.contribPoint][inputRef.contribIndex];
-      const callback = contribution.callbacks
-        ? contribution.callbacks[inputRef.callbackIndex]
-        : undefined;
-      const inputValues =
-        callback && callback.inputs
-          ? getInputValues(callback.inputs, contribution, hostStore?.getState())
-          : [];
-      return { ...inputRef, inputValues };
-    },
+  invokeCallbacks(callbackRequests);
+}
+
+function getCallbackRequests<S extends object = object>(
+  contributionsRecord: Record<string, ContributionState[]>,
+  hostState: S,
+  prevHostState: S,
+): CallbackRequest[] {
+  const propertyRefs = getHostStorePropertyRefs().filter((propertyRef) =>
+    hasPropertyChanged(propertyRef.propertyPath, hostState, prevHostState),
   );
-  // console.log("handleHostStoreChange request:", callbackRequests);
-  fetchApiResult(
-    fetchStateChangeRequests,
-    callbackRequests,
-    configuration.api,
-  ).then((changeRequestsResult) => {
-    if (changeRequestsResult.data) {
-      // console.log("handleHostStoreChange response:", changeRequestsResult.data);
-      applyStateChangeRequests(changeRequestsResult.data);
-    } else {
-      console.error(
-        "callback failed:",
-        changeRequestsResult.error,
-        "for call requests:",
-        callbackRequests,
-      );
-    }
+  const callbackRequest: CallbackRequest[] = [];
+  propertyRefs.forEach((propertyRef) => {
+    const contributions = contributionsRecord[propertyRef.contribPoint];
+    const contribution = contributions[propertyRef.contribIndex];
+    const callback = contribution.callbacks![propertyRef.callbackIndex];
+    const inputValues = getInputValues(
+      callback.inputs!,
+      contribution,
+      hostState,
+    );
+    callbackRequest.push({ ...propertyRef, inputValues });
   });
+  return callbackRequest;
 }
 
 // TODO: memoize this function,
-//  its output should stay constant
-function getHostStoreInputRefs(): InputRef[] {
+//  its return value should stay constant.
+function getHostStorePropertyRefs(): PropertyRef[] {
   const { contributionsRecord } = store.getState();
-  const appStateRefs: InputRef[] = [];
+  const propertyRefs: PropertyRef[] = [];
   Object.getOwnPropertyNames(contributionsRecord).forEach((contribPoint) => {
     const contributions = contributionsRecord[contribPoint];
     contributions.forEach((contribution, contribIndex) => {
@@ -76,7 +68,7 @@ function getHostStoreInputRefs(): InputRef[] {
         (callback, callbackIndex) =>
           (callback.inputs || []).forEach((input, inputIndex) => {
             if (input.kind === "AppState") {
-              appStateRefs.push({
+              propertyRefs.push({
                 contribPoint,
                 contribIndex,
                 callbackIndex,
@@ -89,15 +81,14 @@ function getHostStoreInputRefs(): InputRef[] {
       );
     });
   });
-  return appStateRefs;
+  return propertyRefs;
 }
 
-function isEffectiveInputRef<S extends object = object>(
-  inputRef: InputRef,
+function hasPropertyChanged<S extends object = object>(
+  propertyPath: string[],
   currState: S,
   prevState: S,
 ): boolean {
-  const propertyPath = inputRef.propertyPath;
   const currValue = getValue(currState, propertyPath);
   const prevValue = getValue(prevState, propertyPath);
   return !Object.is(currValue, prevValue);
