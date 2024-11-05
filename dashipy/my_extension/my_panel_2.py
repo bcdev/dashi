@@ -16,16 +16,15 @@ def render_panel(
     selected_dataset_id: str = "",
 ) -> Component:
     dataset = ctx.datasets.get(selected_dataset_id)
-    variable_names = get_variable_names(dataset)
-    selected_variable_name = variable_names[0] if variable_names else ""
+    variable_names, var_name = get_variable_names(dataset)
     plot = Plot(
         id="plot",
-        chart=make_figure(ctx, selected_dataset_id, selected_variable_name),
+        chart=make_figure(ctx, selected_dataset_id, var_name),
         style={"flexGrow": 1},
     )
     dropdown = Dropdown(
         id="selected_variable_name",
-        value=selected_variable_name,
+        value=var_name,
         label="Variable",
         options=[(v, v) for v in variable_names],
         style={"flexGrow": 0, "minWidth": 120},
@@ -57,11 +56,12 @@ def render_panel(
     Output("plot", "chart"),
 )
 def make_figure(
-    ctx: Context, selected_dataset_id: str = None, selected_variable_name: str = None
+    ctx: Context,
+    selected_dataset_id: str | None = None,
+    selected_variable_name: str | None = None,
 ) -> alt.Chart:
     dataset = ctx.datasets.get(selected_dataset_id)
-    # print("selected_dataset_id:", selected_dataset_id)
-    # print("selected_variable_name:", selected_variable_name)
+    _, selected_variable_name = get_variable_names(dataset, selected_variable_name)
     slider = alt.binding_range(min=0, max=100, step=1, name="Cutoff ")
     selector = alt.param(name="SelectorName", value=50, bind=slider)
     # Almost same as the chart in Panel 1, but here we use the Shorthand
@@ -94,15 +94,31 @@ def make_figure(
     Output("selected_variable_name", "value"),
 )
 def update_variable_selector(
-    ctx: Context, selected_dataset_id: str = None
+    ctx: Context, selected_dataset_id: str | None = None
 ) -> tuple[list[tuple[str, str]], str]:
     dataset = ctx.datasets.get(selected_dataset_id)
-    variable_names = get_variable_names(dataset)
-    return [(v, v) for v in variable_names], variable_names[0] if variable_names else ""
+    variable_names, var_name = get_variable_names(dataset)
+    return [(v, v) for v in variable_names], var_name
 
 
-def get_variable_names(dataset: pd.DataFrame) -> list[str]:
+def get_variable_names(
+    dataset: pd.DataFrame,
+    prev_var_name: str | None = None,
+) -> tuple[list[str], str]:
+    """Get the variable names and the selected variable name
+    for the given dataset and previously selected variable name.
+    """
+
     if dataset is not None:
-        return [v for v in dataset.keys() if v != "x"]
+        var_names = [v for v in dataset.keys() if v != "x"]
     else:
-        return []
+        var_names = []
+
+    if prev_var_name and prev_var_name in var_names:
+        var_name = prev_var_name
+    elif var_names:
+        var_name = var_names[0]
+    else:
+        var_name = ""
+
+    return var_names, var_name
