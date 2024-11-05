@@ -6,7 +6,6 @@ import {
   type Callback,
   type CallbackRef,
   type CallbackRequest,
-  type StateChangeRequest,
 } from "@/lib/types/model/callback";
 import { type ComponentChangeEvent } from "@/lib/types/model/event";
 import { type ContributionState } from "@/lib/types/state/contribution";
@@ -18,6 +17,21 @@ export function handleComponentChange(
   contribIndex: number,
   contribEvent: ComponentChangeEvent,
 ) {
+  applyStateChangeRequests([
+    {
+      contribPoint,
+      contribIndex,
+      stateChanges: [
+        {
+          kind: "Component",
+          id: contribEvent.componentId,
+          property: contribEvent.propertyName,
+          value: contribEvent.propertyValue,
+        },
+      ],
+    },
+  ]);
+
   const { configuration, contributionsRecord } = store.getState();
   const { hostStore } = configuration;
   const contributions = contributionsRecord[contribPoint];
@@ -27,24 +41,8 @@ export function handleComponentChange(
     contribEvent,
     hostStore?.getState(),
   );
-  // The primary state change request corresponds
-  // to the original property change event.
-  const primaryChangeRequest: StateChangeRequest = {
-    contribPoint,
-    contribIndex,
-    stateChanges: [
-      {
-        kind: "Component",
-        id: contribEvent.componentId,
-        property: contribEvent.propertyName,
-        value: contribEvent.propertyValue,
-      },
-    ],
-  };
   // console.debug("callRequests", callRequests);
-  if (callbackRefs.length == 0) {
-    applyStateChangeRequests([primaryChangeRequest]);
-  } else {
+  if (callbackRefs.length) {
     const callbackRequests: CallbackRequest[] = callbackRefs.map(
       (callbackRef) => ({
         contribPoint,
@@ -57,14 +55,9 @@ export function handleComponentChange(
       callbackRequests,
       configuration.api,
     ).then((changeRequestsResult) => {
-      const secondaryChangeRequests = changeRequestsResult.data;
-      if (secondaryChangeRequests) {
-        applyStateChangeRequests(
-          [primaryChangeRequest].concat(secondaryChangeRequests),
-        );
+      if (changeRequestsResult.data) {
+        applyStateChangeRequests(changeRequestsResult.data);
       } else {
-        // Note, we do not even apply the primaryChangeRequest
-        // in order to avoid an inconsistent state.
         console.error(
           "callback failed:",
           changeRequestsResult.error,
@@ -122,13 +115,5 @@ export function getCallbackInputValues<S extends object>(
     return undefined;
   }
 
-  const inputValues = getInputValues(callback.inputs, contribution, hostState);
-
-  if (inputValues[triggerIndex] === contribEvent.propertyValue) {
-    // No change --> this callback is not applicable
-    return undefined;
-  }
-
-  inputValues[triggerIndex] = contribEvent.propertyValue;
-  return inputValues;
+  return getInputValues(callback.inputs, contribution, hostState);
 }
