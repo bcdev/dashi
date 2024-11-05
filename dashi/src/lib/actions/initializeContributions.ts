@@ -1,10 +1,13 @@
 import { store } from "@/lib/store";
-import { fetchApiResult } from "@/lib/utils/fetchApiResult";
+import { type ApiResult, fetchApiResult } from "@/lib/utils/fetchApiResult";
 import { fetchContributions } from "@/lib/api";
 import { type Contribution } from "@/lib/types/model/contribution";
 import { type ContributionState } from "@/lib/types/state/contribution";
-import { type ContribPoint } from "@/lib/types/model/extension";
-import type { FrameworkOptions } from "@/lib/types/state/store";
+import {
+  type ContribPoint,
+  type Contributions,
+} from "@/lib/types/model/extension";
+import type { FrameworkOptions, StoreState } from "@/lib/types/state/store";
 import { configureFramework } from "@/lib";
 
 export function initializeContributions<S extends object = object>(
@@ -13,31 +16,40 @@ export function initializeContributions<S extends object = object>(
   if (options) {
     configureFramework(options);
   }
-  const apiOptions = store.getState().configuration.api;
+  const { configuration } = store.getState();
   store.setState({ contributionsResult: { status: "pending" } });
-  fetchApiResult(fetchContributions, apiOptions).then((contributionsResult) => {
-    // TODO: validate contributionsResult and contributionsResult.data
+  fetchApiResult(fetchContributions, configuration.api).then(
+    initializeContributionsLater,
+  );
+}
+
+function initializeContributionsLater(
+  contributionsResult: ApiResult<Contributions>,
+) {
+  let storeState: Partial<StoreState> = { contributionsResult };
+  if (contributionsResult.data) {
     const { extensions, contributions: rawContributionsRecord } =
-      contributionsResult.data!;
+      contributionsResult.data;
     const contributionsRecord: Record<ContribPoint, ContributionState[]> = {};
     Object.getOwnPropertyNames(rawContributionsRecord).forEach(
       (contribPoint: ContribPoint) => {
-        const rawContributions: Contribution[] =
+        const contributions: Contribution[] =
           rawContributionsRecord[contribPoint];
-        contributionsRecord[contribPoint] = rawContributions.map(
-          // Contribution --> ContributionState
-          (rawContribution) => ({
-            ...rawContribution,
-            state: { ...rawContribution.initialState },
-            componentResult: {},
-          }),
-        );
+        contributionsRecord[contribPoint] =
+          contributions.map(newContributionState);
       },
     );
-    store.setState({
-      extensions,
-      contributionsResult,
-      contributionsRecord,
-    });
-  });
+    storeState = { ...storeState, extensions, contributionsRecord };
+  }
+  store.setState(storeState);
+}
+
+function newContributionState(
+  rawContribution: Contribution,
+): ContributionState {
+  return {
+    ...rawContribution,
+    state: { ...rawContribution.initialState },
+    componentResult: {},
+  };
 }
