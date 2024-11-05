@@ -1,7 +1,10 @@
 import { describe, it, expect } from "vitest";
 
 import type { ComponentState, PlotState } from "@/lib/types/state/component";
-import { getComponentStateValue, getInputValueFromState } from "./common";
+import {
+  getComponentStateValue,
+  getInputValueFromState,
+} from "./getInputValues";
 
 const componentState: ComponentState = {
   type: "Box",
