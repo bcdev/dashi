@@ -1,4 +1,4 @@
-from dashipy import Component, Input, Output
+from dashipy import Component, AppInput, Input, Output
 from dashipy.components import Box, Dropdown, Checkbox, Typography
 from dashipy.demo.contribs import Panel
 from dashipy.demo.context import Context
@@ -11,7 +11,7 @@ COLORS = [("red", 0), ("green", 1), ("blue", 2), ("yellow", 3)]
 
 
 @panel.layout(
-    Input(kind="AppState", property="selectedDatasetId"),
+    AppInput("selectedDatasetId"),
 )
 def render_panel(
     ctx: Context,
@@ -53,7 +53,7 @@ def render_panel(
 
 # noinspection PyUnusedLocal
 @panel.callback(
-    Input(kind="AppState", property="selectedDatasetId"),
+    AppInput(property="selectedDatasetId"),
     Input("opaque"),
     Input("color"),
     Output("info_text", "text"),

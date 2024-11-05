@@ -1,7 +1,8 @@
 from typing import Any, Callable
 from abc import ABC
 
-from .callback import Callback, Output, Input
+from .callback import Callback
+from .inputoutput import InputOutput
 
 
 class Contribution(ABC):
@@ -36,7 +37,7 @@ class Contribution(ABC):
 
         return decorator
 
-    def callback(self, *args: Input | Output) -> Callable[[Callable], Callable]:
+    def callback(self, *args: InputOutput) -> Callable[[Callable], Callable]:
         """Decorator."""
 
         def decorator(function: Callable) -> Callable:

@@ -1,51 +1,14 @@
 import inspect
 import types
-from abc import ABC
-from typing import Callable, Any, Literal
+from typing import Any, Callable
 
-
-ComponentKind = Literal["Component"]
-AppStateKind = Literal["AppState"]
-StateKind = Literal["State"]
-InputOutputKind = ComponentKind | StateKind | AppStateKind
-
-
-class InputOutput(ABC):
-    # noinspection PyShadowingBuiltins
-    def __init__(
-        self,
-        id: str | None = None,
-        property: str | None = None,
-        kind: InputOutputKind | None = None,
-    ):
-        kind = "Component" if kind is None else kind
-        assert kind in ("AppState", "State", "Component")
-        if kind == "Component":
-            assert id is not None and isinstance(id, str) and id != ""
-            property = "value" if property is None else property
-            assert isinstance(property, str) and property != ""
-        else:
-            assert id is None or (isinstance(id, str) and id != "")
-            assert property is None or (isinstance(property, str) and property != "")
-
-        self.kind = kind
-        self.id = id
-        self.property = property
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            k: v
-            for k, v in self.__dict__.items()
-            if not k.startswith("_") and v is not None
-        }
-
-
-class Input(InputOutput):
-    """Callback input."""
-
-
-class Output(InputOutput):
-    """Callback output."""
+from dashipy.inputoutput import (
+    AppInput,
+    AppOutput,
+    Input,
+    Output,
+    State,
+)
 
 
 class Callback:
@@ -81,18 +44,18 @@ class Callback:
                 f" context parameter"
             )
 
-        inputs: list[Input] = []
-        outputs: list[Output] = []
+        inputs: list[Input | State | AppInput] = []
+        outputs: list[Output | AppOutput] = []
         for arg in decorator_args:
-            if isinstance(arg, Input):
+            if isinstance(arg, (Input, State, AppInput)):
                 inputs.append(arg)
-            elif outputs_allowed and isinstance(arg, Output):
+            elif outputs_allowed and isinstance(arg, (Output, AppOutput)):
                 outputs.append(arg)
             elif outputs_allowed:
                 raise TypeError(
                     f"arguments for decorator {decorator_name!r}"
-                    f" must be of type Input or Output,"
-                    f" but got {arg.__class__.__name__!r}"
+                    f" must be of type Input, State, Output, AppInput,"
+                    f" or AppOutput, but got {arg.__class__.__name__!r}"
                 )
             else:
                 raise TypeError(
@@ -118,8 +81,8 @@ class Callback:
     def __init__(
         self,
         function: Callable,
-        inputs: list[Input],
-        outputs: list[Output],
+        inputs: list[Input | State | AppInput],
+        outputs: list[Output | AppOutput],
         signature: inspect.Signature | None = None,
     ):
         """Private constructor.
