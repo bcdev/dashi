@@ -25,7 +25,7 @@ export function handleComponentChange(
   const callbackRefs = generateCallbackRefs(
     contribution,
     contribEvent,
-    hostStore ? hostStore.getState() : undefined,
+    hostStore?.getState(),
   );
   // The primary state change request corresponds
   // to the original property change event.
