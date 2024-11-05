@@ -30,14 +30,21 @@ export interface CbParameter {
   default?: unknown;
 }
 
-export type InputOutputKind = "AppState" | "State" | "Component";
+export type InputType = "AppInput" | "Input" | "State";
+
+export type OutputType = "AppOutput" | "Output";
+
+export type InputOutputType = InputType | OutputType;
 
 export interface InputOutput {
-  /** The kind of input or output. */
-  kind: InputOutputKind;
+  /**
+   * The type of input or output.
+   */
+  type: InputOutputType;
+
   /**
    * The identifier of a subcomponent.
-   * `id` is not needed if kind == "AppState" | "State".
+   * `id` is not needed if type == "AppInput" | "AppOutput".
    */
   id?: string;
 
@@ -52,9 +59,13 @@ export interface InputOutput {
   property: string;
 }
 
-export interface Input extends InputOutput {}
+export interface Input extends InputOutput {
+  type: InputType;
+}
 
-export interface Output extends InputOutput {}
+export interface Output extends InputOutput {
+  type: OutputType;
+}
 
 /**
  * A reference to a specific contribution.

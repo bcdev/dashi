@@ -27,7 +27,7 @@ describe("Test that getComponentStateValue()", () => {
   it("works on 1st level", () => {
     expect(
       getComponentStateValue(componentState, {
-        kind: "Component",
+        type: "Input",
         id: "b1",
         property: "value",
       }),
@@ -37,7 +37,7 @@ describe("Test that getComponentStateValue()", () => {
   it("works on 2nd level", () => {
     expect(
       getComponentStateValue(componentState, {
-        kind: "Component",
+        type: "Input",
         id: "p1",
         property: "chart",
       }),
@@ -47,7 +47,7 @@ describe("Test that getComponentStateValue()", () => {
   it("works on 3rd level", () => {
     expect(
       getComponentStateValue(componentState, {
-        kind: "Component",
+        type: "Input",
         id: "cb1",
         property: "value",
       }),
@@ -55,7 +55,7 @@ describe("Test that getComponentStateValue()", () => {
 
     expect(
       getComponentStateValue(componentState, {
-        kind: "Component",
+        type: "Input",
         id: "dd1",
         property: "value",
       }),
@@ -67,21 +67,21 @@ describe("Test that getInputValueFromState()", () => {
   it("works with input.id and input.property", () => {
     const state = { x: { y: 26 } };
     expect(
-      getInputValueFromState({ kind: "State", id: "x", property: "y" }, state),
+      getInputValueFromState({ type: "State", id: "x", property: "y" }, state),
     ).toEqual(26);
   });
 
   it("works with arrays indexes", () => {
     const state = { x: [4, 5, 6] };
     expect(
-      getInputValueFromState({ kind: "State", id: "x", property: "1" }, state),
+      getInputValueFromState({ type: "State", id: "x", property: "1" }, state),
     ).toEqual(5);
   });
 
   it("works without input.id", () => {
     const state = { x: [4, 5, 6] };
     expect(
-      getInputValueFromState({ kind: "State", property: "x" }, state),
+      getInputValueFromState({ type: "State", property: "x" }, state),
     ).toEqual([4, 5, 6]);
   });
 });

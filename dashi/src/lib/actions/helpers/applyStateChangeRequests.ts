@@ -37,8 +37,9 @@ function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
     stateChangeRequests.forEach((stateChangeRequest) => {
       hostState = applyStateChanges(
         hostState,
-        stateChangeRequest.stateChanges,
-        "AppState",
+        stateChangeRequest.stateChanges.filter(
+          (stateChange) => stateChange.type === "AppOutput",
+        ),
       );
     });
     if (hostState !== hostStateOld) {
@@ -53,13 +54,9 @@ function applyComponentStateChanges(
 ) {
   let component = componentOld;
   if (component) {
-    stateChanges
-      .filter(
-        (stateChange) => !stateChange.kind || stateChange.kind === "Component",
-      )
-      .forEach((stateChange) => {
-        component = applyComponentStateChange(component!, stateChange);
-      });
+    stateChanges.forEach((stateChange) => {
+      component = applyComponentStateChange(component!, stateChange);
+    });
   }
   return component;
 }
@@ -74,12 +71,19 @@ export function applyContributionChangeRequests(
       const contribution = contributionsRecord[contribPoint][contribIndex];
       const state = applyStateChanges(
         contribution.state,
-        stateChanges,
-        "State",
+        stateChanges.filter(
+          (stateChange) =>
+            (!stateChange.type || stateChange.type === "Output") &&
+            !stateChange.id,
+        ),
       );
       const component = applyComponentStateChanges(
         contribution.component,
-        stateChanges,
+        stateChanges.filter(
+          (stateChange) =>
+            (!stateChange.type || stateChange.type === "Output") &&
+            stateChange.id,
+        ),
       );
       if (
         state !== contribution.state ||
@@ -139,14 +143,12 @@ export function applyComponentStateChange(
 export function applyStateChanges<S extends object>(
   state: S | undefined,
   stateChanges: StateChange[],
-  kind: "State" | "AppState",
 ): S | undefined {
   stateChanges.forEach((stateChange) => {
     if (
-      stateChange.kind === kind &&
-      (!state ||
-        (state as unknown as Record<string, unknown>)[stateChange.property] !==
-          stateChange.value)
+      !state ||
+      (state as unknown as Record<string, unknown>)[stateChange.property] !==
+        stateChange.value
     ) {
       state = { ...state, [stateChange.property]: stateChange.value } as S;
     }

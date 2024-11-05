@@ -22,13 +22,14 @@ export function getInputValue<S extends object = object>(
   hostState?: S | undefined,
 ): unknown {
   let inputValue: unknown = undefined;
-  const inputKind = input.kind || "Component";
-  if (inputKind === "Component" && contributionState.component) {
+  const inputKind = input.type || "Input";
+  if (
+    (inputKind === "Input" || inputKind === "State") &&
+    contributionState.component
+  ) {
     // Return value of a property of some component in the tree
     inputValue = getComponentStateValue(contributionState.component, input);
-  } else if (inputKind === "State" && contributionState.state) {
-    inputValue = getInputValueFromState(input, contributionState.state);
-  } else if (inputKind === "AppState" && hostState) {
+  } else if (inputKind === "AppInput" && hostState) {
     inputValue = getInputValueFromState(input, hostState);
   } else {
     console.warn(`input of unknown kind:`, input);

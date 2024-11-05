@@ -68,7 +68,7 @@ function _getHostStorePropertyRefs(): PropertyRef[] {
       (contribution.callbacks || []).forEach(
         (callback, callbackIndex) =>
           (callback.inputs || []).forEach((input, inputIndex) => {
-            if (input.kind === "AppState") {
+            if (input.type === "AppInput") {
               propertyRefs.push({
                 contribPoint,
                 contribIndex,
