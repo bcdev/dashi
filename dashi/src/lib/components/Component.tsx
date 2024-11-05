@@ -5,6 +5,7 @@ import { Box, type BoxProps } from "./Box";
 import { Checkbox, type CheckboxProps } from "./Checkbox";
 import { Dropdown, type DropdownProps } from "./Dropdown";
 import { Plot, type PlotProps } from "./Plot";
+import { Typography, type TypographyProps } from "@/lib/components/Typography";
 
 export interface ComponentProps extends ComponentState {
   onChange: ComponentChangeHandler;
@@ -27,5 +28,7 @@ export function Component({ type, ...props }: ComponentProps) {
     return <Box {...(props as BoxProps)} />;
   } else if (type === "Checkbox") {
     return <Checkbox {...(props as CheckboxProps)} />;
+  } else if (type === "Typography") {
+    return <Typography {...(props as TypographyProps)} />;
   }
 }

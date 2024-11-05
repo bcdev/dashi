@@ -1,7 +1,13 @@
 import { type CSSProperties } from "react";
 import type { VisualizationSpec } from "react-vega";
 
-export type ComponentType = "Button" | "Checkbox" | "Dropdown" | "Plot" | "Box";
+export type ComponentType =
+  | "Button"
+  | "Checkbox"
+  | "Dropdown"
+  | "Plot"
+  | "Box"
+  | "Typography";
 
 export interface ComponentState {
   type: ComponentType;
@@ -46,4 +52,9 @@ export interface PlotState extends ComponentState {
 
 export interface BoxState extends ContainerState {
   type: "Box";
+}
+
+export interface TypographyState extends ComponentState {
+  type: "Typography";
+  text?: string;
 }
