@@ -6,7 +6,10 @@ import { applyStateChangeRequests } from "@/lib/actions/helpers/applyStateChange
 
 export function invokeCallbacks(callbackRequests: CallbackRequest[]) {
   const { configuration } = store.getState();
-  console.debug("invokeCallbacks -->", callbackRequests);
+  const invocationId = getInvocationId();
+  if (import.meta.env.DEV) {
+    console.debug(`invokeCallbacks (${invocationId})-->`, callbackRequests);
+  }
   if (callbackRequests.length) {
     fetchApiResult(
       fetchStateChangeRequests,
@@ -14,7 +17,12 @@ export function invokeCallbacks(callbackRequests: CallbackRequest[]) {
       configuration.api,
     ).then((changeRequestsResult) => {
       if (changeRequestsResult.data) {
-        console.debug("invokeCallbacks <--", changeRequestsResult.data);
+        if (import.meta.env.DEV) {
+          console.debug(
+            `invokeCallbacks <--(${invocationId})`,
+            changeRequestsResult.data,
+          );
+        }
         applyStateChangeRequests(changeRequestsResult.data);
       } else {
         console.error(
@@ -26,4 +34,10 @@ export function invokeCallbacks(callbackRequests: CallbackRequest[]) {
       }
     });
   }
+}
+
+let invocationCounter = 0;
+
+function getInvocationId() {
+  return invocationCounter++;
 }
