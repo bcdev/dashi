@@ -1,5 +1,3 @@
-import type { JSX } from "react";
-
 import { type ComponentChangeEvent, handleComponentChange } from "@/lib";
 import { usePanelStates } from "@/demo/hooks";
 import Panel from "./Panel";
@@ -17,23 +15,21 @@ function PanelsRow() {
   ) => {
     handleComponentChange("panels", panelIndex, panelEvent);
   };
-  const visiblePanels: JSX.Element[] = [];
-  panelStates.forEach((panelState, panelIndex) => {
-    if (panelState.state.visible) {
-      visiblePanels.push(
-        <Panel
-          key={panelIndex}
-          {...panelState}
-          onChange={(e) => handlePanelChange(panelIndex, e)}
-        />,
-      );
-    }
+  const panels = panelStates.map((panelState, panelIndex) => {
+    const { container, component, componentResult } = panelState;
+    return (
+      <Panel
+        key={panelIndex}
+        {...container}
+        componentProps={component}
+        componentStatus={componentResult.status}
+        componentError={componentResult.error}
+        onChange={(e) => handlePanelChange(panelIndex, e)}
+      />
+    );
   });
-  const panelElements = <>{visiblePanels}</>;
   return (
-    <div style={{ display: "flex", gap: 5, paddingTop: 10 }}>
-      {panelElements}
-    </div>
+    <div style={{ display: "flex", gap: 5, paddingTop: 10 }}>{panels}</div>
   );
 }
 

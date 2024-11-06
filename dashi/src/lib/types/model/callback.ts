@@ -1,3 +1,5 @@
+import type { Input, Output } from "@/lib/types/model/channel";
+
 export interface Callback {
   function: CbFunction;
   inputs?: Input[];
@@ -29,32 +31,6 @@ export interface CbParameter {
   type?: JsonSchema;
   default?: unknown;
 }
-
-export type InputOutputKind = "AppState" | "State" | "Component";
-
-export interface InputOutput {
-  /** The kind of input or output. */
-  kind: InputOutputKind;
-  /**
-   * The identifier of a subcomponent.
-   * `id` is not needed if kind == "AppState" | "State".
-   */
-  id?: string;
-
-  // TODO: we must allow `property` to be a constant
-  //  expression of the form: name {"." name | index}.
-  //  Then we get the normalized form
-  //    property: string[];
-
-  /**
-   * The property of an object or array index.
-   */
-  property: string;
-}
-
-export interface Input extends InputOutput {}
-
-export interface Output extends InputOutput {}
 
 /**
  * A reference to a specific contribution.

@@ -4,10 +4,12 @@ from dashipy.demo.contribs import Panel
 from dashipy.callback import Input, Callback, Output
 
 
+# noinspection PyUnusedLocal
 def my_callback_1(ctx):
     pass
 
 
+# noinspection PyUnusedLocal
 def my_callback_2(ctx, a: int = 0, b: str = "", c: bool = False) -> str:
     return f"{a}-{b}-{c}"
 
@@ -39,10 +41,7 @@ class DecoratorsTest(unittest.TestCase):
         self.assertEqual(1, len(callback.outputs))
         self.assertEqual("a", callback.inputs[0].id)
         self.assertEqual("value", callback.inputs[0].property)
-        self.assertEqual("Component", callback.inputs[0].kind)
         self.assertEqual("b", callback.inputs[1].id)
         self.assertEqual("value", callback.inputs[1].property)
-        self.assertEqual("Component", callback.inputs[1].kind)
         self.assertEqual("c", callback.inputs[2].id)
         self.assertEqual("value", callback.inputs[2].property)
-        self.assertEqual("Component", callback.inputs[2].kind)

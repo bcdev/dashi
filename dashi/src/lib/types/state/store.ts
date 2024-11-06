@@ -6,7 +6,7 @@ import type {
 import type { ApiResult } from "@/lib/utils/fetchApiResult";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ApiOptions } from "@/lib/api";
-import type { LoggingOptions } from "@/lib/utils/configureLogging";
+import type { LoggingOptions } from "@/lib/actions/helpers/configureLogging";
 import type { StoreApi } from "zustand";
 
 export interface FrameworkOptions<S extends object = object> {

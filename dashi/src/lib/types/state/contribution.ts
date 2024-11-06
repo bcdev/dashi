@@ -5,9 +5,9 @@ import type { ComponentState } from "./component";
 export interface ContributionState<S extends object = object>
   extends Contribution<S> {
   /**
-   * Contribution-private state properties.
+   * State that is used by the container of this contribution.
    */
-  state: S;
+  container: S;
   /**
    * The result of loading the initial component tree.
    */

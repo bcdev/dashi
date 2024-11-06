@@ -10,7 +10,7 @@ import type {
 import type { ContribPoint } from "@/lib/types/model/extension";
 import type { ContributionState } from "@/lib";
 import { updateArray } from "@/lib/utils/updateArray";
-import { isContainerState } from "@/lib/utils/isContainerState";
+import { isContainerState } from "@/lib/actions/helpers/isContainerState";
 
 export function applyStateChangeRequests(
   stateChangeRequests: StateChangeRequest[],
@@ -37,8 +37,9 @@ function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
     stateChangeRequests.forEach((stateChangeRequest) => {
       hostState = applyStateChanges(
         hostState,
-        stateChangeRequest.stateChanges,
-        "AppState",
+        stateChangeRequest.stateChanges.filter(
+          (stateChange) => stateChange.link === "app",
+        ),
       );
     });
     if (hostState !== hostStateOld) {
@@ -53,13 +54,9 @@ function applyComponentStateChanges(
 ) {
   let component = componentOld;
   if (component) {
-    stateChanges
-      .filter(
-        (stateChange) => !stateChange.kind || stateChange.kind === "Component",
-      )
-      .forEach((stateChange) => {
-        component = applyComponentStateChange(component!, stateChange);
-      });
+    stateChanges.forEach((stateChange) => {
+      component = applyComponentStateChange(component!, stateChange);
+    });
   }
   return component;
 }
@@ -72,17 +69,19 @@ export function applyContributionChangeRequests(
   stateChangeRequests.forEach(
     ({ contribPoint, contribIndex, stateChanges }) => {
       const contribution = contributionsRecord[contribPoint][contribIndex];
-      const state = applyStateChanges(
-        contribution.state,
-        stateChanges,
-        "State",
+      const container = applyStateChanges(
+        contribution.container,
+        stateChanges.filter((stateChange) => stateChange.link === "container"),
       );
       const component = applyComponentStateChanges(
         contribution.component,
-        stateChanges,
+        stateChanges.filter(
+          (stateChange) =>
+            !stateChange.link || stateChange.link === "component",
+        ),
       );
       if (
-        state !== contribution.state ||
+        container !== contribution.container ||
         component !== contribution.component
       ) {
         contributionsRecord = {
@@ -90,7 +89,7 @@ export function applyContributionChangeRequests(
           [contribPoint]: updateArray<ContributionState>(
             contributionsRecord[contribPoint],
             contribIndex,
-            { ...contribution, state, component },
+            { ...contribution, container, component },
           ),
         };
       }
@@ -139,14 +138,12 @@ export function applyComponentStateChange(
 export function applyStateChanges<S extends object>(
   state: S | undefined,
   stateChanges: StateChange[],
-  kind: "State" | "AppState",
 ): S | undefined {
   stateChanges.forEach((stateChange) => {
     if (
-      stateChange.kind === kind &&
-      (!state ||
-        (state as unknown as Record<string, unknown>)[stateChange.property] !==
-          stateChange.value)
+      !state ||
+      (state as unknown as Record<string, unknown>)[stateChange.property] !==
+        stateChange.value
     ) {
       state = { ...state, [stateChange.property]: stateChange.value } as S;
     }

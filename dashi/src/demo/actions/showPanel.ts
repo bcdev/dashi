@@ -1,6 +1,8 @@
-import { updateContributionState } from "@/lib";
+import { updateContributionContainer } from "@/lib";
 import type { PanelState } from "@/demo/types";
 
 export function showPanel(panelIndex: number) {
-  updateContributionState<PanelState>("panels", panelIndex, { visible: true });
+  updateContributionContainer<PanelState>("panels", panelIndex, {
+    visible: true,
+  });
 }

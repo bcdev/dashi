@@ -5,6 +5,7 @@ import pytest
 from dashipy.callback import Input, Callback, Output
 
 
+# noinspection PyUnusedLocal
 def my_callback(
     ctx,
     a: int,
@@ -59,10 +60,26 @@ class CallbackTest(unittest.TestCase):
                     "returnType": {"type": "string"},
                 },
                 "inputs": [
-                    {"id": "a", "kind": "Component", "property": "value"},
-                    {"id": "b", "kind": "Component", "property": "value"},
-                    {"id": "c", "kind": "Component", "property": "value"},
-                    {"id": "d", "kind": "Component", "property": "value"},
+                    {
+                        "link": "component",
+                        "id": "a",
+                        "property": "value",
+                    },
+                    {
+                        "link": "component",
+                        "id": "b",
+                        "property": "value",
+                    },
+                    {
+                        "link": "component",
+                        "id": "c",
+                        "property": "value",
+                    },
+                    {
+                        "link": "component",
+                        "id": "d",
+                        "property": "value",
+                    },
                 ],
             },
             d,
@@ -73,8 +90,8 @@ class CallbackTest(unittest.TestCase):
             my_callback_2,
             [Input("n")],
             [
-                Output(id="select", property="options"),
-                Output(id="select", property="value"),
+                Output("select", "options"),
+                Output("select", "value"),
             ],
         )
         d = callback.to_dict()
@@ -92,10 +109,24 @@ class CallbackTest(unittest.TestCase):
                         "type": "array",
                     },
                 },
-                "inputs": [{"id": "n", "kind": "Component", "property": "value"}],
+                "inputs": [
+                    {
+                        "link": "component",
+                        "id": "n",
+                        "property": "value",
+                    }
+                ],
                 "outputs": [
-                    {"id": "select", "kind": "Component", "property": "options"},
-                    {"id": "select", "kind": "Component", "property": "value"},
+                    {
+                        "link": "component",
+                        "id": "select",
+                        "property": "options",
+                    },
+                    {
+                        "link": "component",
+                        "id": "select",
+                        "property": "value",
+                    },
                 ],
             },
             d,
@@ -141,7 +172,9 @@ class FromDecoratorTest(unittest.TestCase):
 
         with pytest.raises(
             TypeError,
-            match="arguments for decorator 'test' must be of"
-            " type Input or Output, but got 'int'",
+            match=(
+                "arguments for decorator 'test' must be of type Input,"
+                " State, Output, AppInput, or AppOutput, but got 'int'"
+            ),
         ):
             Callback.from_decorator("test", (13,), my_callback, outputs_allowed=True)

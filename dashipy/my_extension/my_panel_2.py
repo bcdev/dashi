@@ -10,7 +10,7 @@ from dashipy.demo.context import Context
 panel = Panel(__name__, title="Panel B")
 
 
-@panel.layout(Input(kind="AppState", property="selectedDatasetId"))
+@panel.layout(Input(property="selectedDatasetId", source="app"))
 def render_panel(
     ctx: Context,
     selected_dataset_id: str = "",
@@ -51,7 +51,7 @@ def render_panel(
 
 
 @panel.callback(
-    Input(kind="AppState", property="selectedDatasetId"),
+    Input(property="selectedDatasetId", source="app"),
     Input("selected_variable_name"),
     Output("plot", "chart"),
 )
@@ -89,7 +89,7 @@ def make_figure(
 
 
 @panel.callback(
-    Input(kind="AppState", property="selectedDatasetId"),
+    Input(property="selectedDatasetId", source="app"),
     Output("selected_variable_name", "options"),
     Output("selected_variable_name", "value"),
 )

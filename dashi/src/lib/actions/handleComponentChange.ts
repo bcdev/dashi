@@ -17,7 +17,7 @@ export function handleComponentChange(
       contribIndex,
       stateChanges: [
         {
-          kind: "Component",
+          link: "component",
           id: changeEvent.componentId,
           property: changeEvent.propertyName,
           value: changeEvent.propertyValue,
@@ -57,7 +57,8 @@ function getCallbackRequests(
       const inputs = callback.inputs;
       const inputIndex = inputs.findIndex(
         (input) =>
-          (!input.kind || input.kind === "Component") &&
+          !input.noTrigger &&
+          (!input.link || input.link === "component") &&
           input.id === changeEvent.componentId &&
           input.property === changeEvent.propertyName,
       );

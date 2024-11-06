@@ -1,9 +1,6 @@
 import json
 import unittest
 
-import plotly.graph_objects as go
-from plotly.graph_objs import Layout
-
 from dashipy.components import Box
 
 
