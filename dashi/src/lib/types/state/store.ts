@@ -21,10 +21,10 @@ export interface FrameworkOptions<S extends object = object> {
 export interface StoreState<S extends object = object> {
   /** Framework configuration */
   configuration: FrameworkOptions<S>;
-  /** API call result from `GET /contributions`. */
-  contributionsResult: ApiResult<Contributions>;
   /** All extensions */
   extensions: Extension[];
+  /** API call result from `GET /contributions`. */
+  contributionsResult: ApiResult<Contributions>;
   /** A record that maps contribPoint --> ContributionState[].*/
   contributionsRecord: Record<ContribPoint, ContributionState[]>;
 }

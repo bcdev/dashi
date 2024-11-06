@@ -8,15 +8,15 @@ export {
 } from "@/lib/types/model/event";
 // Actions (store changes)
 export { initializeContributions } from "@/lib/actions/initializeContributions";
-export { configureFramework } from "@/lib/actions/configureFramework";
 export { handleComponentChange } from "@/lib/actions/handleComponentChange";
 export { updateContributionContainer } from "@/lib/actions/updateContributionContainer";
 // React Components
 export { Component } from "@/lib/components/Component";
 // React Hooks
 export {
-  useStore,
+  useConfiguration,
   useExtensions,
   useContributionsResult,
   useContributionsRecord,
+  makeContributionsHook,
 } from "@/lib/hooks";
