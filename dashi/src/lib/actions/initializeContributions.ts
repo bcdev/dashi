@@ -49,7 +49,7 @@ function newContributionState(
 ): ContributionState {
   return {
     ...rawContribution,
-    state: { ...rawContribution.initialState },
+    container: { ...rawContribution.initialState },
     componentResult: {},
   };
 }

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 
 import type { ComponentState, PlotState } from "@/lib/types/state/component";
 import {
-  getComponentStateValue,
+  getInputValueFromComponent,
   getInputValueFromState,
 } from "./getInputValues";
 
@@ -23,10 +23,10 @@ const componentState: ComponentState = {
   value: 14,
 };
 
-describe("Test that getComponentStateValue()", () => {
+describe("Test that getInputValueFromComponent()", () => {
   it("works on 1st level", () => {
     expect(
-      getComponentStateValue(componentState, {
+      getInputValueFromComponent(componentState, {
         link: "component",
         id: "b1",
         property: "value",
@@ -36,7 +36,7 @@ describe("Test that getComponentStateValue()", () => {
 
   it("works on 2nd level", () => {
     expect(
-      getComponentStateValue(componentState, {
+      getInputValueFromComponent(componentState, {
         link: "component",
         id: "p1",
         property: "chart",
@@ -46,7 +46,7 @@ describe("Test that getComponentStateValue()", () => {
 
   it("works on 3rd level", () => {
     expect(
-      getComponentStateValue(componentState, {
+      getInputValueFromComponent(componentState, {
         link: "component",
         id: "cb1",
         property: "value",
@@ -54,7 +54,7 @@ describe("Test that getComponentStateValue()", () => {
     ).toEqual(true);
 
     expect(
-      getComponentStateValue(componentState, {
+      getInputValueFromComponent(componentState, {
         link: "component",
         id: "dd1",
         property: "value",

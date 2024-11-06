@@ -6,31 +6,30 @@ import { updateArray } from "@/lib/utils/updateArray";
 import type { ContribPoint } from "@/lib/types/model/extension";
 import type { ContributionState } from "@/lib/types/state/contribution";
 
-export function updateContributionState<S extends object = object>(
+export function updateContributionContainer<S extends object = object>(
   contribPoint: ContribPoint,
   contribIndex: number,
-  contribState: Partial<S>,
+  container: Partial<S>,
   requireComponent: boolean = true,
 ) {
   const { configuration, contributionsRecord } = store.getState();
   const contributionStates = contributionsRecord[contribPoint];
   const contributionState = contributionStates[contribIndex];
-  if (contributionState.state === contribState) {
+  if (contributionState.container === container) {
     return; // nothing to do
   }
   const componentStatus = contributionState.componentResult.status;
   if (!requireComponent || componentStatus) {
     _updateContributionState(contribPoint, contribIndex, {
-      state: contribState,
+      container,
     });
   } else if (!componentStatus) {
     // No status yet, so we must load the component
     _updateContributionState(contribPoint, contribIndex, {
-      state: contribState,
+      container,
       componentResult: { status: "pending" },
     });
     const inputValues = getLayoutInputValues(contribPoint, contribIndex);
-    console.log("inputValues:", inputValues);
     fetchApiResult(
       fetchInitialComponentState,
       contribPoint,
@@ -70,10 +69,10 @@ function _updateContributionState(
   const { contributionsRecord } = store.getState();
   const contribStates = contributionsRecord[contribPoint]!;
   const contribStateOld = contribStates[contribIndex];
-  const contribStateNew = contribState.state
+  const contribStateNew = contribState.container
     ? {
         ...contribState,
-        state: { ...contribStateOld.state, ...contribState.state },
+        container: { ...contribStateOld.container, ...contribState.container },
       }
     : contribState;
   store.setState({

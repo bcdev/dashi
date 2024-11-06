@@ -25,8 +25,8 @@ export function getInputValue<S extends object = object>(
   const dataSource = input.link || "component";
   if (dataSource === "component" && contributionState.component) {
     // Return value of a property of some component in the tree
-    inputValue = getComponentStateValue(contributionState.component, input);
-  } else if (dataSource === "container" && contributionState.state) {
+    inputValue = getInputValueFromComponent(contributionState.component, input);
+  } else if (dataSource === "container" && contributionState.container) {
     inputValue = getInputValueFromState(input, hostState);
   } else if (dataSource === "app" && hostState) {
     inputValue = getInputValueFromState(input, hostState);
@@ -42,7 +42,7 @@ export function getInputValue<S extends object = object>(
 }
 
 // we export for testing only
-export function getComponentStateValue(
+export function getInputValueFromComponent(
   componentState: ComponentState,
   input: Input,
 ): unknown {
@@ -53,7 +53,7 @@ export function getComponentStateValue(
   } else if (isContainerState(componentState)) {
     for (let i = 0; i < componentState.components.length; i++) {
       const item = componentState.components[i];
-      const itemValue = getComponentStateValue(item, input);
+      const itemValue = getInputValueFromComponent(item, input);
       if (itemValue !== noValue) {
         return itemValue;
       }

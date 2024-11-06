@@ -4,7 +4,7 @@ import {
 } from "@/lib/types/state/component";
 
 export function isContainerState(
-  componentModel: ComponentState,
-): componentModel is ContainerState {
-  return !!componentModel.components;
+  component: ComponentState,
+): component is ContainerState {
+  return !!component.components;
 }

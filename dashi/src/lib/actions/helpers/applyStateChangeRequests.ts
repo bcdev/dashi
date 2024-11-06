@@ -69,22 +69,19 @@ export function applyContributionChangeRequests(
   stateChangeRequests.forEach(
     ({ contribPoint, contribIndex, stateChanges }) => {
       const contribution = contributionsRecord[contribPoint][contribIndex];
-      const state = applyStateChanges(
-        contribution.state,
-        stateChanges.filter(
-          (stateChange) => stateChange.link === "container" && !stateChange.id,
-        ),
+      const container = applyStateChanges(
+        contribution.container,
+        stateChanges.filter((stateChange) => stateChange.link === "container"),
       );
       const component = applyComponentStateChanges(
         contribution.component,
         stateChanges.filter(
           (stateChange) =>
-            (!stateChange.link || stateChange.link === "component") &&
-            stateChange.id,
+            !stateChange.link || stateChange.link === "component",
         ),
       );
       if (
-        state !== contribution.state ||
+        container !== contribution.container ||
         component !== contribution.component
       ) {
         contributionsRecord = {
@@ -92,7 +89,7 @@ export function applyContributionChangeRequests(
           [contribPoint]: updateArray<ContributionState>(
             contributionsRecord[contribPoint],
             contribIndex,
-            { ...contribution, state, component },
+            { ...contribution, container, component },
           ),
         };
       }

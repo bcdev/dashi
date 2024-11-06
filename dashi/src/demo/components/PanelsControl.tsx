@@ -17,15 +17,16 @@ function PanelsControl() {
     <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
       {panelStates.map((panelState, panelIndex) => {
         const id = `panels.${panelIndex}`;
+        const { title, visible } = panelState.container;
         return (
           <FormControlLabel
             key={panelIndex}
-            label={panelState.state.title}
+            label={title}
             control={
               <Checkbox
                 color="secondary"
                 id={id}
-                checked={panelState.state.visible || false}
+                checked={visible || false}
                 value={panelIndex}
                 onChange={(e) => {
                   if (e.currentTarget.checked) {

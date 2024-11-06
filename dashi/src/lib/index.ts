@@ -1,6 +1,7 @@
 // Types
 export { type Contribution } from "@/lib/types/model/contribution";
 export { type ContributionState } from "@/lib/types/state/contribution";
+export { type ComponentState } from "@/lib/types/state/component";
 export {
   type ComponentChangeEvent,
   type ComponentChangeHandler,
@@ -9,7 +10,7 @@ export {
 export { initializeContributions } from "@/lib/actions/initializeContributions";
 export { configureFramework } from "@/lib/actions/configureFramework";
 export { handleComponentChange } from "@/lib/actions/handleComponentChange";
-export { updateContributionState } from "@/lib/actions/updateContributionState";
+export { updateContributionContainer } from "@/lib/actions/updateContributionContainer";
 // React Components
 export { Component } from "@/lib/components/Component";
 // React Hooks

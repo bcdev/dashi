@@ -1,11 +1,7 @@
 import type { CSSProperties, ReactElement } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-
-import {
-  type ComponentChangeHandler,
-  type ContributionState,
-  Component,
-} from "@/lib";
+import { Component } from "@/lib";
+import type { ComponentState, ComponentChangeHandler } from "@/lib";
 import type { PanelState } from "@/demo/types";
 
 const panelContainerStyle: CSSProperties = {
@@ -32,39 +28,43 @@ const panelContentStyle: CSSProperties = {
   padding: 2,
 };
 
-interface PanelProps extends ContributionState<PanelState> {
+interface PanelProps extends PanelState {
+  componentProps?: ComponentState;
+  componentStatus?: string;
+  componentError?: { message: string };
   onChange: ComponentChangeHandler;
 }
 
 function Panel({
-  name,
-  state,
-  component,
-  componentResult,
+  title,
+  visible,
+  componentProps,
+  componentStatus,
+  componentError,
   onChange,
 }: PanelProps) {
-  if (!state.visible) {
+  if (!visible) {
     return null;
   }
   let panelElement: ReactElement | null = null;
-  if (component) {
-    panelElement = <Component {...component} onChange={onChange} />;
-  } else if (componentResult.error) {
+  if (componentProps) {
+    panelElement = <Component {...componentProps} onChange={onChange} />;
+  } else if (componentError) {
     panelElement = (
       <span>
-        Error loading {name}: {componentResult.error.message}
+        Error loading panel {title}: {componentError.message}
       </span>
     );
-  } else if (componentResult.status === "pending") {
+  } else if (componentStatus === "pending") {
     panelElement = (
       <span>
-        <CircularProgress size={30} color="secondary" /> Loading {name}...
+        <CircularProgress size={30} color="secondary" /> Loading {title}...
       </span>
     );
   }
   return (
     <div style={panelContainerStyle}>
-      <div style={panelHeaderStyle}>{state.title}</div>
+      <div style={panelHeaderStyle}>{title}</div>
       <div style={panelContentStyle}>{panelElement}</div>
     </div>
   );
