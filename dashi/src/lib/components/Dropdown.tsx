@@ -4,13 +4,13 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 
 import { type DropdownState } from "@/lib/types/state/component";
-import { type PropertyChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
-export interface DashiDropdownProps extends Omit<DropdownState, "type"> {
-  onPropertyChange: PropertyChangeHandler;
+export interface DropdownProps extends Omit<DropdownState, "type"> {
+  onChange: ComponentChangeHandler;
 }
 
-export function DashiDropdown({
+export function Dropdown({
   id,
   name,
   value,
@@ -18,8 +18,8 @@ export function DashiDropdown({
   disabled,
   style,
   label,
-  onPropertyChange,
-}: DashiDropdownProps) {
+  onChange,
+}: DropdownProps) {
   const handleChange = (event: SelectChangeEvent) => {
     if (!id) {
       return;
@@ -29,7 +29,7 @@ export function DashiDropdown({
       newValue = Number.parseInt(newValue);
     }
 
-    return onPropertyChange({
+    return onChange({
       componentType: "Dropdown",
       componentId: id,
       propertyName: "value",
@@ -47,11 +47,12 @@ export function DashiDropdown({
         disabled={disabled}
         onChange={handleChange}
       >
-        {options.map(([text, value], index) => (
-          <MenuItem key={index} value={value}>
-            {text}
-          </MenuItem>
-        ))}
+        {options &&
+          options.map(([text, value], index) => (
+            <MenuItem key={index} value={value}>
+              {text}
+            </MenuItem>
+          ))}
       </Select>
     </FormControl>
   );

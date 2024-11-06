@@ -1,19 +1,23 @@
+// Types
 export { type Contribution } from "@/lib/types/model/contribution";
 export { type ContributionState } from "@/lib/types/state/contribution";
 export {
-  type PropertyChangeEvent,
-  type PropertyChangeHandler,
+  type ComponentChangeEvent,
+  type ComponentChangeHandler,
 } from "@/lib/types/model/event";
-export { DashiComponent } from "@/lib/components/DashiComponent";
-export { initSystemStore } from "@/lib/actions/initSystemStore";
-export { applyPropertyChange } from "@/lib/actions/applyPropertyChange";
-export { setComponentVisibility } from "@/lib/actions/setComponentVisibility";
+// Actions (store changes)
+export { initializeContributions } from "@/lib/actions/initializeContributions";
+export { configureFramework } from "@/lib/actions/configureFramework";
+export { handleComponentChange } from "@/lib/actions/handleComponentChange";
 export { updateContributionState } from "@/lib/actions/updateContributionState";
-export { configureLogging } from "@/lib/utils/configureLogging";
+// React Components
+export { Component } from "@/lib/components/Component";
+// React Hooks
 export {
   useStore,
   useExtensions,
   useContributionsResult,
-  useContributionModelsRecord,
-  useContributionStatesRecord,
+  useContributionsRecord,
 } from "@/lib/hooks";
+// Utilities
+export { configureLogging } from "@/lib/utils/configureLogging";

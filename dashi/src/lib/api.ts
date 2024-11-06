@@ -40,7 +40,7 @@ export async function fetchStateChangeRequests(
   options?: ApiOptions,
 ): Promise<StateChangeRequest[]> {
   return callApi(makeUrl("callback", options), {
-    body: JSON.stringify({ callbackRequests: callbackRequests }),
+    body: JSON.stringify({ callbackRequests }),
     method: "post",
   });
 }

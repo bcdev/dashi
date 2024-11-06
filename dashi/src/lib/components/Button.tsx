@@ -1,24 +1,24 @@
 import { type MouseEvent } from "react";
-import Button from "@mui/material/Button";
+import MuiButton from "@mui/material/Button";
 
 import { type ButtonState } from "@/lib/types/state/component";
-import { type PropertyChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
-export interface DashiButtonProps extends Omit<ButtonState, "type"> {
-  onPropertyChange: PropertyChangeHandler;
+export interface ButtonProps extends Omit<ButtonState, "type"> {
+  onChange: ComponentChangeHandler;
 }
 
-export function DashiButton({
+export function Button({
   id,
   name,
   style,
   text,
   disabled,
-  onPropertyChange,
-}: DashiButtonProps) {
+  onChange,
+}: ButtonProps) {
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (id) {
-      onPropertyChange({
+      onChange({
         componentType: "Button",
         componentId: id,
         // Compat with plotly/dash
@@ -29,7 +29,7 @@ export function DashiButton({
     }
   };
   return (
-    <Button
+    <MuiButton
       id={id}
       name={name}
       style={style}
@@ -37,6 +37,6 @@ export function DashiButton({
       onClick={handleClick}
     >
       {text}
-    </Button>
+    </MuiButton>
   );
 }

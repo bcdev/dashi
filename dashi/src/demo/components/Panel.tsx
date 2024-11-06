@@ -1,12 +1,12 @@
-import { type CSSProperties, type ReactElement } from "react";
+import type { CSSProperties, ReactElement } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import {
-  type Contribution,
+  type ComponentChangeHandler,
   type ContributionState,
-  type PropertyChangeHandler,
-  DashiComponent,
+  Component,
 } from "@/lib";
+import type { PanelState } from "@/demo/types";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",
@@ -32,40 +32,39 @@ const panelContentStyle: CSSProperties = {
   padding: 2,
 };
 
-interface PanelProps {
-  panelModel: Contribution;
-  panelState: ContributionState;
-  onPropertyChange: PropertyChangeHandler;
+interface PanelProps extends ContributionState<PanelState> {
+  onChange: ComponentChangeHandler;
 }
 
-function Panel({ panelModel, panelState, onPropertyChange }: PanelProps) {
-  if (!panelState.visible) {
+function Panel({
+  name,
+  state,
+  component,
+  componentResult,
+  onChange,
+}: PanelProps) {
+  if (!state.visible) {
     return null;
   }
-  const componentState = panelState.componentState;
   let panelElement: ReactElement | null = null;
-  const componentModelResult = panelState.componentStateResult;
-  if (componentModelResult.data && componentState) {
-    panelElement = (
-      <DashiComponent {...componentState} onPropertyChange={onPropertyChange} />
-    );
-  } else if (componentModelResult.error) {
+  if (component) {
+    panelElement = <Component {...component} onChange={onChange} />;
+  } else if (componentResult.error) {
     panelElement = (
       <span>
-        Error loading {panelModel.name}: {componentModelResult.error.message}
+        Error loading {name}: {componentResult.error.message}
       </span>
     );
-  } else if (componentModelResult.status === "pending") {
+  } else if (componentResult.status === "pending") {
     panelElement = (
       <span>
-        <CircularProgress size={30} color="secondary" /> Loading{" "}
-        {panelModel.name}...
+        <CircularProgress size={30} color="secondary" /> Loading {name}...
       </span>
     );
   }
   return (
     <div style={panelContainerStyle}>
-      <div style={panelHeaderStyle}>{panelState.title}</div>
+      <div style={panelHeaderStyle}>{state.title}</div>
       <div style={panelContentStyle}>{panelElement}</div>
     </div>
   );

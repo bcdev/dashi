@@ -1,14 +1,17 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import { configureLogging, initSystemStore } from "@/lib";
+import { initializeContributions } from "@/lib";
 import ExtensionsInfo from "./components/ExtensionInfo";
+import ControlBar from "@/demo/components/ControlBar";
 import PanelsControl from "./components/PanelsControl";
 import PanelsRow from "./components/PanelsRow";
+import { appStore } from "@/demo/store";
 
-configureLogging();
-
-initSystemStore();
+initializeContributions({
+  hostStore: appStore,
+  logging: { enabled: true },
+});
 
 // MUI's default font family
 const fontFamily = "Roboto, Arial, sans-serif";
@@ -32,6 +35,7 @@ function App() {
         Dashi Demo
       </Typography>
       <ExtensionsInfo />
+      <ControlBar />
       <PanelsControl />
       <PanelsRow />
     </ThemeProvider>

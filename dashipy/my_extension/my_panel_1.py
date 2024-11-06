@@ -1,7 +1,7 @@
 import altair as alt
 
-from dashipy import (Component, Input, Output)
-from dashipy.components import (Plot, Box, Dropdown)
+from dashipy import Component, Input, Output
+from dashipy.components import Plot, Box, Dropdown
 from dashipy.demo.contribs import Panel
 from dashipy.demo.context import Context
 
@@ -48,7 +48,10 @@ def render_panel(ctx: Context) -> Component:
     Output("plot", "chart"),
 )
 def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
-    dataset = ctx.datasets[selected_dataset]
+    dataset_key = tuple(ctx.datasets.keys())[selected_dataset]
+    dataset = ctx.datasets[dataset_key]
+
+    variable_name = "a" if selected_dataset == 0 else "u"
 
     # Create a slider
     corner_slider = alt.binding_range(min=0, max=50, step=1)
@@ -56,22 +59,25 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     corner_var = alt.param(bind=corner_slider, value=0, name="cornerRadius")
     # Create another parameter to handle the click events and send the data as
     # specified in the fields
-    click_param = alt.selection_point(on="click", name="onClick",
-                                      fields=["a", "b"])
+    click_param = alt.selection_point(
+        on="click", name="onClick", fields=["x", variable_name]
+    )
     # Create a chart type using mark_* where * could be any kind of chart
     # supported by Vega. We can add properties and parameters as shown below.
-    chart = alt.Chart(dataset).mark_bar(cornerRadius=corner_var).encode(
-        x=alt.X('a:N', title='a'),
-        y=alt.Y('b:Q', title='b'),
-        tooltip=[
-            alt.Tooltip('a:N'),
-            alt.Tooltip('b:Q'),
-        ],
-        color='b:Q',
-    ).properties(
-        width=300,
-        height=300,
-        title="Vega charts"
-    ).add_params(corner_var, click_param)
+    chart = (
+        alt.Chart(dataset)
+        .mark_bar(cornerRadius=corner_var)
+        .encode(
+            x=alt.X("x:N", title="x"),
+            y=alt.Y(f"{variable_name}:Q", title=variable_name),
+            tooltip=[
+                alt.Tooltip("x:N"),
+                alt.Tooltip(f"{variable_name}:Q"),
+            ],
+            color=f"{variable_name}:Q",
+        )
+        .properties(width=290, height=300, title="Vega charts")
+        .add_params(corner_var, click_param)
+    )
 
     return chart

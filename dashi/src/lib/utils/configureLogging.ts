@@ -9,7 +9,11 @@ const pathStyle = "color:light-dark(darkgrey, lightgray)";
 
 let unsubscribe: (() => void) | undefined = undefined;
 
-export function configureLogging(options?: { enabled?: boolean }) {
+export interface LoggingOptions {
+  enabled?: boolean;
+}
+
+export function configureLogging(options?: LoggingOptions) {
   if (unsubscribe) {
     unsubscribe();
     unsubscribe = undefined;

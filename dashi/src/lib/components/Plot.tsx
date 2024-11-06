@@ -1,25 +1,20 @@
 import { VegaLite } from "react-vega";
 
 import { type PlotState } from "@/lib/types/state/component";
-import { type PropertyChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/model/event";
 
-export interface DashiPlotProps extends Omit<PlotState, "type"> {
-  onPropertyChange: PropertyChangeHandler;
+export interface PlotProps extends Omit<PlotState, "type"> {
+  onChange: ComponentChangeHandler;
 }
 
-export function DashiPlot({
-  id,
-  style,
-  chart,
-  onPropertyChange,
-}: DashiPlotProps) {
+export function Plot({ id, style, chart, onChange }: PlotProps) {
   if (!chart) {
     return <div id={id} style={style} />;
   }
   const { datasets, ...spec } = chart;
   const handleSignal = (_signalName: string, value: unknown) => {
     if (id) {
-      return onPropertyChange({
+      return onChange({
         componentType: "Plot",
         componentId: id,
         propertyName: "points",

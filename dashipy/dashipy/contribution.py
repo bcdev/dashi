@@ -6,17 +6,17 @@ from .callback import Callback, Output, Input
 
 class Contribution(ABC):
     # noinspection PyShadowingBuiltins
-    def __init__(self, name: str, title: str | None = None):
+    def __init__(self, name: str, **initial_state):
         self.name = name
-        self.title = title
+        self.initial_state = initial_state
         self.extension: str | None = None
         self.layout_callback: Callback | None = None
         self.callbacks: list[Callback] = []
 
     def to_dict(self) -> dict[str, Any]:
         d = dict(name=self.name)
-        if self.title is not None:
-            d.update(title=self.title)
+        if self.initial_state is not None:
+            d.update(initialState=self.initial_state)
         if self.extension is not None:
             d.update(extension=self.extension)
         if self.layout_callback is not None:
@@ -51,4 +51,3 @@ class Contribution(ABC):
 
     def __str__(self):
         return self.name
-

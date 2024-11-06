@@ -1,5 +1,6 @@
-import { setComponentVisibility } from "@/lib";
+import { updateContributionState } from "@/lib";
+import type { PanelState } from "@/demo/types";
 
 export function hidePanel(panelIndex: number) {
-  setComponentVisibility("panels", panelIndex, false);
+  updateContributionState<PanelState>("panels", panelIndex, { visible: false });
 }

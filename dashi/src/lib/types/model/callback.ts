@@ -4,23 +4,51 @@ export interface Callback {
   outputs?: Output[];
 }
 
+export type JsonTypeName =
+  | "null"
+  | "boolean"
+  | "integer"
+  | "number"
+  | "string"
+  | "object"
+  | "array";
+
+export interface JsonSchema {
+  type?: JsonTypeName | JsonTypeName[];
+  [property: string]: unknown;
+}
+
 export interface CbFunction {
   name: string;
   parameters: CbParameter[];
-  returnType: string | string[];
+  returnType: JsonSchema;
 }
 
 export interface CbParameter {
   name: string;
-  type?: string | string[];
+  type?: JsonSchema;
   default?: unknown;
 }
 
 export type InputOutputKind = "AppState" | "State" | "Component";
 
 export interface InputOutput {
+  /** The kind of input or output. */
   kind: InputOutputKind;
-  id: string;
+  /**
+   * The identifier of a subcomponent.
+   * `id` is not needed if kind == "AppState" | "State".
+   */
+  id?: string;
+
+  // TODO: we must allow `property` to be a constant
+  //  expression of the form: name {"." name | index}.
+  //  Then we get the normalized form
+  //    property: string[];
+
+  /**
+   * The property of an object or array index.
+   */
   property: string;
 }
 
@@ -32,9 +60,13 @@ export interface Output extends InputOutput {}
  * A reference to a specific contribution.
  */
 export interface ContribRef {
-  // Contribution point name, e.g., "panels"
+  /**
+   * Name of the contribution point, e.g., "panels".
+   */
   contribPoint: string;
-  // Contribution index
+  /**
+   * Index into the contributions of a contribution point.
+   */
   contribIndex: number;
 }
 
@@ -42,27 +74,45 @@ export interface ContribRef {
  * A reference to a specific callback of a contribution.
  */
 export interface CallbackRef {
-  // The callback index of the contribution
+  /**
+   * The callback index of the contribution.
+   */
   callbackIndex: number;
-  // The input values for the callback that will become server-side
-  // function call arguments. They have the same size and order
-  // as the callback's inputs.
-  inputValues: unknown[];
 }
 
 /**
- * A `CallbackRequest` is a request to invoke a server side-side callback.
+ * A reference to a specific input of a callback.
+ */
+export interface InputRef {
+  /**
+   * The index of the input of a callback.
+   * Used to store the input that triggered the callback.
+   */
+  inputIndex: number;
+}
+
+/**
+ * A `CallbackRequest` is a request to invoke a server-side callback.
  * The result from invoking server-side callbacks is a list of `StateChangeRequest`
  * instances.
  */
-export interface CallbackRequest extends ContribRef, CallbackRef {}
+export interface CallbackRequest extends ContribRef, CallbackRef, InputRef {
+  /**
+   * The input values for the callback that will become server-side
+   * function call arguments. They have the same size and order
+   * as the callback's inputs.
+   */
+  inputValues: unknown[];
+}
 
 /**
  * A `StateChangeRequest` is a request to change the application state.
  * Instances of this interface are returned from invoking a server-side callback.
  */
 export interface StateChangeRequest extends ContribRef {
-  // The stateChanges requested by the contribution
+  /**
+   * The stateChanges requested by the contribution.
+   */
   stateChanges: StateChange[];
 }
 
