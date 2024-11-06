@@ -60,10 +60,30 @@ class CallbackTest(unittest.TestCase):
                     "returnType": {"type": "string"},
                 },
                 "inputs": [
-                    {"type": "Input", "id": "a", "property": "value"},
-                    {"type": "Input", "id": "b", "property": "value"},
-                    {"type": "Input", "id": "c", "property": "value"},
-                    {"type": "Input", "id": "d", "property": "value"},
+                    {
+                        "class": "Input",
+                        "source": "component",
+                        "id": "a",
+                        "property": "value",
+                    },
+                    {
+                        "class": "Input",
+                        "source": "component",
+                        "id": "b",
+                        "property": "value",
+                    },
+                    {
+                        "class": "Input",
+                        "source": "component",
+                        "id": "c",
+                        "property": "value",
+                    },
+                    {
+                        "class": "Input",
+                        "source": "component",
+                        "id": "d",
+                        "property": "value",
+                    },
                 ],
             },
             d,
@@ -93,10 +113,27 @@ class CallbackTest(unittest.TestCase):
                         "type": "array",
                     },
                 },
-                "inputs": [{"type": "Input", "id": "n", "property": "value"}],
+                "inputs": [
+                    {
+                        "class": "Input",
+                        "source": "component",
+                        "id": "n",
+                        "property": "value",
+                    }
+                ],
                 "outputs": [
-                    {"type": "Output", "id": "select", "property": "options"},
-                    {"type": "Output", "id": "select", "property": "value"},
+                    {
+                        "class": "Output",
+                        "target": "component",
+                        "id": "select",
+                        "property": "options",
+                    },
+                    {
+                        "class": "Output",
+                        "target": "component",
+                        "id": "select",
+                        "property": "value",
+                    },
                 ],
             },
             d,
@@ -142,7 +179,9 @@ class FromDecoratorTest(unittest.TestCase):
 
         with pytest.raises(
             TypeError,
-            match=("arguments for decorator 'test' must be of type Input,"
-                   " State, Output, AppInput, or AppOutput, but got 'int'"),
+            match=(
+                "arguments for decorator 'test' must be of type Input,"
+                " State, Output, AppInput, or AppOutput, but got 'int'"
+            ),
         ):
             Callback.from_decorator("test", (13,), my_callback, outputs_allowed=True)

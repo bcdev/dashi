@@ -1,7 +1,7 @@
 import altair as alt
 import pandas as pd
 
-from dashipy import Component, AppInput, Input, Output
+from dashipy import Component, Input, Output
 from dashipy.components import Plot, Box, Dropdown
 from dashipy.demo.contribs import Panel
 from dashipy.demo.context import Context
@@ -10,7 +10,7 @@ from dashipy.demo.context import Context
 panel = Panel(__name__, title="Panel B")
 
 
-@panel.layout(AppInput("selectedDatasetId"))
+@panel.layout(Input(property="selectedDatasetId", source="app"))
 def render_panel(
     ctx: Context,
     selected_dataset_id: str = "",
@@ -51,7 +51,7 @@ def render_panel(
 
 
 @panel.callback(
-    AppInput("selectedDatasetId"),
+    Input(property="selectedDatasetId", source="app"),
     Input("selected_variable_name"),
     Output("plot", "chart"),
 )
@@ -89,7 +89,7 @@ def make_figure(
 
 
 @panel.callback(
-    AppInput("selectedDatasetId"),
+    Input(property="selectedDatasetId", source="app"),
     Output("selected_variable_name", "options"),
     Output("selected_variable_name", "value"),
 )

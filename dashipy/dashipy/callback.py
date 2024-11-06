@@ -3,8 +3,6 @@ import types
 from typing import Any, Callable
 
 from dashipy.inputoutput import (
-    AppInput,
-    AppOutput,
     Input,
     Output,
     State,
@@ -44,12 +42,12 @@ class Callback:
                 f" context parameter"
             )
 
-        inputs: list[Input | State | AppInput] = []
-        outputs: list[Output | AppOutput] = []
+        inputs: list[Input | State] = []
+        outputs: list[Output] = []
         for arg in decorator_args:
-            if isinstance(arg, (Input, State, AppInput)):
+            if isinstance(arg, (Input, State)):
                 inputs.append(arg)
-            elif outputs_allowed and isinstance(arg, (Output, AppOutput)):
+            elif outputs_allowed and isinstance(arg, Output):
                 outputs.append(arg)
             elif outputs_allowed:
                 raise TypeError(
@@ -81,8 +79,8 @@ class Callback:
     def __init__(
         self,
         function: Callable,
-        inputs: list[Input | State | AppInput],
-        outputs: list[Output | AppOutput],
+        inputs: list[Input | State],
+        outputs: list[Output],
         signature: inspect.Signature | None = None,
     ):
         """Private constructor.

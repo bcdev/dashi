@@ -1,6 +1,4 @@
 from .callback import Callback
-from .inputoutput import AppInput
-from .inputoutput import AppOutput
 from .inputoutput import Input
 from .inputoutput import Output
 from .inputoutput import State
