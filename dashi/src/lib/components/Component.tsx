@@ -15,7 +15,7 @@ export function Component({ type, ...props }: ComponentProps) {
   // TODO: allow for registering components via their types
   //   and make following code generic.
   //
-  // const DashiComp = Registry.getComponent(type);
+  // const DashiComp = Registry.getComponent(link);
   // return return <DashiComp {...props} />;
   //
   if (type === "Plot") {

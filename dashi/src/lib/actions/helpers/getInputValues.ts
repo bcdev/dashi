@@ -1,4 +1,4 @@
-import type { Input } from "@/lib/types/model/callback";
+import type { Input } from "@/lib/types/model/channel";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ComponentState } from "@/lib/types/state/component";
 import { isSubscriptable } from "@/lib/utils/isSubscriptable";
@@ -22,17 +22,16 @@ export function getInputValue<S extends object = object>(
   hostState?: S | undefined,
 ): unknown {
   let inputValue: unknown = undefined;
-  const inputKind = input.type || "Input";
-  if (
-    (inputKind === "Input" || inputKind === "State") &&
-    contributionState.component
-  ) {
+  const dataSource = input.link || "component";
+  if (dataSource === "component" && contributionState.component) {
     // Return value of a property of some component in the tree
     inputValue = getComponentStateValue(contributionState.component, input);
-  } else if (inputKind === "AppInput" && hostState) {
+  } else if (dataSource === "container" && contributionState.state) {
+    inputValue = getInputValueFromState(input, hostState);
+  } else if (dataSource === "app" && hostState) {
     inputValue = getInputValueFromState(input, hostState);
   } else {
-    console.warn(`input of unknown kind:`, input);
+    console.warn(`input with unknown data source:`, input);
   }
   if (inputValue === undefined || inputValue === noValue) {
     // We use null, because undefined is not JSON-serializable.

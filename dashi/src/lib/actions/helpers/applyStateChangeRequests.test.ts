@@ -46,7 +46,7 @@ describe("Test that applyContributionChangeRequests()", () => {
     contribIndex: 0,
     stateChanges: [
       {
-        type: "Output",
+        link: "component",
         id: "dd1",
         property: "value",
         value: 14,
@@ -59,7 +59,7 @@ describe("Test that applyContributionChangeRequests()", () => {
     contribIndex: 0,
     stateChanges: [
       {
-        type: "Output",
+        link: "component",
         id: "dd1",
         property: "value",
         value: 13,
@@ -88,7 +88,7 @@ describe("Test that applyContributionChangeRequests()", () => {
 describe("Test that applyComponentStateChange()", () => {
   it("changes state if values are different", () => {
     const newState = applyComponentStateChange(componentTree, {
-      type: "Output",
+      link: "component",
       id: "cb1",
       property: "value",
       value: false,
@@ -99,7 +99,7 @@ describe("Test that applyComponentStateChange()", () => {
 
   it("doesn't change the state if value stays the same", () => {
     const newState = applyComponentStateChange(componentTree, {
-      type: "Output",
+      link: "component",
       id: "cb1",
       property: "value",
       value: true,

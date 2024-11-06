@@ -5,9 +5,9 @@ import type {
   CallbackRef,
   CallbackRequest,
   ContribRef,
-  Input,
   InputRef,
 } from "@/lib/types/model/callback";
+import type { Input } from "@/lib/types/model/channel";
 import { getInputValues } from "@/lib/actions/helpers/getInputValues";
 import { getValue, type PropertyPath } from "@/lib/utils/getValue";
 import { invokeCallbacks } from "@/lib/actions/helpers/invokeCallbacks";
@@ -59,6 +59,9 @@ function getCallbackRequests<S extends object = object>(
 
 const getHostStorePropertyRefs = memoizeOne(_getHostStorePropertyRefs);
 
+/**
+ * Get the static list of host state property references for all contributions.
+ */
 function _getHostStorePropertyRefs(): PropertyRef[] {
   const { contributionsRecord } = store.getState();
   const propertyRefs: PropertyRef[] = [];
@@ -68,13 +71,13 @@ function _getHostStorePropertyRefs(): PropertyRef[] {
       (contribution.callbacks || []).forEach(
         (callback, callbackIndex) =>
           (callback.inputs || []).forEach((input, inputIndex) => {
-            if (input.type === "AppInput") {
+            if (!input.noTrigger && input.link === "app") {
               propertyRefs.push({
                 contribPoint,
                 contribIndex,
                 callbackIndex,
                 inputIndex,
-                propertyPath: input.property.split("."),
+                propertyPath: input.property!.split("."),
               });
             }
           }),

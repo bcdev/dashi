@@ -38,7 +38,7 @@ function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
       hostState = applyStateChanges(
         hostState,
         stateChangeRequest.stateChanges.filter(
-          (stateChange) => stateChange.type === "AppOutput",
+          (stateChange) => stateChange.link === "app",
         ),
       );
     });
@@ -72,16 +72,14 @@ export function applyContributionChangeRequests(
       const state = applyStateChanges(
         contribution.state,
         stateChanges.filter(
-          (stateChange) =>
-            (!stateChange.type || stateChange.type === "Output") &&
-            !stateChange.id,
+          (stateChange) => stateChange.link === "container" && !stateChange.id,
         ),
       );
       const component = applyComponentStateChanges(
         contribution.component,
         stateChanges.filter(
           (stateChange) =>
-            (!stateChange.type || stateChange.type === "Output") &&
+            (!stateChange.link || stateChange.link === "component") &&
             stateChange.id,
         ),
       );
