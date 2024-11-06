@@ -10,7 +10,7 @@ import type {
 import type { ContribPoint } from "@/lib/types/model/extension";
 import type { ContributionState } from "@/lib";
 import { updateArray } from "@/lib/utils/updateArray";
-import { isContainerState } from "@/lib/utils/isContainerState";
+import { isContainerState } from "@/lib/actions/helpers/isContainerState";
 
 export function applyStateChangeRequests(
   stateChangeRequests: StateChangeRequest[],

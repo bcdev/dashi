@@ -2,7 +2,7 @@ import type { Input } from "@/lib/types/model/channel";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ComponentState } from "@/lib/types/state/component";
 import { isSubscriptable } from "@/lib/utils/isSubscriptable";
-import { isContainerState } from "@/lib/utils/isContainerState";
+import { isContainerState } from "@/lib/actions/helpers/isContainerState";
 
 export function getInputValues<S extends object = object>(
   inputs: Input[],

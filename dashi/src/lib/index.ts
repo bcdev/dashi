@@ -20,5 +20,3 @@ export {
   useContributionsResult,
   useContributionsRecord,
 } from "@/lib/hooks";
-// Utilities
-export { configureLogging } from "@/lib/utils/configureLogging";

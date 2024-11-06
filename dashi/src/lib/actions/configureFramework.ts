@@ -1,6 +1,6 @@
 import { store } from "@/lib/store";
 import type { FrameworkOptions } from "@/lib/types/state/store";
-import { configureLogging } from "@/lib/utils/configureLogging";
+import { configureLogging } from "@/lib/actions/helpers/configureLogging";
 import { handleHostStoreChange } from "./handleHostStoreChange";
 
 export function configureFramework<S extends object = object>(
