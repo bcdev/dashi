@@ -61,26 +61,22 @@ class CallbackTest(unittest.TestCase):
                 },
                 "inputs": [
                     {
-                        "class": "Input",
-                        "source": "component",
+                        "link": "component",
                         "id": "a",
                         "property": "value",
                     },
                     {
-                        "class": "Input",
-                        "source": "component",
+                        "link": "component",
                         "id": "b",
                         "property": "value",
                     },
                     {
-                        "class": "Input",
-                        "source": "component",
+                        "link": "component",
                         "id": "c",
                         "property": "value",
                     },
                     {
-                        "class": "Input",
-                        "source": "component",
+                        "link": "component",
                         "id": "d",
                         "property": "value",
                     },
@@ -115,22 +111,19 @@ class CallbackTest(unittest.TestCase):
                 },
                 "inputs": [
                     {
-                        "class": "Input",
-                        "source": "component",
+                        "link": "component",
                         "id": "n",
                         "property": "value",
                     }
                 ],
                 "outputs": [
                     {
-                        "class": "Output",
-                        "target": "component",
+                        "link": "component",
                         "id": "select",
                         "property": "options",
                     },
                     {
-                        "class": "Output",
-                        "target": "component",
+                        "link": "component",
                         "id": "select",
                         "property": "value",
                     },

@@ -1,4 +1,4 @@
-from dashipy import Component, Input, Output
+from dashipy import Component, Input, State, Output
 from dashipy.components import Box, Dropdown, Checkbox, Typography
 from dashipy.demo.contribs import Panel
 from dashipy.demo.context import Context
@@ -11,7 +11,7 @@ COLORS = [("red", 0), ("green", 1), ("blue", 2), ("yellow", 3)]
 
 
 @panel.layout(
-    Input(property="selectedDatasetId", source="app"),
+    Input(source="app", property="selectedDatasetId"),
 )
 def render_panel(
     ctx: Context,
@@ -53,9 +53,10 @@ def render_panel(
 
 # noinspection PyUnusedLocal
 @panel.callback(
-    Input("selectedDatasetId", source="app"),
+    Input(source="app", property="selectedDatasetId"),
     Input("opaque"),
     Input("color"),
+    State("info_text", "text"),
     Output("info_text", "text"),
 )
 def update_info_text(
@@ -63,11 +64,14 @@ def update_info_text(
     dataset_id: str = "",
     opaque: bool = False,
     color: int = 0,
+    info_text: str = ""
 ) -> str:
     opaque = opaque or False
     color = color if color is not None else 0
     return (
         f"The dataset is {dataset_id},"
         f" the color is {COLORS[color][0]} and"
-        f" it {'is' if opaque else 'is not'} opaque"
+        f" it {'is' if opaque else 'is not'} opaque."
+        f" The length of the last info text"
+        f" was {len(info_text or "")}."
     )

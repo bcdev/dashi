@@ -2,7 +2,7 @@ import inspect
 import types
 from typing import Any, Callable
 
-from dashipy.inputoutput import (
+from dashipy.channel import (
     Input,
     Output,
     State,
