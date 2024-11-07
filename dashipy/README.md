@@ -1,6 +1,6 @@
 # dashi 
 
-Dashi is a demo for server-configured panels using Plotly + Tornado. 
+Dashi is a demo for server-configured panels using Vega + Tornado. 
 
 ### Run server
 
