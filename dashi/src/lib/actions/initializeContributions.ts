@@ -8,7 +8,7 @@ import {
   type Contributions,
 } from "@/lib/types/model/extension";
 import type { FrameworkOptions, StoreState } from "@/lib/types/state/store";
-import { configureFramework } from "@/lib";
+import { configureFramework } from "./configureFramework";
 
 export function initializeContributions<S extends object = object>(
   options?: FrameworkOptions<S>,
