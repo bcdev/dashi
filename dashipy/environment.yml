@@ -2,10 +2,11 @@ name: dashi
 channels:
   - conda-forge
 dependencies:
+  # Library Dependencies
   - python >=3.12,<3.13
-  # Dependencies
-  - pandas
   - altair
+  # Demo Dependencies
+  - pandas
   - pyaml
   - tornado
   # Dev Dependencies
