@@ -17,7 +17,18 @@ python -m dashipy.server
 Implement the application-specific contributions that users 
 can add to their extensions.
 
-As an example, see [`panel.py` of the demo](dashipy/demo/contribs/panel.py).
+As an example, see [`panel.py` of the demo](dashipy/demo/contribs/panel.py):
+
+```python
+from dashipy import Contribution
+
+
+class Panel(Contribution):
+    """Panel contribution"""
+
+    def __init__(self, name: str, title: str | None = None):
+        super().__init__(name, title=title)
+```
 
 ### 2. Define the contributions points
 
@@ -51,3 +62,9 @@ the controller implementations in `dashipy.controllers`.
 
 As an example, see [`server.py` of the demo](dashipy/demo/server.py).
 
+### 5. Consume the extensions
+
+Use JavaScript package `dashi` in your frontend to implement the 
+contribution lifecycle in your React application.
+
+As an example, see [the demo application](../dashi/src/demo).

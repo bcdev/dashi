@@ -18,8 +18,6 @@ def get_callback_results(ext_ctx: ExtensionContext, data: dict[str, Any]):
     # TODO: validate data
     callback_requests: list[dict] = data.get("callbackRequests") or []
 
-    context = ext_ctx.app_ctx
-
     # TODO: assert correctness, set status code on error
     state_change_requests: list[dict] = []
     for callback_request in callback_requests:
@@ -31,7 +29,7 @@ def get_callback_results(ext_ctx: ExtensionContext, data: dict[str, Any]):
         contributions = ext_ctx.contributions[contrib_point_name]
         contribution = contributions[contrib_index]
         callback = contribution.callbacks[callback_index]
-        output_values = callback.invoke(context, input_values)
+        output_values = callback.invoke(ext_ctx.app_ctx, input_values)
 
         if len(callback.outputs) == 1:
             output_values = (output_values,)
