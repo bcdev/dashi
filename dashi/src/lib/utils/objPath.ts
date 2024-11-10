@@ -1,10 +1,14 @@
+import { isObject } from "@/lib/utils/isObject";
+
 export type ObjPath = (string | number)[];
+
+type Obj = Record<string | number, unknown>;
 
 export function getValue(obj: object, path: ObjPath): unknown {
   let value: unknown = obj;
   for (const key of path) {
-    if (typeof value === "object") {
-      value = (value as unknown as Record<string, unknown>)[key];
+    if (isObject(value)) {
+      value = (value as Obj)[key];
     } else {
       return undefined;
     }
@@ -21,41 +25,36 @@ export function setValue<S extends object>(
 }
 
 export function _setValue<S extends object>(
-  obj: S,
+  obj: S | undefined,
   path: ObjPath,
   value: unknown,
 ): S | undefined {
   if (path.length === 1) {
     const key = path[0];
-    if (typeof obj === "object") {
+    if (isObject(obj)) {
       const oldValue = obj[key];
       if (value === oldValue) {
         return obj;
       }
-      const newObj = Array.isArray(obj)
-        ? ([...obj] as unknown[])
-        : ({ ...obj } as Record<string, unknown>);
+      const newObj = (Array.isArray(obj) ? [...obj] : { ...obj }) as Obj;
       newObj[key] = value;
       return newObj as S;
     } else if (obj === undefined) {
-      const newObj =
-        typeof key === "number"
-          ? ([] as unknown[])
-          : ({} as Record<string, unknown>);
+      const newObj = (typeof key === "number" ? [] : {}) as Obj;
       newObj[key] = value;
       return newObj as S;
     }
   } else if (path.length > 1) {
-    if (typeof obj === "object") {
+    if (isObject(obj)) {
       const key = path[0];
       const subObj = obj[key];
-      const newSubObj = setValue(subObj, path.slice(1), value);
-      if (subObj !== newSubObj) {
-        const newObj = Array.isArray(obj)
-          ? ([...obj] as unknown[])
-          : ({ ...obj } as Record<string, unknown>);
-        newObj[key] = newSubObj;
-        return newObj as S;
+      if (isObject(subObj) || subObj === undefined) {
+        const newSubObj = _setValue(subObj, path.slice(1), value);
+        if (subObj !== newSubObj) {
+          const newObj = (Array.isArray(obj) ? [...obj] : { ...obj }) as Obj;
+          newObj[key] = newSubObj;
+          return newObj as S;
+        }
       }
     }
   }

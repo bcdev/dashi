@@ -38,7 +38,11 @@ export async function fetchApiResult<T, P extends unknown[]>(
   }
 }
 
-export async function callApi<T>(url: string, init?: RequestInit): Promise<T> {
+export async function callApi<T, RT = T>(
+  url: string,
+  init?: RequestInit,
+  transform?: (data: RT) => T,
+): Promise<T> {
   const response = await fetch(url, init);
   const apiResponse = await response.json();
   if (typeof apiResponse === "object") {
@@ -52,7 +56,7 @@ export async function callApi<T>(url: string, init?: RequestInit): Promise<T> {
       });
     }
     if (hasOwnProperty(apiResponse, "result")) {
-      return apiResponse.result;
+      return transform ? transform(apiResponse.result) : apiResponse.result;
     }
   }
   throw new ApiException({ message: `unexpected response from ${url}` });
