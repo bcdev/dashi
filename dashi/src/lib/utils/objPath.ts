@@ -62,7 +62,7 @@ export function _setValue<S extends object>(
   return obj;
 }
 
-function toObjPath(property: ObjPath | string): ObjPath {
+export function toObjPath(property: ObjPath | string): ObjPath {
   if (Array.isArray(property)) {
     return property as ObjPath;
   }

@@ -9,9 +9,9 @@ import type {
 } from "@/lib/types/model/callback";
 import type { Input } from "@/lib/types/model/channel";
 import { getInputValues } from "@/lib/actions/helpers/getInputValues";
-import { getValue, type ObjPath } from "@/lib/utils/objPath";
+import { getValue, type ObjPath, toObjPath } from "@/lib/utils/objPath";
 import { invokeCallbacks } from "@/lib/actions/helpers/invokeCallbacks";
-import type { ContributionState } from "@/lib";
+import type { ContributionState } from "@/lib/types/state/contribution";
 
 /**
  * A reference to a property of an input of a callback of a contribution.
@@ -77,7 +77,7 @@ function _getHostStorePropertyRefs(): PropertyRef[] {
                 contribIndex,
                 callbackIndex,
                 inputIndex,
-                propertyPath: input.property!.split("."),
+                propertyPath: toObjPath(input.property!),
               });
             }
           }),
@@ -93,7 +93,7 @@ function hasPropertyChanged<S extends object = object>(
   currState: S,
   prevState: S,
 ): boolean {
-  const currValue = propertyPath(currState, propertyPath);
-  const prevValue = propertyPath(prevState, propertyPath);
+  const currValue = getValue(currState, propertyPath);
+  const prevValue = getValue(prevState, propertyPath);
   return !Object.is(currValue, prevValue);
 }
