@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { getValue, setValue, toObjPath } from "./objPath";
+import { equalObjPaths, getValue, setValue, toObjPath } from "./objPath";
 
 describe("Test that getValue()", () => {
   it("works on 0th level", () => {
@@ -96,5 +96,22 @@ describe("Test that toObjPath()", () => {
     expect(toObjPath("colors")).toEqual(["colors"]);
     expect(toObjPath("colors.6")).toEqual(["colors", 6]);
     expect(toObjPath("colors.6.red")).toEqual(["colors", 6, "red"]);
+  });
+});
+
+describe("Test that equalObjPaths()", () => {
+  it("works with equal paths", () => {
+    expect(equalObjPaths("a", "a")).toBe(true);
+    expect(equalObjPaths(2, 2)).toBe(true);
+    expect(equalObjPaths("2", 2)).toBe(true);
+    expect(equalObjPaths([3, 1, 2], [3, 1, 2])).toBe(true);
+    expect(equalObjPaths([3, 1, 2], "3.1.2")).toBe(true);
+  });
+
+  it("works with non-equal paths", () => {
+    expect(equalObjPaths("a", "b")).toBe(false);
+    expect(equalObjPaths("a", 2)).toBe(false);
+    expect(equalObjPaths("a", 2)).toBe(false);
+    expect(equalObjPaths([3, 1, 2], [3, 1, 2, 0])).toBe(false);
   });
 });

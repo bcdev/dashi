@@ -1,13 +1,11 @@
 import { isObject } from "@/lib/utils/isObject";
 
 export type ObjPath = (string | number)[];
+export type ObjPathLike = ObjPath | string | number | undefined | null;
 
 type Obj = Record<string | number, unknown>;
 
-export function getValue(
-  obj: object | undefined,
-  path: ObjPath | string,
-): unknown {
+export function getValue(obj: object | undefined, path: ObjPathLike): unknown {
   path = toObjPath(path);
   let value: unknown = obj;
   for (const key of path) {
@@ -22,7 +20,7 @@ export function getValue(
 
 export function setValue<S extends object | undefined>(
   obj: S,
-  path: ObjPath | string,
+  path: ObjPathLike,
   value: unknown,
 ): S {
   return _setValue(obj, toObjPath(path), value);
@@ -65,17 +63,15 @@ export function _setValue<S extends object | undefined>(
   return obj;
 }
 
-export function toObjPath(
-  property: ObjPath | string | number | undefined | null,
-): ObjPath {
-  if (Array.isArray(property)) {
-    return property as ObjPath;
-  } else if (!property || property === "") {
+export function toObjPath(pathLike: ObjPathLike): ObjPath {
+  if (Array.isArray(pathLike)) {
+    return pathLike as ObjPath;
+  } else if (!pathLike || pathLike === "") {
     return [];
-  } else if (typeof property === "number") {
-    return [property];
+  } else if (typeof pathLike === "number") {
+    return [pathLike];
   } else {
-    const objPath: ObjPath = property.split(".");
+    const objPath: ObjPath = pathLike.split(".");
     for (let i = 0; i < objPath.length; i++) {
       const index = Number(objPath[i]);
       if (Number.isInteger(index)) {
@@ -84,4 +80,16 @@ export function toObjPath(
     }
     return objPath;
   }
+}
+
+export function equalObjPaths(pathLike1: ObjPathLike, pathLike2: ObjPathLike) {
+  if (pathLike1 === pathLike2) {
+    return true;
+  }
+  const path1 = toObjPath(pathLike1);
+  const path2 = toObjPath(pathLike2);
+  return (
+    path1.length === path2.length &&
+    path1.every((item, index) => item === path2[index])
+  );
 }
