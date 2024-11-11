@@ -1,6 +1,8 @@
 import importlib
 from typing import Any
 
+import sys
+
 from dashipy import Extension, Contribution
 
 
@@ -31,7 +33,22 @@ class ExtensionContext:
         return self._contributions
 
     @classmethod
-    def load_extensions(cls, extension_refs: list[str]) -> list[Extension]:
+    def load(
+        cls,
+        app_ctx: Any,
+        extension_refs: list[str],
+    ) -> "ExtensionContext":
+        """Create a new extension context from the given application context
+        and list of extension references.
+
+        Args:
+            app_ctx: Application context object passed to a contribution's
+                layout factory and callback functions.
+            extension_refs: Extension references where each item must
+                have the form ``"module.attribute"``.
+        Returns:
+            A new extension context.
+        """
         extensions: list[Extension] = []
         for ext_ref in extension_refs:
             try:
@@ -47,4 +64,4 @@ class ExtensionContext:
                     f" but was {type(extension).__qualname__!r}"
                 )
             extensions.append(extension)
-        return extensions
+        return ExtensionContext(app_ctx, extensions)

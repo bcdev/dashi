@@ -108,9 +108,6 @@ def make_app():
     with open("my-config.yaml") as f:
         server_config = yaml.load(f, yaml.SafeLoader)
 
-    # Parse panel renderers
-    extensions = ExtensionContext.load_extensions(server_config.get("extensions", []))
-
     # Create app
     app = tornado.web.Application(
         [
@@ -120,7 +117,11 @@ def make_app():
             (r"/dashi/callback", CallbackHandler),
         ]
     )
-    app.settings[DASHI_CONTEXT_KEY] = ExtensionContext(Context(), extensions)
+
+    # Load extensions
+    ext_ctx = ExtensionContext.load(Context(), server_config.get("extensions", []))
+    app.settings[DASHI_CONTEXT_KEY] = ext_ctx
+
     return app
 
 

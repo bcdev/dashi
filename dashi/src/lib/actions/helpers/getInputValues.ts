@@ -3,6 +3,7 @@ import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ComponentState } from "@/lib/types/state/component";
 import { isSubscriptable } from "@/lib/utils/isSubscriptable";
 import { isContainerState } from "@/lib/actions/helpers/isContainerState";
+import { getValue } from "@/lib/utils/getValue";
 
 export function getInputValues<S extends object = object>(
   inputs: Input[],
@@ -24,11 +25,11 @@ export function getInputValue<S extends object = object>(
   let inputValue: unknown = undefined;
   const dataSource = input.link || "component";
   if (dataSource === "component" && contributionState.component) {
-    // Return value of a property of some component in the tree
-    inputValue = getInputValueFromComponent(contributionState.component, input);
+    inputValue = getInputValueFromComponent(input, contributionState.component);
   } else if (dataSource === "container" && contributionState.container) {
-    inputValue = getInputValueFromState(input, hostState);
+    inputValue = getInputValueFromState(input, contributionState.container);
   } else if (dataSource === "app" && hostState) {
+    console.log();
     inputValue = getInputValueFromState(input, hostState);
   } else {
     console.warn(`input with unknown data source:`, input);
@@ -43,8 +44,8 @@ export function getInputValue<S extends object = object>(
 
 // we export for testing only
 export function getInputValueFromComponent(
-  componentState: ComponentState,
   input: Input,
+  componentState: ComponentState,
 ): unknown {
   if (componentState.id === input.id && input.property) {
     return (componentState as unknown as Record<string, unknown>)[
@@ -53,7 +54,7 @@ export function getInputValueFromComponent(
   } else if (isContainerState(componentState)) {
     for (let i = 0; i < componentState.components.length; i++) {
       const item = componentState.components[i];
-      const itemValue = getInputValueFromComponent(item, input);
+      const itemValue = getInputValueFromComponent(input, item);
       if (itemValue !== noValue) {
         return itemValue;
       }
@@ -72,7 +73,16 @@ export function getInputValueFromState(
     inputValue = inputValue[input.id];
   }
   if (isSubscriptable(inputValue)) {
-    inputValue = inputValue[input.property];
+    const property = input.property;
+    // TODO: The Input.property should be normalized to be a path
+    //   and have type string[].
+    //   See also interface Input in types/model/channel.ts
+    if (property.includes(".")) {
+      const path = property.split(".");
+      inputValue = getValue(inputValue, path);
+    } else {
+      inputValue = inputValue[property];
+    }
   }
   return inputValue;
 }
