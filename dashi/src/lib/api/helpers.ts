@@ -1,10 +1,8 @@
-import type { ApiOptions } from "@/lib/api/types";
+import type { ApiOptions, ApiError, ApiResult } from "@/lib/types/api";
+import { hasOwnProperty } from "../utils/hasOwnProperty";
 
 const defaultServerUrl = "http://localhost:8888";
 const defaultEndpointName = "dashi";
-
-import { hasOwnProperty } from "../utils/hasOwnProperty";
-import type { ApiError, ApiResult } from "./types";
 
 export async function fetchApiResult<T, P extends unknown[]>(
   callApi: (...args: P) => Promise<T>,

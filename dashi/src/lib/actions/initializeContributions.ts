@@ -1,5 +1,5 @@
 import { store } from "@/lib/store";
-import { type ApiResult } from "@/lib/api/types";
+import { type ApiResult } from "@/lib/types/api";
 import { fetchContributions } from "@/lib/api/fetchContributions";
 import { type Contribution } from "@/lib/types/model/contribution";
 import { type ContributionState } from "@/lib/types/state/contribution";

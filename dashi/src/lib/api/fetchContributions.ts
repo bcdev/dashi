@@ -4,8 +4,8 @@ import { toObjPath } from "@/lib/utils/objPath";
 import { mapObject } from "@/lib/utils/mapObject";
 import type { Contribution } from "@/lib/types/model/contribution";
 import type { Channel } from "@/lib/types/model/channel";
+import type { ApiOptions, ApiResult } from "@/lib/types/api";
 import { makeUrl, callApi, fetchApiResult } from "./helpers";
-import type { ApiOptions, ApiResult } from "./types";
 
 export async function fetchContributions(
   options?: ApiOptions,

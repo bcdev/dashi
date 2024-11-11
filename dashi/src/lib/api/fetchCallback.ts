@@ -2,8 +2,8 @@ import {
   type CallbackRequest,
   type StateChangeRequest,
 } from "@/lib/types/model/callback";
+import type { ApiOptions, ApiResult } from "@/lib/types/api";
 import { makeUrl, callApi, fetchApiResult } from "./helpers";
-import type { ApiOptions, ApiResult } from "./types";
 
 export async function fetchCallback(
   callbackRequests: CallbackRequest[],

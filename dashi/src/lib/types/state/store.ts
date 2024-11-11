@@ -6,7 +6,7 @@ import type {
   Extension,
 } from "@/lib/types/model/extension";
 import type { ContributionState } from "@/lib/types/state/contribution";
-import type { ApiOptions, ApiResult } from "@/lib/api/types";
+import type { ApiOptions, ApiResult } from "@/lib/types/api";
 import type { LoggingOptions } from "@/lib/actions/helpers/configureLogging";
 
 export interface FrameworkOptions<S extends object = object> {
