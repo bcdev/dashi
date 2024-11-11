@@ -5,7 +5,7 @@ from dashipy.response import Response
 
 
 # POST /dashi/callback
-def get_callback_results(ext_ctx: ExtensionContext, data: dict[str, Any]):
+def get_callback_results(ext_ctx: ExtensionContext | None, data: dict[str, Any]):
     """Generate the response for `POST /dashi/callback`.
 
     Args:
@@ -15,6 +15,11 @@ def get_callback_results(ext_ctx: ExtensionContext, data: dict[str, Any]):
     Returns:
         A JSON-serializable list.
     """
+    if ext_ctx is None:
+        return Response.failed(
+            404, f"no contributions configured"
+        )
+
     # TODO: validate data
     callback_requests: list[dict] = data.get("callbackRequests") or []
 

@@ -5,7 +5,7 @@ from dashipy.response import Response
 
 
 def get_layout(
-    ext_ctx: ExtensionContext,
+    ext_ctx: ExtensionContext | None,
     contrib_point_name: str,
     contrib_index: int,
     data: dict[str, Any],
@@ -22,6 +22,11 @@ def get_layout(
     Returns:
         A JSON-serializable dictionary.
     """
+    if ext_ctx is None:
+        return Response.failed(
+            404, f"no contributions configured"
+        )
+
     # TODO: validate data
     input_values = data.get("inputValues") or []
 
