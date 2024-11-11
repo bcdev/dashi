@@ -23,9 +23,9 @@ export function Checkbox({
     if (id) {
       return onChange({
         componentType: "Checkbox",
-        componentId: id,
-        propertyName: "value",
-        propertyValue: event.currentTarget.checked,
+        id: id,
+        property: "value",
+        value: event.currentTarget.checked,
       });
     }
   };

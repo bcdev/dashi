@@ -31,9 +31,9 @@ export function Dropdown({
 
     return onChange({
       componentType: "Dropdown",
-      componentId: id,
-      propertyName: "value",
-      propertyValue: newValue,
+      id: id,
+      property: "value",
+      value: newValue,
     });
   };
   return (

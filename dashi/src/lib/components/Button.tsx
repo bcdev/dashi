@@ -20,11 +20,11 @@ export function Button({
     if (id) {
       onChange({
         componentType: "Button",
-        componentId: id,
+        id: id,
         // Compat with plotly/dash
-        propertyName: "n_clicks",
+        property: "n_clicks",
         // TODO: get number of mouse clicks
-        propertyValue: event.buttons,
+        value: event.buttons,
       });
     }
   };

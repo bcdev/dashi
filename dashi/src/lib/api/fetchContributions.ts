@@ -14,23 +14,27 @@ export async function fetchContributions(
   return callApi<Contributions>(
     makeUrl("contributions", options),
     undefined,
-    (contributions: Contributions) => ({
-      ...contributions,
-      contributions: mapObject(
-        contributions.contributions,
-        (contributions: Contribution[]) =>
-          contributions.map(
-            (contribution): Contribution => ({
-              ...contribution,
-              layout: contribution.layout
-                ? normalizeCallback(contribution.layout)
-                : undefined,
-              callbacks: normalizeCallbacks(contribution.callbacks),
-            }),
-          ),
-      ),
-    }),
+    normalizeContributions,
   );
+}
+
+function normalizeContributions(contributions: Contributions) {
+  return {
+    ...contributions,
+    contributions: mapObject(
+      contributions.contributions,
+      (contributions: Contribution[]) =>
+        contributions.map(
+          (contribution): Contribution => ({
+            ...contribution,
+            layout: contribution.layout
+              ? normalizeCallback(contribution.layout)
+              : undefined,
+            callbacks: normalizeCallbacks(contribution.callbacks),
+          }),
+        ),
+    ),
+  };
 }
 
 function normalizeCallbacks(callbacks: Callback[] | undefined): Callback[] {

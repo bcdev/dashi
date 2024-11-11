@@ -1,4 +1,4 @@
-import type { ObjPath } from "@/lib/utils/objPath";
+import type { ObjPathLike } from "@/lib/utils/objPath";
 
 export type Link = "component" | "container" | "app";
 
@@ -20,7 +20,7 @@ export interface Channel {
   /**
    * The property of an object or array index.
    */
-  property: string | ObjPath;
+  property: ObjPathLike;
 }
 
 export interface Input extends Channel {

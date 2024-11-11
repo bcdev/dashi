@@ -5,6 +5,7 @@ import { type ComponentChangeEvent } from "@/lib/types/model/event";
 import { getInputValues } from "@/lib/actions/helpers/getInputValues";
 import { applyStateChangeRequests } from "@/lib/actions/helpers/applyStateChangeRequests";
 import { invokeCallbacks } from "@/lib/actions/helpers/invokeCallbacks";
+import { equalObjPaths } from "@/lib/utils/objPath";
 
 export function handleComponentChange(
   contribPoint: ContribPoint,
@@ -18,9 +19,9 @@ export function handleComponentChange(
       stateChanges: [
         {
           link: "component",
-          id: changeEvent.componentId,
-          property: changeEvent.propertyName,
-          value: changeEvent.propertyValue,
+          id: changeEvent.id,
+          property: changeEvent.property,
+          value: changeEvent.value,
         },
       ],
     },
@@ -59,8 +60,8 @@ function getCallbackRequests(
         (input) =>
           !input.noTrigger &&
           (!input.link || input.link === "component") &&
-          input.id === changeEvent.componentId &&
-          input.property === changeEvent.propertyName,
+          input.id === changeEvent.id &&
+          equalObjPaths(input.property, changeEvent.property),
       );
       if (inputIndex >= 0) {
         callbackRequests.push({

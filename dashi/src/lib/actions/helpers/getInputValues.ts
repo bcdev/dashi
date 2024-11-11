@@ -47,7 +47,7 @@ export function getInputValueFromComponent(
   input: Input,
   componentState: ComponentState,
 ): unknown {
-  if (componentState.id === input.id && input.property) {
+  if (componentState.id === input.id) {
     return getValue(componentState, input.property);
   } else if (isContainerState(componentState)) {
     for (let i = 0; i < componentState.components.length; i++) {

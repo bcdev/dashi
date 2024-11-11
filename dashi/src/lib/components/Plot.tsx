@@ -16,9 +16,9 @@ export function Plot({ id, style, chart, onChange }: PlotProps) {
     if (id) {
       return onChange({
         componentType: "Plot",
-        componentId: id,
-        propertyName: "points",
-        propertyValue: value,
+        id: id,
+        property: "points",
+        value: value,
       });
     }
   };
