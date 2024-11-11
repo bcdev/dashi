@@ -1,5 +1,5 @@
 import { store } from "@/lib/store";
-import { fetchInitialComponentState } from "@/lib/api";
+import { fetchInitialComponentState } from "@/lib/api/fetchInitialComponentState";
 import { fetchApiResult } from "@/lib/utils/fetchApiResult";
 import { getInputValues } from "@/lib/actions/helpers/getInputValues";
 import { updateArray } from "@/lib/utils/updateArray";

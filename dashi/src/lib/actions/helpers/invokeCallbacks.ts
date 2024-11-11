@@ -1,7 +1,7 @@
 import { store } from "@/lib/store";
 import type { CallbackRequest } from "@/lib/types/model/callback";
 import { fetchApiResult } from "@/lib/utils/fetchApiResult";
-import { fetchStateChangeRequests } from "@/lib/api";
+import { fetchStateChangeRequests } from "@/lib/api/fetchStateChangeRequests";
 import { applyStateChangeRequests } from "@/lib/actions/helpers/applyStateChangeRequests";
 
 export function invokeCallbacks(callbackRequests: CallbackRequest[]) {

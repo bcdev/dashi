@@ -5,7 +5,7 @@ import type {
 } from "@/lib/types/model/extension";
 import type { ApiResult } from "@/lib/utils/fetchApiResult";
 import type { ContributionState } from "@/lib/types/state/contribution";
-import type { ApiOptions } from "@/lib/api";
+import type { ApiOptions } from "@/lib/api/types";
 import type { LoggingOptions } from "@/lib/actions/helpers/configureLogging";
 import type { StoreApi } from "zustand";
 
