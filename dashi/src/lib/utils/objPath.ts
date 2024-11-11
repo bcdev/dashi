@@ -66,19 +66,18 @@ export function toObjPath(
 ): ObjPath {
   if (Array.isArray(property)) {
     return property as ObjPath;
-  }
-  if (property === "" || !property) {
+  } else if (property === "" || !property) {
     return [];
-  }
-  if (typeof property === "number") {
+  } else if (typeof property === "number") {
     return [property];
-  }
-  const objPath: ObjPath = property.split(".");
-  for (let i = 0; i < objPath.length; i++) {
-    const index = Number(objPath[i]);
-    if (Number.isInteger(index)) {
-      objPath[i] = index;
+  } else {
+    const objPath: ObjPath = property.split(".");
+    for (let i = 0; i < objPath.length; i++) {
+      const index = Number(objPath[i]);
+      if (Number.isInteger(index)) {
+        objPath[i] = index;
+      }
     }
+    return objPath;
   }
-  return objPath;
 }
