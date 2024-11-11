@@ -61,12 +61,17 @@ export function _setValue<S extends object>(
   return obj;
 }
 
-export function toObjPath(property: ObjPath | string): ObjPath {
+export function toObjPath(
+  property: ObjPath | string | number | undefined | null,
+): ObjPath {
   if (Array.isArray(property)) {
     return property as ObjPath;
   }
-  if (property === "") {
+  if (property === "" || !property) {
     return [];
+  }
+  if (typeof property === "number") {
+    return [property];
   }
   const objPath: ObjPath = property.split(".");
   for (let i = 0; i < objPath.length; i++) {
