@@ -1,6 +1,6 @@
 {
   "name": "dashipopashi",
-  "version": "0.0.11",
+  "version": "0.0.15",
   "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
   "files": [
@@ -49,7 +49,6 @@
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.1.0",
     "@mui/material": "^6.1.5",
-    "memoize-one": "^6.0.0",
     "microdiff": "^1.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
