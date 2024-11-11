@@ -38,11 +38,11 @@ export async function fetchApiResult<T, P extends unknown[]>(
   }
 }
 
-export async function callApi<T, RT = T>(
+export async function callApi<T, T2 = T>(
   url: string,
   init?: RequestInit,
-  transform?: (data: RT) => T,
-): Promise<T> {
+  transform?: (data: T) => T2,
+): Promise<T2> {
   const response = await fetch(url, init);
   const apiResponse = await response.json();
   if (typeof apiResponse === "object") {
