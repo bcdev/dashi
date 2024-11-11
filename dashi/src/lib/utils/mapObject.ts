@@ -1,9 +1,5 @@
-export function mapObject<
-  S extends Record<string, V1>,
-  V1 = unknown,
-  V2 = unknown,
->(
-  obj: S,
+export function mapObject<V1 = unknown, V2 = unknown>(
+  obj: Record<string, V1>,
   transformValue: (value: V1, key: string | number) => V2,
 ): Record<string, V2> {
   const obj2: { [k: string]: V2 } = {};
