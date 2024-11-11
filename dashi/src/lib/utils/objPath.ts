@@ -26,7 +26,7 @@ export function setValue<S extends object | undefined>(
   return _setValue(obj, toObjPath(path), value);
 }
 
-export function _setValue<S extends object | undefined>(
+function _setValue<S extends object | undefined>(
   obj: S,
   path: ObjPath,
   value: unknown,
