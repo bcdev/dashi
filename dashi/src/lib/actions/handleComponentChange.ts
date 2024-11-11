@@ -12,6 +12,7 @@ export function handleComponentChange(
   contribIndex: number,
   changeEvent: ComponentChangeEvent,
 ) {
+  // Apply actual component state change immediately
   applyStateChangeRequests([
     {
       contribPoint,

@@ -4,7 +4,7 @@ export interface ApiOptions {
 }
 
 export interface ApiResult<T> {
-  status?: "pending" | "ok" | "failed";
+  status?: "pending" | "ok" | "failed" | undefined;
   data?: T;
   error?: ApiError;
 }

@@ -17,12 +17,12 @@ export function updateContributionContainer<S extends object = object>(
   if (contributionState.container === container) {
     return; // nothing to do
   }
-  const componentStatus = contributionState.componentResult.status;
-  if (!requireComponent || componentStatus) {
+  const isLayoutFetched = Boolean(contributionState.componentResult.status);
+  if (!requireComponent || isLayoutFetched) {
     _updateContributionState(contribPoint, contribIndex, {
       container,
     });
-  } else if (!componentStatus) {
+  } else if (!isLayoutFetched) {
     // No status yet, so we must load the component
     _updateContributionState(contribPoint, contribIndex, {
       container,
