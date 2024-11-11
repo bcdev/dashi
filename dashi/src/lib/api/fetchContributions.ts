@@ -13,7 +13,7 @@ export async function fetchContributions(
   return fetchApiResult(_fetchContributions, options);
 }
 
-export async function _fetchContributions(
+async function _fetchContributions(
   options?: ApiOptions,
 ): Promise<Contributions> {
   return callApi<Contributions>(
