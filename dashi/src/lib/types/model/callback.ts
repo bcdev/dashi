@@ -62,7 +62,7 @@ export interface CallbackRef {
 export interface InputRef {
   /**
    * The index of the input of a callback.
-   * Records the input that triggered the callback.
+   * Records the index of the input that triggered the callback.
    */
   inputIndex: number;
 }
