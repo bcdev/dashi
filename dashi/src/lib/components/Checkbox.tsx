@@ -4,7 +4,7 @@ import MuiFormControl from "@mui/material/FormControl";
 import MuiFormControlLabel from "@mui/material/FormControlLabel";
 
 import { type CheckboxState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/state/event";
 
 export interface CheckboxProps extends Omit<CheckboxState, "type"> {
   onChange: ComponentChangeHandler;

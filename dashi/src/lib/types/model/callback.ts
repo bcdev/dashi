@@ -1,4 +1,4 @@
-import type { Input, Output } from "@/lib/types/model/channel";
+import type { Input, Output } from "./channel";
 
 export interface Callback {
   function: CbFunction;
@@ -62,7 +62,7 @@ export interface CallbackRef {
 export interface InputRef {
   /**
    * The index of the input of a callback.
-   * Used to store the input that triggered the callback.
+   * Records the input that triggered the callback.
    */
   inputIndex: number;
 }

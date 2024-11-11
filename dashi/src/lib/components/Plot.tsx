@@ -1,7 +1,7 @@
 import { VegaLite } from "react-vega";
 
 import { type PlotState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/state/event";
 
 export interface PlotProps extends Omit<PlotState, "type"> {
   onChange: ComponentChangeHandler;

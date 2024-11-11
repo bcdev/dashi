@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 
 import { type DropdownState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/state/event";
 
 export interface DropdownProps extends Omit<DropdownState, "type"> {
   onChange: ComponentChangeHandler;

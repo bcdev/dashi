@@ -5,7 +5,7 @@ export { type ComponentState } from "@/lib/types/state/component";
 export {
   type ComponentChangeEvent,
   type ComponentChangeHandler,
-} from "@/lib/types/model/event";
+} from "@/lib/types/state/event";
 // Actions (store changes)
 export { initializeContributions } from "@/lib/actions/initializeContributions";
 export { handleComponentChange } from "@/lib/actions/handleComponentChange";
