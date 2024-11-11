@@ -1,5 +1,3 @@
-import memoizeOne from "memoize-one";
-
 import { store } from "@/lib/store";
 import type {
   CallbackRef,
@@ -39,30 +37,29 @@ function getCallbackRequests<S extends object = object>(
   hostState: S,
   prevHostState: S,
 ): CallbackRequest[] {
-  const propertyRefs = getHostStorePropertyRefs().filter((propertyRef) =>
-    hasPropertyChanged(propertyRef.propertyPath, hostState, prevHostState),
-  );
-  const callbackRequest: CallbackRequest[] = [];
-  propertyRefs.forEach((propertyRef) => {
-    const contributions = contributionsRecord[propertyRef.contribPoint];
-    const contribution = contributions[propertyRef.contribIndex];
-    const callback = contribution.callbacks![propertyRef.callbackIndex];
-    const inputValues = getInputValues(
-      callback.inputs!,
-      contribution,
-      hostState,
-    );
-    callbackRequest.push({ ...propertyRef, inputValues });
-  });
-  return callbackRequest;
+  return getHostStorePropertyRefs()
+    .filter((propertyRef) =>
+      hasPropertyChanged(propertyRef.propertyPath, hostState, prevHostState),
+    )
+    .map((propertyRef) => {
+      const contributions = contributionsRecord[propertyRef.contribPoint];
+      const contribution = contributions[propertyRef.contribIndex];
+      const callback = contribution.callbacks![propertyRef.callbackIndex];
+      const inputValues = getInputValues(
+        callback.inputs!,
+        contribution,
+        hostState,
+      );
+      return { ...propertyRef, inputValues };
+    });
 }
 
-const getHostStorePropertyRefs = memoizeOne(_getHostStorePropertyRefs);
+// const getHostStorePropertyRefs = memoizeOne(_getHostStorePropertyRefs);
 
 /**
  * Get the static list of host state property references for all contributions.
  */
-function _getHostStorePropertyRefs(): PropertyRef[] {
+function getHostStorePropertyRefs(): PropertyRef[] {
   const { contributionsRecord } = store.getState();
   const propertyRefs: PropertyRef[] = [];
   Object.getOwnPropertyNames(contributionsRecord).forEach((contribPoint) => {
