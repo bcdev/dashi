@@ -11,6 +11,7 @@ import type { ContribPoint } from "@/lib/types/model/extension";
 import type { ContributionState } from "@/lib";
 import { updateArray } from "@/lib/utils/updateArray";
 import { isContainerState } from "@/lib/actions/helpers/isContainerState";
+import { getValue, setValue } from "@/lib/utils/objPath";
 
 export function applyStateChangeRequests(
   stateChangeRequests: StateChangeRequest[],
@@ -106,12 +107,10 @@ export function applyComponentStateChange(
 ): ComponentState {
   if (component.id === stateChange.id) {
     const property = stateChange.property;
-    const valueOld = (component as unknown as Record<string, unknown>)[
-      property
-    ];
+    const valueOld = getValue(component, property);
     const valueNew = stateChange.value;
     if (valueOld !== valueNew) {
-      return { ...component, [property]: valueNew };
+      return setValue(component, property, valueNew);
     }
   } else if (isContainerState(component)) {
     const containerOld: ContainerState = component;
@@ -135,17 +134,13 @@ export function applyComponentStateChange(
 }
 
 // we export for testing only
-export function applyStateChanges<S extends object>(
-  state: S | undefined,
+export function applyStateChanges<S extends object | undefined>(
+  state: S,
   stateChanges: StateChange[],
-): S | undefined {
+): S {
   stateChanges.forEach((stateChange) => {
-    if (
-      !state ||
-      (state as unknown as Record<string, unknown>)[stateChange.property] !==
-        stateChange.value
-    ) {
-      state = { ...state, [stateChange.property]: stateChange.value } as S;
+    if (!state || getValue(state, stateChange.property) !== stateChange.value) {
+      state = setValue(state, stateChange.property, stateChange.value) as S;
     }
   });
   return state;

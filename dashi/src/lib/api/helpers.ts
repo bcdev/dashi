@@ -1,25 +1,8 @@
-import { hasOwnProperty } from "./hasOwnProperty";
+import type { ApiOptions, ApiError, ApiResult } from "@/lib/types/api";
+import { hasOwnProperty } from "../utils/hasOwnProperty";
 
-export interface ApiResult<T> {
-  status?: "pending" | "ok" | "failed";
-  data?: T;
-  error?: ApiError;
-}
-
-export type ApiError = {
-  message: string;
-  status?: number;
-  traceback?: string[];
-};
-
-export class ApiException extends Error {
-  public readonly apiError: ApiError;
-
-  constructor(apiError: ApiError) {
-    super(apiError.message);
-    this.apiError = apiError;
-  }
-}
+const defaultServerUrl = "http://localhost:8888";
+const defaultEndpointName = "dashi";
 
 export async function fetchApiResult<T, P extends unknown[]>(
   callApi: (...args: P) => Promise<T>,
@@ -38,7 +21,11 @@ export async function fetchApiResult<T, P extends unknown[]>(
   }
 }
 
-export async function callApi<T>(url: string, init?: RequestInit): Promise<T> {
+export async function callApi<T, T2 = T>(
+  url: string,
+  init?: RequestInit,
+  transform?: (data: T) => T2,
+): Promise<T2> {
   const response = await fetch(url, init);
   const apiResponse = await response.json();
   if (typeof apiResponse === "object") {
@@ -52,8 +39,23 @@ export async function callApi<T>(url: string, init?: RequestInit): Promise<T> {
       });
     }
     if (hasOwnProperty(apiResponse, "result")) {
-      return apiResponse.result;
+      return transform ? transform(apiResponse.result) : apiResponse.result;
     }
   }
   throw new ApiException({ message: `unexpected response from ${url}` });
+}
+
+export class ApiException extends Error {
+  public readonly apiError: ApiError;
+
+  constructor(apiError: ApiError) {
+    super(apiError.message);
+    this.apiError = apiError;
+  }
+}
+
+export function makeUrl(path: string, options?: ApiOptions): string {
+  const serverUrl = options?.serverUrl || defaultServerUrl;
+  const endpointName = options?.endpointName || defaultEndpointName;
+  return `${serverUrl}/${endpointName}/${path}`;
 }

@@ -1,3 +1,5 @@
+import type { ObjPathLike } from "@/lib/utils/objPath";
+
 export type Link = "component" | "container" | "app";
 
 /**
@@ -15,15 +17,10 @@ export interface Channel {
    */
   id?: string;
 
-  // TODO: we must allow `property` to be a constant
-  //  expression of the form: name {"." name | index}.
-  //  Then we get the normalized form
-  //    property: string[];
-
   /**
    * The property of an object or array index.
    */
-  property: string;
+  property: ObjPathLike;
 }
 
 export interface Input extends Channel {

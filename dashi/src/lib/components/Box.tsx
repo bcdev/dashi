@@ -1,7 +1,7 @@
 import MuiBox from "@mui/material/Box";
 
 import { type BoxState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/state/event";
 import { ComponentChildren } from "./ComponentChildren";
 
 export interface BoxProps extends Omit<BoxState, "type"> {

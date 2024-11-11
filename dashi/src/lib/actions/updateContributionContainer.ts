@@ -1,6 +1,5 @@
 import { store } from "@/lib/store";
-import { fetchInitialComponentState } from "@/lib/api";
-import { fetchApiResult } from "@/lib/utils/fetchApiResult";
+import { fetchLayout } from "@/lib/api/fetchLayout";
 import { getInputValues } from "@/lib/actions/helpers/getInputValues";
 import { updateArray } from "@/lib/utils/updateArray";
 import type { ContribPoint } from "@/lib/types/model/extension";
@@ -18,20 +17,19 @@ export function updateContributionContainer<S extends object = object>(
   if (contributionState.container === container) {
     return; // nothing to do
   }
-  const componentStatus = contributionState.componentResult.status;
-  if (!requireComponent || componentStatus) {
+  const isLayoutFetched = Boolean(contributionState.componentResult.status);
+  if (!requireComponent || isLayoutFetched) {
     _updateContributionState(contribPoint, contribIndex, {
       container,
     });
-  } else if (!componentStatus) {
+  } else if (!isLayoutFetched) {
     // No status yet, so we must load the component
     _updateContributionState(contribPoint, contribIndex, {
       container,
       componentResult: { status: "pending" },
     });
     const inputValues = getLayoutInputValues(contribPoint, contribIndex);
-    fetchApiResult(
-      fetchInitialComponentState,
+    fetchLayout(
       contribPoint,
       contribIndex,
       inputValues,

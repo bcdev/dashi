@@ -1,4 +1,4 @@
-import { type ComponentChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/state/event";
 import { type ComponentState } from "@/lib/types/state/component";
 import { Component } from "./Component";
 

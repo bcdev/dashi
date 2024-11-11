@@ -1,9 +1,9 @@
 import type { Input } from "@/lib/types/model/channel";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ComponentState } from "@/lib/types/state/component";
-import { isSubscriptable } from "@/lib/utils/isSubscriptable";
 import { isContainerState } from "@/lib/actions/helpers/isContainerState";
-import { getValue } from "@/lib/utils/getValue";
+import { getValue } from "@/lib/utils/objPath";
+import { isObject } from "@/lib/utils/isObject";
 
 export function getInputValues<S extends object = object>(
   inputs: Input[],
@@ -47,10 +47,8 @@ export function getInputValueFromComponent(
   input: Input,
   componentState: ComponentState,
 ): unknown {
-  if (componentState.id === input.id && input.property) {
-    return (componentState as unknown as Record<string, unknown>)[
-      input.property
-    ];
+  if (componentState.id === input.id) {
+    return getValue(componentState, input.property);
   } else if (isContainerState(componentState)) {
     for (let i = 0; i < componentState.components.length; i++) {
       const item = componentState.components[i];
@@ -69,20 +67,11 @@ export function getInputValueFromState(
   state: unknown,
 ): unknown | undefined {
   let inputValue: unknown = state;
-  if (input.id && isSubscriptable(inputValue)) {
+  if (input.id && isObject(inputValue)) {
     inputValue = inputValue[input.id];
   }
-  if (isSubscriptable(inputValue)) {
-    const property = input.property;
-    // TODO: The Input.property should be normalized to be a path
-    //   and have type string[].
-    //   See also interface Input in types/model/channel.ts
-    if (property.includes(".")) {
-      const path = property.split(".");
-      inputValue = getValue(inputValue, path);
-    } else {
-      inputValue = inputValue[property];
-    }
+  if (isObject(inputValue)) {
+    inputValue = getValue(inputValue, input.property);
   }
   return inputValue;
 }

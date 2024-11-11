@@ -2,7 +2,7 @@ import { type MouseEvent } from "react";
 import MuiButton from "@mui/material/Button";
 
 import { type ButtonState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/state/event";
 
 export interface ButtonProps extends Omit<ButtonState, "type"> {
   onChange: ComponentChangeHandler;
@@ -20,11 +20,11 @@ export function Button({
     if (id) {
       onChange({
         componentType: "Button",
-        componentId: id,
+        id: id,
         // Compat with plotly/dash
-        propertyName: "n_clicks",
+        property: "n_clicks",
         // TODO: get number of mouse clicks
-        propertyValue: event.buttons,
+        value: event.buttons,
       });
     }
   };

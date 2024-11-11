@@ -1,5 +1,5 @@
 import { type ComponentState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/model/event";
+import { type ComponentChangeHandler } from "@/lib/types/state/event";
 import { Button, type ButtonProps } from "./Button";
 import { Box, type BoxProps } from "./Box";
 import { Checkbox, type CheckboxProps } from "./Checkbox";

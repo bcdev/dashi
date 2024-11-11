@@ -1,14 +1,12 @@
 import { store } from "@/lib/store";
-import { type ApiResult, fetchApiResult } from "@/lib/utils/fetchApiResult";
-import { fetchContributions } from "@/lib/api";
+import { type ApiResult } from "@/lib/types/api";
+import { fetchContributions } from "@/lib/api/fetchContributions";
 import { type Contribution } from "@/lib/types/model/contribution";
 import { type ContributionState } from "@/lib/types/state/contribution";
-import {
-  type ContribPoint,
-  type Contributions,
-} from "@/lib/types/model/extension";
+import { type Contributions } from "@/lib/types/model/extension";
 import type { FrameworkOptions, StoreState } from "@/lib/types/state/store";
 import { configureFramework } from "./configureFramework";
+import { mapObject } from "@/lib/utils/mapObject";
 
 export function initializeContributions<S extends object = object>(
   options?: FrameworkOptions<S>,
@@ -18,9 +16,7 @@ export function initializeContributions<S extends object = object>(
   }
   const { configuration } = store.getState();
   store.setState({ contributionsResult: { status: "pending" } });
-  fetchApiResult(fetchContributions, configuration.api).then(
-    initializeContributionsLater,
-  );
+  fetchContributions(configuration.api).then(initializeContributionsLater);
 }
 
 function initializeContributionsLater(
@@ -30,16 +26,13 @@ function initializeContributionsLater(
   if (contributionsResult.data) {
     const { extensions, contributions: rawContributionsRecord } =
       contributionsResult.data;
-    const contributionsRecord: Record<ContribPoint, ContributionState[]> = {};
-    Object.getOwnPropertyNames(rawContributionsRecord).forEach(
-      (contribPoint: ContribPoint) => {
-        const contributions: Contribution[] =
-          rawContributionsRecord[contribPoint];
-        contributionsRecord[contribPoint] =
-          contributions.map(newContributionState);
-      },
-    );
-    storeState = { ...storeState, extensions, contributionsRecord };
+    storeState = {
+      ...storeState,
+      extensions,
+      contributionsRecord: mapObject(rawContributionsRecord, (contributions) =>
+        contributions.map(newContributionState),
+      ),
+    };
   }
   store.setState(storeState);
 }
