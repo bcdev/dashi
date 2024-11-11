@@ -1,25 +1,10 @@
-import { hasOwnProperty } from "./hasOwnProperty";
+import type { ApiOptions } from "@/lib/api/types";
 
-export interface ApiResult<T> {
-  status?: "pending" | "ok" | "failed";
-  data?: T;
-  error?: ApiError;
-}
+const defaultServerUrl = "http://localhost:8888";
+const defaultEndpointName = "dashi";
 
-export type ApiError = {
-  message: string;
-  status?: number;
-  traceback?: string[];
-};
-
-export class ApiException extends Error {
-  public readonly apiError: ApiError;
-
-  constructor(apiError: ApiError) {
-    super(apiError.message);
-    this.apiError = apiError;
-  }
-}
+import { hasOwnProperty } from "../utils/hasOwnProperty";
+import type { ApiError, ApiResult } from "./types";
 
 export async function fetchApiResult<T, P extends unknown[]>(
   callApi: (...args: P) => Promise<T>,
@@ -60,4 +45,19 @@ export async function callApi<T, T2 = T>(
     }
   }
   throw new ApiException({ message: `unexpected response from ${url}` });
+}
+
+export class ApiException extends Error {
+  public readonly apiError: ApiError;
+
+  constructor(apiError: ApiError) {
+    super(apiError.message);
+    this.apiError = apiError;
+  }
+}
+
+export function makeUrl(path: string, options?: ApiOptions): string {
+  const serverUrl = options?.serverUrl || defaultServerUrl;
+  const endpointName = options?.endpointName || defaultEndpointName;
+  return `${serverUrl}/${endpointName}/${path}`;
 }

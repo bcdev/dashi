@@ -1,9 +1,9 @@
 import type { Input } from "@/lib/types/model/channel";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ComponentState } from "@/lib/types/state/component";
-import { isSubscriptable } from "@/lib/utils/isSubscriptable";
 import { isContainerState } from "@/lib/actions/helpers/isContainerState";
 import { getValue } from "@/lib/utils/objPath";
+import { isObject } from "@/lib/utils/isObject";
 
 export function getInputValues<S extends object = object>(
   inputs: Input[],
@@ -67,10 +67,10 @@ export function getInputValueFromState(
   state: unknown,
 ): unknown | undefined {
   let inputValue: unknown = state;
-  if (input.id && isSubscriptable(inputValue)) {
+  if (input.id && isObject(inputValue)) {
     inputValue = inputValue[input.id];
   }
-  if (isSubscriptable(inputValue)) {
+  if (isObject(inputValue)) {
     inputValue = getValue(inputValue, input.property);
   }
   return inputValue;

@@ -1,5 +1,5 @@
 import { store } from "@/lib/store";
-import { type ApiResult, fetchApiResult } from "@/lib/utils/fetchApiResult";
+import { type ApiResult } from "@/lib/api/types";
 import { fetchContributions } from "@/lib/api/fetchContributions";
 import { type Contribution } from "@/lib/types/model/contribution";
 import { type ContributionState } from "@/lib/types/state/contribution";
@@ -16,9 +16,7 @@ export function initializeContributions<S extends object = object>(
   }
   const { configuration } = store.getState();
   store.setState({ contributionsResult: { status: "pending" } });
-  fetchApiResult(fetchContributions, configuration.api).then(
-    initializeContributionsLater,
-  );
+  fetchContributions(configuration.api).then(initializeContributionsLater);
 }
 
 function initializeContributionsLater(

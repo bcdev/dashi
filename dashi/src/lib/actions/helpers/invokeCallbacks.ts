@@ -1,7 +1,6 @@
 import { store } from "@/lib/store";
 import type { CallbackRequest } from "@/lib/types/model/callback";
-import { fetchApiResult } from "@/lib/utils/fetchApiResult";
-import { fetchStateChangeRequests } from "@/lib/api/fetchStateChangeRequests";
+import { fetchCallback } from "@/lib/api/fetchCallback";
 import { applyStateChangeRequests } from "@/lib/actions/helpers/applyStateChangeRequests";
 
 export function invokeCallbacks(callbackRequests: CallbackRequest[]) {
@@ -13,28 +12,26 @@ export function invokeCallbacks(callbackRequests: CallbackRequest[]) {
   if (import.meta.env.DEV) {
     console.debug(`invokeCallbacks (${invocationId})-->`, callbackRequests);
   }
-  fetchApiResult(
-    fetchStateChangeRequests,
-    callbackRequests,
-    configuration.api,
-  ).then((changeRequestsResult) => {
-    if (changeRequestsResult.data) {
-      if (import.meta.env.DEV) {
-        console.debug(
-          `invokeCallbacks <--(${invocationId})`,
-          changeRequestsResult.data,
+  fetchCallback(callbackRequests, configuration.api).then(
+    (changeRequestsResult) => {
+      if (changeRequestsResult.data) {
+        if (import.meta.env.DEV) {
+          console.debug(
+            `invokeCallbacks <--(${invocationId})`,
+            changeRequestsResult.data,
+          );
+        }
+        applyStateChangeRequests(changeRequestsResult.data);
+      } else {
+        console.error(
+          "callback failed:",
+          changeRequestsResult.error,
+          "for call requests:",
+          callbackRequests,
         );
       }
-      applyStateChangeRequests(changeRequestsResult.data);
-    } else {
-      console.error(
-        "callback failed:",
-        changeRequestsResult.error,
-        "for call requests:",
-        callbackRequests,
-      );
-    }
-  });
+    },
+  );
 }
 
 let invocationCounter = 0;

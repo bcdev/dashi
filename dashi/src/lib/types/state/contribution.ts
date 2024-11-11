@@ -1,4 +1,4 @@
-import type { ApiResult } from "@/lib/utils/fetchApiResult";
+import type { ApiResult } from "@/lib/api/types";
 import type { Contribution } from "@/lib/types/model/contribution";
 import type { ComponentState } from "./component";
 

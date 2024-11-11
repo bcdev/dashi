@@ -1,6 +1,5 @@
 import { store } from "@/lib/store";
-import { fetchInitialComponentState } from "@/lib/api/fetchInitialComponentState";
-import { fetchApiResult } from "@/lib/utils/fetchApiResult";
+import { fetchLayout } from "@/lib/api/fetchLayout";
 import { getInputValues } from "@/lib/actions/helpers/getInputValues";
 import { updateArray } from "@/lib/utils/updateArray";
 import type { ContribPoint } from "@/lib/types/model/extension";
@@ -30,8 +29,7 @@ export function updateContributionContainer<S extends object = object>(
       componentResult: { status: "pending" },
     });
     const inputValues = getLayoutInputValues(contribPoint, contribIndex);
-    fetchApiResult(
-      fetchInitialComponentState,
+    fetchLayout(
       contribPoint,
       contribIndex,
       inputValues,

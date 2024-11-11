@@ -1,14 +1,19 @@
 import { type Contributions } from "@/lib/types/model/extension";
 import { type Callback } from "@/lib/types/model/callback";
-import { callApi } from "@/lib/utils/fetchApiResult";
 import { toObjPath } from "@/lib/utils/objPath";
 import { mapObject } from "@/lib/utils/mapObject";
 import type { Contribution } from "@/lib/types/model/contribution";
 import type { Channel } from "@/lib/types/model/channel";
-import type { ApiOptions } from "@/lib/api/types";
-import { makeUrl } from "@/lib/api/common";
+import { makeUrl, callApi, fetchApiResult } from "./helpers";
+import type { ApiOptions, ApiResult } from "./types";
 
 export async function fetchContributions(
+  options?: ApiOptions,
+): Promise<ApiResult<Contributions>> {
+  return fetchApiResult(_fetchContributions, options);
+}
+
+export async function _fetchContributions(
   options?: ApiOptions,
 ): Promise<Contributions> {
   return callApi<Contributions>(
