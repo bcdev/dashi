@@ -48,9 +48,7 @@ export function getInputValueFromComponent(
   componentState: ComponentState,
 ): unknown {
   if (componentState.id === input.id && input.property) {
-    return (componentState as unknown as Record<string, unknown>)[
-      input.property
-    ];
+    return getValue(componentState, input.property);
   } else if (isContainerState(componentState)) {
     for (let i = 0; i < componentState.components.length; i++) {
       const item = componentState.components[i];
@@ -73,16 +71,7 @@ export function getInputValueFromState(
     inputValue = inputValue[input.id];
   }
   if (isSubscriptable(inputValue)) {
-    const property = input.property;
-    // TODO: The Input.property should be normalized to be a path
-    //   and have type string[].
-    //   See also interface Input in types/model/channel.ts
-    if (property.includes(".")) {
-      const path = property.split(".");
-      inputValue = getValue(inputValue, path);
-    } else {
-      inputValue = inputValue[property];
-    }
+    inputValue = getValue(inputValue, input.property);
   }
   return inputValue;
 }

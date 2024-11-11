@@ -4,7 +4,11 @@ export type ObjPath = (string | number)[];
 
 type Obj = Record<string | number, unknown>;
 
-export function getValue(obj: object, path: ObjPath): unknown {
+export function getValue(
+  obj: object | undefined,
+  path: ObjPath | string,
+): unknown {
+  path = toObjPath(path);
   let value: unknown = obj;
   for (const key of path) {
     if (isObject(value)) {
@@ -16,19 +20,19 @@ export function getValue(obj: object, path: ObjPath): unknown {
   return value;
 }
 
-export function setValue<S extends object>(
+export function setValue<S extends object | undefined>(
   obj: S,
   path: ObjPath | string,
   value: unknown,
-): S | undefined {
+): S {
   return _setValue(obj, toObjPath(path), value);
 }
 
-export function _setValue<S extends object>(
-  obj: S | undefined,
+export function _setValue<S extends object | undefined>(
+  obj: S,
   path: ObjPath,
   value: unknown,
-): S | undefined {
+): S {
   if (path.length === 1) {
     const key = path[0];
     if (isObject(obj)) {
@@ -66,7 +70,7 @@ export function toObjPath(
 ): ObjPath {
   if (Array.isArray(property)) {
     return property as ObjPath;
-  } else if (property === "" || !property) {
+  } else if (!property || property === "") {
     return [];
   } else if (typeof property === "number") {
     return [property];

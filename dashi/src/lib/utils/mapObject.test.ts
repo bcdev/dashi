@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 
-import { getValue, setValue, toObjPath } from "./objPath";
 import { mapObject } from "@/lib/utils/mapObject";
 
 describe("Test that mapObject()", () => {
