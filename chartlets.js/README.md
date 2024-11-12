@@ -37,17 +37,17 @@ git clone https://github.com/bcdev/chartlets.git
 ### Run the server
 
 ```bash
-cd chartlets/dashipy
+cd chartlets/chartlets.py
 conda env create
 conda activate chartlets
 pip install -ve . 
-python -m dashipy.demo.server
+python -m chartlets.demo.server
 ```
 
 ### Run the UI
 
 ```bash
-cd ../chartlets
+cd ../chartlets.js
 npm install
 npm run dev
 ```
