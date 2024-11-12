@@ -1,4 +1,4 @@
-# Dashi UI TODOs
+# Chartlets UI TODOs
 
 - Keep state flat, avoid deep nesting!
   
@@ -10,8 +10,6 @@
   
   - How: Go back to former design where initial contributions that stay constant
     are separate from changing contribution states and components.
-
-- Consequently use `propertyPath: string[]` instead of `propertyName: string`  
 
 - Add true actions from `src/actions` to store state so that lib users
   know what actions are public.

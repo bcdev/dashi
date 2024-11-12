@@ -2,7 +2,7 @@ import inspect
 import types
 from typing import Any, Callable
 
-from dashipy.channel import (
+from chartlets.channel import (
     Input,
     Output,
     State,

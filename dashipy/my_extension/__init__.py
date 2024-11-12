@@ -1,4 +1,4 @@
-from dashipy import Extension
+from chartlets import Extension
 from .my_panel_1 import panel as my_panel_1
 from .my_panel_2 import panel as my_panel_2
 from .my_panel_3 import panel as my_panel_3

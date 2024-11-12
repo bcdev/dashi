@@ -1,7 +1,7 @@
 from typing import Any
 
-from dashipy.extensioncontext import ExtensionContext
-from dashipy.response import Response
+from chartlets.extensioncontext import ExtensionContext
+from chartlets.response import Response
 
 
 def get_layout(
@@ -11,7 +11,7 @@ def get_layout(
     data: dict[str, Any],
 ) -> Response:
     """Generate the response for
-    `POST /dashi/layout/{contrib_point_name}/{contrib_index}`.
+    `POST /chartlets/layout/{contrib_point_name}/{contrib_index}`.
 
     Args:
         ext_ctx: Extension context.

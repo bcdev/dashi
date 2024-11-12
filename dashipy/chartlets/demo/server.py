@@ -8,18 +8,18 @@ import tornado.web
 import tornado.log
 import yaml
 
-from dashipy import __version__
-from dashipy import ExtensionContext
-from dashipy import Response
-from dashipy import Extension
-from dashipy.controllers import get_callback_results
-from dashipy.controllers import get_contributions
-from dashipy.controllers import get_layout
-from dashipy.demo.context import Context
-from dashipy.demo.contribs import Panel
-from dashipy.demo.utils import NumpyJSONEncoder
+from chartlets import __version__
+from chartlets import ExtensionContext
+from chartlets import Response
+from chartlets import Extension
+from chartlets.controllers import get_callback_results
+from chartlets.controllers import get_contributions
+from chartlets.controllers import get_layout
+from chartlets.demo.context import Context
+from chartlets.demo.contribs import Panel
+from chartlets.demo.utils import NumpyJSONEncoder
 
-DASHI_CONTEXT_KEY = "dashi.context"
+DASHI_CONTEXT_KEY = "chartlets.context"
 
 # This would be done by a xcube server extension
 Extension.add_contrib_point("panels", Panel)
@@ -59,24 +59,24 @@ class RootHandler(DashiHandler):
     # GET /
     def get(self):
         self.set_header("Content-Type", "text/plain")
-        self.write(f"dashi-server {__version__}")
+        self.write(f"chartlets-server {__version__}")
 
 
 class ContributionsHandler(DashiHandler):
 
-    # GET /dashi/contributions
+    # GET /chartlets/contributions
     def get(self):
         self.write_response(get_contributions(self.ext_ctx))
 
 
 class LayoutHandler(DashiHandler):
-    # GET /dashi/layout/{contrib_point_name}/{contrib_index}
+    # GET /chartlets/layout/{contrib_point_name}/{contrib_index}
     def get(self, contrib_point_name: str, contrib_index: str):
         self.write_response(
             get_layout(self.ext_ctx, contrib_point_name, int(contrib_index), {})
         )
 
-    # POST /dashi/layout/{contrib_point_name}/{contrib_index}
+    # POST /chartlets/layout/{contrib_point_name}/{contrib_index}
     def post(self, contrib_point_name: str, contrib_index: str):
         data = tornado.escape.json_decode(self.request.body)
         self.write_response(
@@ -86,7 +86,7 @@ class LayoutHandler(DashiHandler):
 
 class CallbackHandler(DashiHandler):
 
-    # POST /dashi/callback
+    # POST /chartlets/callback
     def post(self):
         data = tornado.escape.json_decode(self.request.body)
         self.write_response(get_callback_results(self.ext_ctx, data))
@@ -96,11 +96,11 @@ def print_usage(app, port):
     url = f"http://127.0.0.1:{port}"
     print(f"Listening on {url}...")
     print(f"API:")
-    print(f"- {url}/dashi/contributions")
+    print(f"- {url}/chartlets/contributions")
     ext_ctx: ExtensionContext = app.settings[DASHI_CONTEXT_KEY]
     for contrib_point_name, contributions in ext_ctx.contributions.items():
         for i in range(len(contributions)):
-            print(f"- {url}/dashi/layout/{contrib_point_name}/{i}")
+            print(f"- {url}/chartlets/layout/{contrib_point_name}/{i}")
 
 
 def make_app():
@@ -112,9 +112,9 @@ def make_app():
     app = tornado.web.Application(
         [
             (r"/", RootHandler),
-            (r"/dashi/contributions", ContributionsHandler),
-            (r"/dashi/layout/([a-z0-9-]+)/([0-9]+)", LayoutHandler),
-            (r"/dashi/callback", CallbackHandler),
+            (r"/chartlets/contributions", ContributionsHandler),
+            (r"/chartlets/layout/([a-z0-9-]+)/([0-9]+)", LayoutHandler),
+            (r"/chartlets/callback", CallbackHandler),
         ]
     )
 

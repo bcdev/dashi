@@ -3,7 +3,7 @@ from typing import Any
 
 import altair as alt
 
-from dashipy import Component
+from chartlets import Component
 
 
 @dataclass(frozen=True)

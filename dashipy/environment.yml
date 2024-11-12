@@ -1,4 +1,4 @@
-name: dashi
+name: chartlets
 channels:
   - conda-forge
 dependencies:

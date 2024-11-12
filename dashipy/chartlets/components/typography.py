@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from dashipy import Component
+from chartlets import Component
 
 
 @dataclass(frozen=True)
-class Button(Component):
+class Typography(Component):
     text: str | None = None

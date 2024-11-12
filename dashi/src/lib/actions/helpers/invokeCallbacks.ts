@@ -8,14 +8,17 @@ export function invokeCallbacks(callbackRequests: CallbackRequest[]) {
   const shouldLog = configuration.logging?.enabled;
   if (!callbackRequests.length) {
     if (shouldLog) {
-      console.info(`dashi: invokeCallbacks - no requests`, callbackRequests);
+      console.info(
+        `chartlets: invokeCallbacks - no requests`,
+        callbackRequests,
+      );
     }
     return;
   }
   const invocationId = getInvocationId();
   if (shouldLog) {
     console.info(
-      `dashi: invokeCallbacks (${invocationId})-->`,
+      `chartlets: invokeCallbacks (${invocationId})-->`,
       callbackRequests,
     );
   }
@@ -24,7 +27,7 @@ export function invokeCallbacks(callbackRequests: CallbackRequest[]) {
       if (changeRequestsResult.data) {
         if (shouldLog) {
           console.info(
-            `dashi: invokeCallbacks <--(${invocationId})`,
+            `chartlets: invokeCallbacks <--(${invocationId})`,
             changeRequestsResult.data,
           );
         }

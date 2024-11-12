@@ -1,12 +1,12 @@
 from typing import Any
 
-from dashipy.extensioncontext import ExtensionContext
-from dashipy.response import Response
+from chartlets.extensioncontext import ExtensionContext
+from chartlets.response import Response
 
 
-# POST /dashi/callback
+# POST /chartlets/callback
 def get_callback_results(ext_ctx: ExtensionContext | None, data: dict[str, Any]):
-    """Generate the response for `POST /dashi/callback`.
+    """Generate the response for `POST /chartlets/callback`.
 
     Args:
         ext_ctx: Extension context.

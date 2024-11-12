@@ -39,9 +39,9 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: resolve(__dirname, "src/lib/index.ts"),
-      name: "Dashi",
+      name: "Chartlets",
       // the proper extensions will be added
-      fileName: "dashi",
+      fileName: "chartlets",
     },
     rollupOptions: {
       // externalize deps that shouldn't be bundled into the library

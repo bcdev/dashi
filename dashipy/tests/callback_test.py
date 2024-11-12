@@ -2,7 +2,7 @@ import unittest
 
 import pytest
 
-from dashipy.callback import Input, Callback, Output
+from chartlets.callback import Input, Callback, Output
 
 
 # noinspection PyUnusedLocal

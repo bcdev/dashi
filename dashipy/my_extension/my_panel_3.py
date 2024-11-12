@@ -1,7 +1,7 @@
-from dashipy import Component, Input, State, Output
-from dashipy.components import Box, Dropdown, Checkbox, Typography
-from dashipy.demo.contribs import Panel
-from dashipy.demo.context import Context
+from chartlets import Component, Input, State, Output
+from chartlets.components import Box, Dropdown, Checkbox, Typography
+from chartlets.demo.contribs import Panel
+from chartlets.demo.context import Context
 
 
 panel = Panel(__name__, title="Panel C")

@@ -1,7 +1,7 @@
 import unittest
 from dataclasses import dataclass
 
-from dashipy import Component, Container
+from chartlets import Component, Container
 
 
 @dataclass(frozen=True)

@@ -2,7 +2,7 @@ import type { ApiOptions, ApiError, ApiResult } from "@/lib/types/api";
 import { hasOwnProperty } from "../utils/hasOwnProperty";
 
 const defaultServerUrl = "http://localhost:8888";
-const defaultEndpointName = "dashi";
+const defaultEndpointName = "chartlets";
 
 export async function fetchApiResult<T, P extends unknown[]>(
   callApi: (...args: P) => Promise<T>,

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from dashipy import Container
+from chartlets import Container
 
 
 @dataclass(frozen=True)

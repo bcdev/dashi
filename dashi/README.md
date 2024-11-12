@@ -1,6 +1,6 @@
-# dashi 
+# chartlets 
 
-Dashi is a JavaScript library that allows configuring server-side widgets
+Chartlets is a JavaScript library that allows configuring server-side widgets
 and plugging them into existing web frontends.
 
 _Note, this library is experimental and under development still._
@@ -31,15 +31,15 @@ The bottom shows the lifeline of the backend REST server.
 ## How to run the demo
 
 ```bash
-git clone https://github.com/bcdev/dashi.git
+git clone https://github.com/bcdev/chartlets.git
 ```
 
 ### Run the server
 
 ```bash
-cd dashi/dashipy
+cd chartlets/dashipy
 conda env create
-conda activate dashi
+conda activate chartlets
 pip install -ve . 
 python -m dashipy.demo.server
 ```
@@ -47,7 +47,7 @@ python -m dashipy.demo.server
 ### Run the UI
 
 ```bash
-cd ../dashi
+cd ../chartlets
 npm install
 npm run dev
 ```

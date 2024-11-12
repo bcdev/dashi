@@ -1,6 +1,6 @@
 {
-  "name": "dashipopashi",
-  "version": "0.0.15",
+  "name": "chartlets",
+  "version": "0.0.0",
   "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
   "files": [
@@ -18,22 +18,22 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bcdev/dashi.git"
+    "url": "https://github.com/bcdev/charlet.git"
   },
   "bugs": {
-    "url": "https://github.com/bcdev/dashi/issues"
+    "url": "https://github.com/bcdev/charlet/issues"
   },
-  "homepage": "https://github.com/bcdev/dashi/blob/main/dashi/README.md",
+  "homepage": "https://github.com/bcdev/charlet/blob/main/chartlets/README.md",
   "author": "Brockmann Consult GmbH",
   "license": "MIT",
   "types": "./dist/index.d.ts",
-  "module": "./dist/dashi.js",
-  "main": "./dist/dashi.umd.cjs",
+  "module": "./dist/chartlets.js",
+  "main": "./dist/chartlets.umd.cjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "module": "./dist/dashi.js",
-      "require": "./dist/dashi.umd.cjs"
+      "module": "./dist/chartlets.js",
+      "require": "./dist/chartlets.umd.cjs"
     }
   },
   "scripts": {

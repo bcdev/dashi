@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from dashipy.components import Box
+from chartlets.components import Box
 
 
 class BoxTest(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 
-from dashipy.demo.contribs import Panel
-from dashipy.callback import Input, Callback, Output
+from chartlets.demo.contribs import Panel
+from chartlets.callback import Input, Callback, Output
 
 
 # noinspection PyUnusedLocal

@@ -3,17 +3,16 @@ requires = ["setuptools >= 61.2.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dashipy"
+name = "chartlets"
 dynamic = ["version", "readme"]
 authors = [
-  {name = "xcube Development Team"}
+  {name = "chartlets Development Team"}
 ]
 description = """\
-  Backend for server-configured charts.
+  Backend for server-configured charts powered by Vega Altair.
   """
 keywords = [
-  "analysis ready data", "data science",
-  "datacube", "xarray", "zarr"
+  "dashboard", "charts", "vega", "altair", "plots"
 ]
 license = {text = "MIT"}
 requires-python = ">=3.10"
@@ -66,4 +65,4 @@ demo = [
 ]
 
 [project.urls]
-Source = "https://github.com/bcdev/dashi"
+Source = "https://github.com/bcdev/chartlets"

@@ -1,9 +1,9 @@
-from dashipy.extensioncontext import ExtensionContext
-from dashipy.response import Response
+from chartlets.extensioncontext import ExtensionContext
+from chartlets.response import Response
 
 
 def get_contributions(ext_ctx: ExtensionContext | None) -> Response:
-    """Generate the response for `GET /dashi/contributions`."""
+    """Generate the response for `GET /chartlets/contributions`."""
     if ext_ctx is None:
         return Response.failed(
             404, f"no contributions configured"

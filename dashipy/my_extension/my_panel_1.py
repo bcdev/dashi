@@ -1,9 +1,9 @@
 import altair as alt
 
-from dashipy import Component, Input, Output
-from dashipy.components import Plot, Box, Dropdown
-from dashipy.demo.contribs import Panel
-from dashipy.demo.context import Context
+from chartlets import Component, Input, Output
+from chartlets.components import Plot, Box, Dropdown
+from chartlets.demo.contribs import Panel
+from chartlets.demo.context import Context
 
 
 panel = Panel(__name__, title="Panel A")

@@ -1,4 +1,4 @@
-from dashipy import Contribution
+from chartlets import Contribution
 
 
 class Panel(Contribution):

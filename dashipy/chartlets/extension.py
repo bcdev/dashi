@@ -1,6 +1,6 @@
 from typing import Any
 
-from dashipy.contribution import Contribution
+from chartlets.contribution import Contribution
 
 
 class Extension:

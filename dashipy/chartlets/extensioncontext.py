@@ -3,7 +3,7 @@ from typing import Any
 
 import sys
 
-from dashipy import Extension, Contribution
+from chartlets import Extension, Contribution
 
 
 class ExtensionContext:

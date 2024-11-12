@@ -3,7 +3,7 @@ from typing import Type
 
 import pytest
 
-from dashipy.channel import Channel, Input, State, Output
+from chartlets.channel import Channel, Input, State, Output
 
 
 def make_base():

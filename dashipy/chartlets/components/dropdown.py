@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from dashipy import Component
+from chartlets import Component
 
 
 @dataclass(frozen=True)

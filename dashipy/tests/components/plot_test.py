@@ -4,7 +4,7 @@ import unittest
 import pandas as pd
 import altair as alt
 
-from dashipy.components import Plot
+from chartlets.components import Plot
 
 
 class PlotTest(unittest.TestCase):

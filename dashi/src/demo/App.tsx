@@ -32,7 +32,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Typography fontSize="3em" fontWeight="bold">
-        Dashi Demo
+        Chartlets Demo
       </Typography>
       <ExtensionsInfo />
       <ControlBar />
