@@ -58,7 +58,7 @@ ext_ctx = ExtensionContext.load(app_ctx, extension_refs)
 ### 4. Publish the extensions 
 
 Implement the Chartlets API in your application-specific webserver using
-the controller implementations in `dashipy.controllers`. 
+the controller implementations in `chartlets.controllers`. 
 
 As an example, see [`server.py` of the demo](chartlets/demo/server.py).
 

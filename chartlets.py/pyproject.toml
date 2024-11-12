@@ -37,11 +37,8 @@ classifiers = [
   "Operating System :: MacOS",
 ]
 
-[project.scripts]
-dashipy = "dashipy.demo.server:main"
-
 [tool.setuptools.dynamic]
-version = {attr = "dashipy.__version__"}
+version = {attr = "chartlets.__version__"}
 readme = {file = "README.md", content-type = "text/markdown"}
 
 [tool.setuptools.packages.find]
