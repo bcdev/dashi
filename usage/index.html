@@ -547,7 +547,8 @@
 the application's backend service.</p>
 <p>Your module is supposed to export one or more instances of the
 <code>chartlets.Extension</code> class. An extension object is a container for your
-UI contributions. It groups contributions that logically belong together. </p>
+UI contributions. It groups contributions that logically belong together.</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/my_extension"><code>my_extension</code> of the demo</a>.</p>
 <p>To develop an extension, follow these steps:</p>
 <ol>
 <li>Create the extension object</li>
@@ -619,7 +620,7 @@ UI-contributions:</p>
 <h3 id="implement-the-possible-contributions">Implement the possible contributions</h3>
 <p>Implement the application-specific contributions that users 
 can add to their extensions.</p>
-<p>As an example, see <a href="chartlets.py/chartlets/demo/contribs/panel.py"><code>panel.py</code> of the demo</a>:</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/contribs/panel.py"><code>panel.py</code> of the demo</a>:</p>
 <pre><code class="language-python">from chartlets import Contribution
 
 
@@ -631,7 +632,7 @@ class Panel(Contribution):
 </code></pre>
 <h3 id="define-the-contributions-points">Define the contributions points</h3>
 <p>Define the possible contribution points in your application.</p>
-<p>As an example, see <a href="chartlets.py/chartlets/demo/server.py"><code>server.py</code> of the demo</a>:</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py"><code>server.py</code> of the demo</a>:</p>
 <pre><code class="language-python">from chartlets import Extension
 from chartlets.demo.contribs import Panel
 
@@ -639,7 +640,7 @@ Extension.add_contrib_point(&quot;panels&quot;, Panel)
 </code></pre>
 <h3 id="load-the-extensions">Load the extensions</h3>
 <p>Load the extensions that augment your application.</p>
-<p>As an example, see <a href="chartlets.py/chartlets/demo/server.py"><code>server.py</code> of the demo</a>:</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py"><code>server.py</code> of the demo</a>:</p>
 <pre><code class="language-python">from chartlets import ExtensionContext
 
 ext_ctx = ExtensionContext.load(app_ctx, extension_refs)
@@ -647,11 +648,11 @@ ext_ctx = ExtensionContext.load(app_ctx, extension_refs)
 <h3 id="publish-the-extensions">Publish the extensions</h3>
 <p>Implement the Chartlets API in your application-specific webserver using
 the controller implementations in <code>chartlets.controllers</code>. </p>
-<p>As an example, see <a href="chartlets.py/chartlets/demo/server.py"><code>server.py</code> of the demo</a>.</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py"><code>server.py</code> of the demo</a>.</p>
 <h3 id="consume-the-extensions">Consume the extensions</h3>
 <p>Use JavaScript package <code>chartlets</code> in your frontend to implement the 
 contribution lifecycle in your React application.</p>
-<p>As an example, see <a href="chartlets.js/src/demo">the demo application</a>.</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.js/src/demo">the demo application</a>.</p>
 
 
 
