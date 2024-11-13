@@ -25,7 +25,7 @@ class Component(ABC):
     #
     # Special non-HTML properties
     label: str | None = None
-    """Optional label used by many specific components."""
+    """Label used by many specific components. Optional """
 
     children: list["Component"] | None = None
     """Optional children used by many specific components."""
