@@ -1,3 +1,16 @@
+# Logs
+*.log
+
+# Artifacts
+build
+dist
+# npm
+node_modules
+# pip
+*.egg-info
+# mkdocs
+site
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -8,3 +21,4 @@
 *.njsproj
 *.sln
 *.sw?
+.idea/

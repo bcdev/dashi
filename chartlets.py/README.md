@@ -1,6 +1,12 @@
 # chartlets 
 
-`chartlets` is a Python framework for server-configured web-UI contributions. 
+Chartlets is a software framework that allows websites developed with
+React to be extended by server-side widgets programmed in Python or other
+programming languages. 
+
+This is the Python backend library of the framework.
+
+For details refer to the [documentation](https://bcdev.github.io/chartlets/).
 
 ## Run demo server
 
@@ -9,62 +15,3 @@ mamba env create
 conda activate chartlets
 python -m chartlets.demo.server 
 ```
-
-## How to use the framework
-
-### 1. Implement the possible contributions
-
-Implement the application-specific contributions that users 
-can add to their extensions.
-
-As an example, see [`panel.py` of the demo](chartlets/demo/contribs/panel.py):
-
-```python
-from chartlets import Contribution
-
-
-class Panel(Contribution):
-    """Panel contribution"""
-
-    def __init__(self, name: str, title: str | None = None):
-        super().__init__(name, title=title)
-```
-
-### 2. Define the contributions points
-
-Define the possible contribution points in your application.
-
-As an example, see [`server.py` of the demo](chartlets/demo/server.py):
-
-```python
-from chartlets import Extension
-from chartlets.demo.contribs import Panel
-
-Extension.add_contrib_point("panels", Panel)
-```
-
-### 3. Load the extensions
-
-Load the extensions that augment your application.
-
-As an example, see [`server.py` of the demo](chartlets/demo/server.py):
-
-```python
-from chartlets import ExtensionContext
-
-ext_ctx = ExtensionContext.load(app_ctx, extension_refs)
-```
-
-### 4. Publish the extensions 
-
-Implement the Chartlets API in your application-specific webserver using
-the controller implementations in `chartlets.controllers`. 
-
-As an example, see [`server.py` of the demo](chartlets/demo/server.py).
-
-### 5. Consume the extensions
-
-Use JavaScript package `chartlets` in your frontend to implement the 
-contribution lifecycle in your React application.
-
-As an example, see [the demo application](../chartlets/src/demo).
