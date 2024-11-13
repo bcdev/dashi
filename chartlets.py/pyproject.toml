@@ -54,6 +54,13 @@ dev = [
   "pytest",
   "pytest-cov",
   "requests-mock",
+  "twine",
+  "build",
+  "hatch"
+]
+doc = [
+  "mkdocs",
+  "mkdocs-material"
 ]
 demo = [
   "pyaml",
