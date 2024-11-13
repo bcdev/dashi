@@ -9,7 +9,7 @@ class Typography(Component):
     and efficiently as possible."""
 
     text: str | None = None
-    """Optional text to be displayed."""
+    """Text to be displayed. Optional"""
 
     color: str | None = None
     """The color of the component."""
