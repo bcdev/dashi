@@ -7,9 +7,16 @@ module, e.g.
 from chartlets.components import Checkbox
 ```
 
-- Box
-- Button
-- Checkbox
-- Dropdown
-- Plot
-- Typography
+::: chartlets.components.Box
+
+::: chartlets.components.Button
+
+::: chartlets.components.Checkbox
+
+::: chartlets.components.Dropdown
+
+::: chartlets.components.Typography
+
+
+::: chartlets.Component
+

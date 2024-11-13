@@ -1,5 +1,17 @@
 site_name: chartlets
 
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [ "chartlets.py" ]
+          options:
+            show_source: false
+            show_if_no_docstring: false
+            show_root_heading: true
+            heading_level: 2
+
 nav:
   - Home: index.md
   - Demo: demo.md
@@ -44,3 +56,4 @@ validation:
   absolute_links: warn
   unrecognized_links: warn
   anchors: warn
+
