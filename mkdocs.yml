@@ -13,10 +13,6 @@ plugins:
             heading_level: 3
             toc: true
             toc_depth: 1
-            members:
-             - methods
-             - classes
-             - attributes
 
 nav:
   - Home: index.md

@@ -17,6 +17,8 @@ from chartlets.components import Checkbox
 
 ::: chartlets.components.Dropdown
 
+::: chartlets.components.Plot
+
 ::: chartlets.components.Typography
 
 ## Base classes
