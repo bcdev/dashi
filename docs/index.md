@@ -1,6 +1,6 @@
 # Welcome to Chartlets
 
-Chartlets is a software frameworks that allows websites developed with
+Chartlets is a software framework that allows websites developed with
 React to be extended by server-side widgets programmed in Python or other
 programming languages. 
 
