@@ -1,11 +1,13 @@
-Given here is a list of the components supported by chartlets.
+Given here is a list of the components supported by Chartlets.
 
-Using the Python package, they can be imported from the `chartlets.components` 
-module, e.g.
+Using the Python package `chartlets`, the related component classes can be 
+imported from the `chartlets.components` module, e.g.
 
 ```python
 from chartlets.components import Checkbox
 ```
+
+## Classes
 
 ::: chartlets.components.Box
 
@@ -17,6 +19,8 @@ from chartlets.components import Checkbox
 
 ::: chartlets.components.Typography
 
+## Base classes
 
 ::: chartlets.Component
 
+::: chartlets.Container
