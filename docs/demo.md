@@ -1,4 +1,4 @@
-Chartlets provides a simple demo that explains serves as a
+Chartlets provides a simple demo that serves as a
 reference for the framework usage and testbed for its features.
 
 ```bash
