@@ -5,16 +5,30 @@ from typing import Any
 
 @dataclass(frozen=True)
 class Component(ABC):
+    """Base class for components.
+    Provides the common attributes that apply to all components.
+    """
     # Common HTML properties
     id: str | None = None
+    """HTML `id` property. Required for referring to this component."""
+
     name: str | None = None
+    """HTML `name` property. Optional."""
+
     value: bool | int | float | str | None = None
+    """HTML `value` property. Required for specific components."""
+
     style: dict[str, Any] | None = None
+    """HTML `style` property. Optional."""
+
     # We may add more here later
     #
     # Special non-HTML properties
     label: str | None = None
+    """Optional label used by many specific components."""
+
     children: list["Component"] | None = None
+    """Optional children used by many specific components."""
 
     @property
     def type(self):

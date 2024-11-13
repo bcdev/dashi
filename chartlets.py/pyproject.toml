@@ -60,7 +60,9 @@ dev = [
 ]
 doc = [
   "mkdocs",
-  "mkdocs-material"
+  "mkdocs-material",
+  "mkdocstrings",
+  "mkdocstrings-python"
 ]
 demo = [
   "pyaml",
