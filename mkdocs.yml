@@ -10,7 +10,13 @@ plugins:
             show_source: false
             show_if_no_docstring: false
             show_root_heading: true
-            heading_level: 2
+            heading_level: 3
+            toc: true
+            toc_depth: 1
+            members:
+             - methods
+             - classes
+             - attributes
 
 nav:
   - Home: index.md
@@ -21,6 +27,8 @@ nav:
 
 theme:
   name: material
+  features:
+    - toc.integrate  # Ensures TOC is integrated into the sidebar
   locale: en
   #include_sidebar: false
   palette:
