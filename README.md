@@ -7,7 +7,7 @@ or other programming languages.
 It comprises a [Python backend package](chartlets.py/README.md)
 and a [JavaScript/React frontend package](chartlets.js/README.md).
 
-Please see the [Documentation]() for more information.
+Please see the [Documentation](https://bcdev.github.io/chartlets/) for more information.
 
 ## Features
 
