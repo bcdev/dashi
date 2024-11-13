@@ -38,7 +38,7 @@ Extension.add_contrib_point("panels", Panel)
 
 ### 3. Load the extensions
 
-Load the extensions that augment your application.
+Load the extensions that augments your application.
 
 As an example, see [`server.py` of the demo](chartlets.py/chartlets/demo/server.py):
 
