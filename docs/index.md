@@ -14,7 +14,7 @@ endpoints to publish the widgets:
   and whose values are arrays of contribution objects.
 - `POST /layout/{contribPoint}/{contribIndex}`:
   Called once for every contribution when it becomes visible in the UI.
-  Returns the contribution's initial component tree
+  Returns the contribution's initial component tree.
 - `POST /callback`:
   Called when users interact with the component tree or on application 
   state changes. Returns an array of contribution changes where each 
