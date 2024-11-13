@@ -1,6 +1,6 @@
 Given here is a list of the components supported by chartlets.
 
-Using the Python package, they are be imported from the `chartlets.components` 
+Using the Python package, they can be imported from the `chartlets.components` 
 module, e.g.
 
 ```python
