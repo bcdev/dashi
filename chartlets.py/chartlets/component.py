@@ -28,7 +28,7 @@ class Component(ABC):
     """Label used by many specific components. Optional """
 
     children: list["Component"] | None = None
-    """Optional children used by many specific components."""
+    """Children used by many specific components. Optional """
 
     @property
     def type(self):
