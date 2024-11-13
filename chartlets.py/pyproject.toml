@@ -71,4 +71,8 @@ demo = [
 ]
 
 [project.urls]
-Source = "https://github.com/bcdev/chartlets"
+Repository = "https://github.com/bcdev/chartlets"
+Documentation = "https://bcdev.github.io/chartlets"
+# Not yet:
+#Issues = "https://github.com/bcdev/chartlets/issues"
+#Changelog = "https://github.com/bcdev/chartlets/blob/main/CHANGES.md"
