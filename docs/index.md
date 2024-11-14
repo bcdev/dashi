@@ -4,6 +4,18 @@ Chartlets is a software framework that allows websites developed with
 React to be extended by server-side widgets programmed in Python or other
 programming languages. 
 
+It comprises a 
+[Python backend package](https://github.com/bcdev/chartlets/tree/main/chartlets.py)
+and a 
+[JavaScript/React frontend package](https://github.com/bcdev/chartlets/tree/main/chartlets.js).
+
+## Features
+
+- Enhance your React web application by UI-contributions programmed in Python
+- Enhance your (Python) web API to serve server-side UI-contributions.
+- Uses [Material UI](https://mui.com/material-ui/) components and 
+  [Vega-Lite](https://vega.github.io/vega-lite/) charts.
+
 ## How it works
 
 Users write the widgets in, e.g. Python, and a REST server implements three 

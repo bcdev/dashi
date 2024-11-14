@@ -1,8 +1,10 @@
-The Chartlets framework has two types of users. 
+The Chartlets framework has two types of users:
 
-- **Application contributors** develop new contributions for a specific web application.
-- **Application providers** develop the web application and the service that allows
-  for server-side UI contributions.
+- **Application contributors** develop new contributions 
+  for a specific web application that is powered by Chartlets.
+- **Application providers** develop the web application 
+  and the service that allows for server-side UI contributions
+  using Chartlets.
 
 
 ## Application contributor guide
