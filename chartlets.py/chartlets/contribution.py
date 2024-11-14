@@ -18,6 +18,7 @@ class Contribution(ABC):
         name: A name that should be unique within an extension.
         initial_state: contribution specific attribute values.
     """
+
     # noinspection PyShadowingBuiltins
     def __init__(self, name: str, **initial_state):
         self.name = name
@@ -27,8 +28,13 @@ class Contribution(ABC):
         self.callbacks: list[Callback] = []
 
     def to_dict(self) -> dict[str, Any]:
-        """Convert this contribution into a
-        JSON serializable dictionary.
+        """Convert this contribution into a JSON serializable dictionary.
+
+        May be overridden by subclasses to allow for specific
+        JSON serialization.
+
+        Returns:
+            A JSON serializable dictionary.
         """
         d = dict(name=self.name)
         if self.initial_state is not None:
@@ -41,8 +47,8 @@ class Contribution(ABC):
             d.update(callbacks=[cb.to_dict() for cb in self.callbacks])
         return d
 
-    def layout(self, *args) -> Callable:
-        """A decorator for a user-provided function that
+    def layout(self, *args) -> Callable[[Callable], Callable]:
+        """Provides a decorator for a user-provided function that
         returns the initial user interface layout.
 
         The layout decorator should only be used once for
@@ -59,16 +65,18 @@ class Contribution(ABC):
         called `ctx`.
 
         Other parameters of the decorated function are user-defined
-        and must have a corresponding `chartlets.Input` argument
-        in the `layout` decorator in the same order.
+        and must have a corresponding `chartlets.Input` or
+        `chartlets.State` arguments in the `layout` decorator in the
+        same order.
 
         Args:
-            args: Instances of the `chartlets.Input` class that
+            args:
+                `chartlets.Input` or `chartlets.State` objects that
                 define the source of the value for the corresponding
                 parameter of the decorated function. Optional.
 
         Returns:
-             The decorated, user-provided function.
+             The decorator.
         """
 
         def decorator(function: Callable) -> Callable:
@@ -80,17 +88,12 @@ class Contribution(ABC):
         return decorator
 
     def callback(self, *args: Channel) -> Callable[[Callable], Callable]:
-        """A decorator for a user-provided callback function.
+        """Provide a decorator for a user-provided callback function.
 
         Callback functions are event handlers that react
         to events fired by the host application state or by events
         fired by related components provided by this contribution's
-        user interface.
-
-        The callback decorator can be used more than once for a
-        given contribution instance.
-
-        The decorated function can return ...
+        layout.
 
         The first parameter of the decorated function must be a
         positional argument. It provides an application-specific
@@ -102,10 +105,18 @@ class Contribution(ABC):
         and must have a corresponding `chartlets.Input` argument
         in the `layout` decorator in the same order.
 
+        The return value of the decorated function is used to change
+        the component or the application state as described by its
+        `Output` argument passed to the decorator. If more than out
+        output is specified, the function is supposed to return a tuple
+        of values with the same number of items in the order given
+        by the `Output` arguments passed to the decorator.
+
         Args:
-            args: Instances of the `chartlets.Input` class that
-                define the source of the value for the corresponding
-                parameter of the decorated function. Optional.
+            args:
+                `chartlets.Input`, `chartlets.State`, and `Output` objects that
+                define sources and targets for the parameters passed to the
+                callback function and the returned from the callback function.
 
         Returns:
              The decorated, user-provided function.
@@ -120,6 +131,3 @@ class Contribution(ABC):
             return function
 
         return decorator
-
-    def __str__(self):
-        return self.name

@@ -10,22 +10,23 @@ def get_layout(
     contrib_index: int,
     data: dict[str, Any],
 ) -> Response:
-    """Generate the response for
+    """Generate the response for the endpoint
     `POST /chartlets/layout/{contrib_point_name}/{contrib_index}`.
 
     Args:
-        ext_ctx: Extension context.
+        ext_ctx: Extension context. If `None`,
+            the function returns a 404 error response.
         contrib_point_name: Contribution point name.
         contrib_index: Contribution index.
         data: A dictionary deserialized from a request JSON body
             that may contain a key `inputValues` of type `list`.
     Returns:
-        A JSON-serializable dictionary.
+        A `Response` object.
+        On success, the response is a dictionary that represents
+        a JSON-serialized component tree.
     """
     if ext_ctx is None:
-        return Response.failed(
-            404, f"no contributions configured"
-        )
+        return Response.failed(404, f"no contributions configured")
 
     # TODO: validate data
     input_values = data.get("inputValues") or []

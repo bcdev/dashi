@@ -1,4 +1,5 @@
 from .callback import Callback
+from .channel import Channel
 from .channel import Input
 from .channel import Output
 from .channel import State

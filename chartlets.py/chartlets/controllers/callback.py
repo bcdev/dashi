@@ -5,20 +5,23 @@ from chartlets.response import Response
 
 
 # POST /chartlets/callback
-def get_callback_results(ext_ctx: ExtensionContext | None, data: dict[str, Any]):
-    """Generate the response for `POST /chartlets/callback`.
+def get_callback_results(
+    ext_ctx: ExtensionContext | None, data: dict[str, Any]
+) -> Response:
+    """Generate the response for the endpoint `POST /chartlets/callback`.
 
     Args:
-        ext_ctx: Extension context.
+        ext_ctx: Extension context. If `None`,
+            the function returns a 404 error response.
         data: A dictionary deserialized from a request JSON body
-            that may contain a key `callbackRequests` of type `list`.
+            that should contain a key `callbackRequests` of type `list`.
     Returns:
-        A JSON-serializable list.
+        A `Response` object.
+        On success, the response is a list of state-change requests
+        grouped by contributions.
     """
     if ext_ctx is None:
-        return Response.failed(
-            404, f"no contributions configured"
-        )
+        return Response.failed(404, f"no contributions configured")
 
     # TODO: validate data
     callback_requests: list[dict] = data.get("callbackRequests") or []
