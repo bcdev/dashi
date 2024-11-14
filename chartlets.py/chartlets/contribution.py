@@ -45,6 +45,9 @@ class Contribution(ABC):
         """A decorator for a user-provided function that
         returns the initial user interface layout.
 
+        The layout decorator should only be used once for
+        given contribution instance.
+
         The decorated function must return an instance of
         a `chartlets.Component`, usually a `chartlets.components.Box`
         that arranges other components in some layout.
@@ -77,7 +80,36 @@ class Contribution(ABC):
         return decorator
 
     def callback(self, *args: Channel) -> Callable[[Callable], Callable]:
-        """Decorator."""
+        """A decorator for a user-provided callback function.
+
+        Callback functions are event handlers that react
+        to events fired by the host application state or by events
+        fired by related components provided by this contribution's
+        user interface.
+
+        The callback decorator can be used more than once for a
+        given contribution instance.
+
+        The decorated function can return ...
+
+        The first parameter of the decorated function must be a
+        positional argument. It provides an application-specific
+        context that is used to allow for access server-side
+        configuration and resources. The parameter should be
+        called `ctx`.
+
+        Other parameters of the decorated function are user-defined
+        and must have a corresponding `chartlets.Input` argument
+        in the `layout` decorator in the same order.
+
+        Args:
+            args: Instances of the `chartlets.Input` class that
+                define the source of the value for the corresponding
+                parameter of the decorated function. Optional.
+
+        Returns:
+             The decorated, user-provided function.
+        """
 
         def decorator(function: Callable) -> Callable:
             self.callbacks.append(
