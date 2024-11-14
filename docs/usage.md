@@ -1,4 +1,4 @@
-The Chartlets framework has two types of users:
+The Chartlets framework has two types of target users:
 
 - **Application contributors** develop new contributions 
   for a specific web application that is powered by Chartlets.
