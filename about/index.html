@@ -73,6 +73,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#changes" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -347,6 +352,17 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -356,6 +372,101 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reporting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#testing-and-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing and Coverage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coding-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coding Style
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      License
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -381,7 +492,64 @@
 
   <h1>About</h1>
 
+<h2 id="changes">Changes</h2>
+<p>You can find the complete Chartlets changelog 
+<a href="https://github.com/bcdev/chartlets/blob/main/CHANGES.md">here</a>. </p>
+<h2 id="reporting">Reporting</h2>
+<p>If you have suggestions, ideas, feature requests, or if you have identified
+a malfunction or error, then please 
+<a href="https://github.com/bcdev/chartlets/issues">post an issue</a>. </p>
+<h2 id="contributions">Contributions</h2>
+<p>The Chartlets project welcomes contributions of any form
+as long as you respect our 
+<a href="https://github.com/bcdev/chartlets/blob/main/CODE_OF_CONDUCT.md">code of conduct</a>
+and follow our 
+<a href="https://github.com/bcdev/chartlets/blob/main/CONTRIBUTING.md">contribution guide</a>.</p>
+<p>If you'd like to submit code or documentation changes, we ask you to provide a 
+pull request (PR) 
+<a href="https://github.com/bcdev/chartlets/pulls">here</a>. 
+For code and configuration changes, your PR must be linked to a 
+corresponding issue. </p>
+<h2 id="development">Development</h2>
+<p>To set up the Python development environment, with repository root as 
+current working directory:</p>
+<pre><code class="language-bash">cd chartlets.py
+pip install .[dev,doc]
+</code></pre>
+<h3 id="testing-and-coverage">Testing and Coverage</h3>
+<p>Chartlets uses <a href="https://docs.pytest.org/">pytest</a> for unit-level testing 
+and coverage analysis for its Python code.</p>
+<pre><code class="language-bash">cd chartlets.py
+pytest --cov=chartlets tests
+</code></pre>
+<h3 id="coding-style">Coding Style</h3>
+<p>Chartlets' Python code is formatted by <a href="https://black.readthedocs.io/">black</a>.</p>
+<pre><code class="language-bash">cd chartlets.py
+black .
+</code></pre>
+<p>Chartlets' TypeScript code is formatted by 
+<a href="https://prettier.io/">prettier</a>.</p>
+<pre><code class="language-bash">cd chartlets.js
+prettier .
+</code></pre>
+<h3 id="documentation">Documentation</h3>
+<p>Chartlets' documentation is built using the <a href="https://www.mkdocs.org/">mkdocs</a> tool.</p>
+<pre><code class="language-bash">cd chartlets.py
+pip install .[doc]
+cd ..
+</code></pre>
+<p>With repository root as current working directory:</p>
+<pre><code class="language-bash"># Write
+mkdocs serve
 
+# Publish
+mkdocs build
+mkdocs gh-deploy
+</code></pre>
+<h2 id="license">License</h2>
+<p>Chartlets is open source made available under the terms and conditions of the 
+<a href="https://github.com/bcdev/chartlets/blob/main/LICENSE">MIT License</a>.</p>
+<p>Copyright © 2024 Brockmann Consult Development</p>
 
 
 
