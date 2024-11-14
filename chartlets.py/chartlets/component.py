@@ -8,6 +8,7 @@ class Component(ABC):
     """Base class for components.
     Provides the common attributes that apply to all components.
     """
+
     # Common HTML properties
     id: str | None = None
     """HTML `id` property. Required for referring to this component."""

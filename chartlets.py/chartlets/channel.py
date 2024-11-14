@@ -42,8 +42,25 @@ class Channel(ABC):
 
 
 class Input(Channel):
-    """An input value read from component state.
-    A component state change may trigger callback invocation.
+    """Describes the source of a parameter value for the user-provided
+    layout and callback functions.
+    `Input` instances are used as arguments passed to the
+    `layout` and `callback` decorators.
+
+    An `Input` describes from which property in which state a parameter
+    value is read. According state changes trigger callback invocation.
+
+    Args:
+        id:
+            Value of a component's "id" property.
+            Used only if `source` is `"component"`.
+        property:
+            Name of the property of a component or state.
+            To address properties in nested objects or arrays
+            use a dot (`.`) to separate property names and array
+            indexes.
+        source: One of `"component"` (the default), `"container"`,
+            or `"app"`.
     """
 
     # noinspection PyShadowingBuiltins
@@ -58,8 +75,26 @@ class Input(Channel):
 
 
 class State(Input):
-    """An input value read from component state.
-    Does not trigger callback invocation.
+    """Describes the source of a parameter value for the user-provided
+    layout and callback functions.
+    `State` instances are used as arguments passed to the
+    `layout` and `callback` decorators.
+
+    Just like an `Input`, a `State` describes from which property in which state
+    a parameter value is read, but according state changes
+    will **not*Ü* trigger callback invocation.
+
+    Args:
+        id:
+            Value of a component's "id" property.
+            Used only if `source` is `"component"`.
+        property:
+            Name of the property of a component or state.
+            To address properties in nested objects or arrays
+            use a dot (`.`) to separate property names and array
+            indexes.
+        source: One of `"component"` (the default), `"container"`,
+            or `"app"`.
     """
 
     # noinspection PyShadowingBuiltins
@@ -73,7 +108,26 @@ class State(Input):
 
 
 class Output(Channel):
-    """Callback output."""
+    """Describes the target of a value returned from a user-provided
+    callback function.
+    `Output` instances are used as arguments passed to the
+    `callback` decorators.
+
+    An `Output` describes which property in which state should be
+    updated from the returned callback value.
+
+    Args:
+        id:
+            Value of a component's "id" property.
+            Used only if `source` is `"component"`.
+        property:
+            Name of the property of a component or state.
+            To address properties in nested objects or arrays
+            use a dot (`.`) to separate property names and array
+            indexes.
+        target: One of `"component"` (the default), `"container"`,
+            or `"app"`.
+    """
 
     # noinspection PyShadowingBuiltins
     def __init__(

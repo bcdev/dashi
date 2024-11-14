@@ -10,15 +10,18 @@ plugins:
             show_source: false
             show_if_no_docstring: false
             show_root_heading: true
-            heading_level: 3
-            toc: true
-            toc_depth: 1
+            toc: false
+            #toc_depth: 1
 
 nav:
   - Home: index.md
   - Demo: demo.md
   - Usage: usage.md
-  - Components: components.md
+  - Python API:
+    - Components: api/components.md
+    - Contribution: api/contribution.md
+    - Extension: api/extension.md
+    - Controllers: api/controllers.md
   - About: about.md
 
 theme:
@@ -45,10 +48,6 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
-
-  toggle:
-    icon: material/brightness-4
-    name: Switch to light mode
 
 repo_url: https://github.com/bcdev/chartlets
 
