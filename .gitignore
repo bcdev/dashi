@@ -8,6 +8,8 @@ dist
 node_modules
 # pip
 *.egg-info
+# Python
+__pycache__
 # mkdocs
 site
 
