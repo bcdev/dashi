@@ -13,6 +13,6 @@ export function configureFramework<S extends object = object>(
     options.hostStore.subscribe(handleHostStoreChange);
   }
   store.setState({
-    configuration: { ...options },
+    configuration: { ...options } as FrameworkOptions<object>,
   });
 }

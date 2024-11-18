@@ -13,7 +13,7 @@ export interface FrameworkOptions<S extends object = object> {
   /** The host applications state management store. */
   hostStore?: StoreApi<S>;
   /** Get a derived state from given host state. */
-  getDerivedHostState?: <S>(hostState: S, propertyName: string) => unknown;
+  getDerivedHostState?: (hostState: S, propertyName: string) => unknown;
   /** API options to configure backend. */
   api?: ApiOptions;
   /** Logging options. */
