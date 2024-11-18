@@ -48,12 +48,17 @@ function getLayoutInputValues(
   contribIndex: number,
 ): unknown[] {
   const { configuration, contributionsRecord } = store.getState();
-  const { hostStore } = configuration;
+  const { hostStore, getDerivedHostState } = configuration;
   const contributions = contributionsRecord[contribPoint];
   const contribution = contributions[contribIndex];
   const inputs = contribution.layout!.inputs;
   if (inputs && inputs.length > 0) {
-    return getInputValues(inputs, contribution, hostStore?.getState());
+    return getInputValues(
+      inputs,
+      contribution,
+      hostStore?.getState(),
+      getDerivedHostState,
+    );
   } else {
     return [];
   }

@@ -116,4 +116,19 @@ describe("Test that getInputValueFromState()", () => {
       getInputValueFromState({ link: "container", property: "x.y.2" }, state),
     ).toEqual(6);
   });
+
+  it("works with derived state", () => {
+    const state = { x: { y: [4, 5, 6] } };
+    const getDerivedState = (_state: object, name: string): number | undefined =>
+        name === "x.ySum"
+        ? state.x.y[0] + state.x.y[1] + state.x.y[2]
+        : undefined;
+    expect(
+      getInputValueFromState(
+          { link: "container", property: "x.ySum" },
+          state,
+          getDerivedState,
+      ),
+    ).toEqual(4 + 5 + 6);
+  });
 });

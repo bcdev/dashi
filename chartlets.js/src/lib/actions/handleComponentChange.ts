@@ -49,7 +49,7 @@ function getCallbackRequests(
   changeEvent: ComponentChangeEvent,
 ): CallbackRequest[] {
   const { configuration, contributionsRecord } = store.getState();
-  const { hostStore } = configuration;
+  const { hostStore, getDerivedHostState } = configuration;
   const hostState = hostStore?.getState();
   const contributions = contributionsRecord[contribPoint];
   const contribution = contributions[contribIndex];
@@ -71,7 +71,12 @@ function getCallbackRequests(
           contribIndex,
           callbackIndex,
           inputIndex,
-          inputValues: getInputValues(inputs, contribution, hostState),
+          inputValues: getInputValues(
+            inputs,
+            contribution,
+            hostState,
+            getDerivedHostState,
+          ),
         });
       }
     }
