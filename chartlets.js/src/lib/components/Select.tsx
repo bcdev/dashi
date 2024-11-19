@@ -50,7 +50,7 @@ export function Select({
         disabled={disabled}
         onChange={handleChange}
       >
-        {options &&
+        {Array.isArray(options) &&
           options.map(normalizeSelectOption).map(([value, text], index) => (
             <MuiMenuItem key={index} value={value}>
               {text}

@@ -1,3 +1,11 @@
+## Version 0.0.22 (from 2024/11/19)
+
+* Improved robustness while rendering the in `Select` component
+  wrt `options` property.
+
+* `Button` component now sets a `clicked: boolean` property instead
+  of `n_clicks: int`.
+
 ## Version 0.0.21 (from 2024/11/19)
 
 * `Component` children can now also be text nodes (of type `string`).

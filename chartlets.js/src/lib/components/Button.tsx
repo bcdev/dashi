@@ -16,15 +16,13 @@ export function Button({
   disabled,
   onChange,
 }: ButtonProps) {
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (_event: MouseEvent<HTMLButtonElement>) => {
     if (id) {
       onChange({
         componentType: "Button",
         id: id,
-        // Compat with plotly/dash
-        property: "n_clicks",
-        // TODO: get number of mouse clicks
-        value: event.buttons,
+        property: "clicked",
+        value: true,
       });
     }
   };

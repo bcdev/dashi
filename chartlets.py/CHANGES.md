@@ -1,4 +1,4 @@
-## Version 0.0.21 (in development)
+## Version 0.0.22 (in development)
 
 * `Component` children can now also be text nodes (of type `string`).
 
@@ -8,6 +8,9 @@
   (to refer to MUI component with same name).
 
 * `Select` component has more flexible options.
+
+* Dealing with callbacks parameter and return types 
+  that are just `list` and not, e.g., `list[str]`.
  
 ## Version 0.0.16 (from 2024/11/12)
 
