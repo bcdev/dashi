@@ -1,7 +1,10 @@
 import type { Input } from "@/lib/types/model/channel";
 import type { ContributionState } from "@/lib/types/state/contribution";
-import type { ComponentState } from "@/lib/types/state/component";
-import { isContainerState } from "@/lib/actions/helpers/isContainerState";
+import {
+  type ComponentState,
+  isComponentState,
+  isContainerState,
+} from "@/lib/types/state/component";
 import { formatObjPath, getValue, normalizeObjPath } from "@/lib/utils/objPath";
 import { isObject } from "@/lib/utils/isObject";
 import type { GetDerivedState } from "@/lib/types/state/store";
@@ -56,11 +59,13 @@ export function getInputValueFromComponent(
   if (componentState.id === input.id) {
     return getValue(componentState, input.property);
   } else if (isContainerState(componentState)) {
-    for (let i = 0; i < componentState.components.length; i++) {
-      const item = componentState.components[i];
-      const itemValue = getInputValueFromComponent(input, item);
-      if (itemValue !== noValue) {
-        return itemValue;
+    for (let i = 0; i < componentState.children.length; i++) {
+      const item = componentState.children[i];
+      if (isComponentState(item)) {
+        const itemValue = getInputValueFromComponent(input, item);
+        if (itemValue !== noValue) {
+          return itemValue;
+        }
       }
     }
   }

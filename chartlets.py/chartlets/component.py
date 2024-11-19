@@ -1,6 +1,6 @@
 from abc import ABC
-from dataclasses import dataclass, field
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, Union
 
 
 @dataclass(frozen=True)
@@ -10,26 +10,29 @@ class Component(ABC):
     """
 
     # Common HTML properties
+    # See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
+    # TODO: Enhance set of supported HTML attributes
+
     id: str | None = None
-    """HTML `id` property. Required for referring to this component."""
+    """HTML `id` attribute. Required for referring to this component."""
 
     name: str | None = None
-    """HTML `name` property. Optional."""
+    """HTML `name` attribute. Optional."""
 
     value: bool | int | float | str | None = None
-    """HTML `value` property. Required for specific components."""
+    """HTML `value` attribute. Required for specific components."""
 
     style: dict[str, Any] | None = None
-    """HTML `style` property. Optional."""
+    """HTML `style` attribute. Optional."""
 
-    # We may add more here later
-    #
-    # Special non-HTML properties
+    disabled: bool | None = None
+    """HTML `disabled` attribute. Optional."""
+
     label: str | None = None
-    """Label used by many specific components. Optional """
+    """HTML `label` attribute. Optional."""
 
-    children: list["Component"] | None = None
-    """Children used by many specific components. Optional """
+    children: list[Union["Component", str]] | None = None
+    """Children used by many specific components. Optional."""
 
     @property
     def type(self):
@@ -48,8 +51,10 @@ class Component(ABC):
             }
         )
         if self.children is not None:
-            # Note we use "components" instead of "children" in order
-            # to avoid later problems with React component's "children"
-            # property
-            d.update(components=list(c.to_dict() for c in self.children))
+            d.update(
+                children=list(
+                    (c.to_dict() if isinstance(c, Component) else c)
+                    for c in self.children
+                )
+            )
         return d

@@ -3,7 +3,7 @@ import { type ComponentChangeHandler } from "@/lib/types/state/event";
 import { Button, type ButtonProps } from "./Button";
 import { Box, type BoxProps } from "./Box";
 import { Checkbox, type CheckboxProps } from "./Checkbox";
-import { Dropdown, type DropdownProps } from "./Dropdown";
+import { Select, type SelectProps } from "./Select";
 import { Plot, type PlotProps } from "./Plot";
 import { Typography, type TypographyProps } from "@/lib/components/Typography";
 
@@ -12,7 +12,7 @@ export interface ComponentProps extends ComponentState {
 }
 
 export function Component({ type, ...props }: ComponentProps) {
-  // TODO: allow for registering components via their types
+  // TODO: allow for registering children via their types
   //   and make following code generic.
   //
   // const DashiComp = Registry.getComponent(link);
@@ -20,8 +20,8 @@ export function Component({ type, ...props }: ComponentProps) {
   //
   if (type === "Plot") {
     return <Plot {...(props as PlotProps)} />;
-  } else if (type === "Dropdown") {
-    return <Dropdown {...(props as DropdownProps)} />;
+  } else if (type === "Select") {
+    return <Select {...(props as SelectProps)} />;
   } else if (type === "Button") {
     return <Button {...(props as ButtonProps)} />;
   } else if (type === "Box") {

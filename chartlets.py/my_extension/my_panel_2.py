@@ -2,7 +2,7 @@ import altair as alt
 import pandas as pd
 
 from chartlets import Component, Input, Output
-from chartlets.components import Plot, Box, Dropdown
+from chartlets.components import Plot, Box, Select
 from chartlets.demo.contribs import Panel
 from chartlets.demo.context import Context
 
@@ -22,7 +22,7 @@ def render_panel(
         chart=make_figure(ctx, selected_dataset_id, var_name),
         style={"flexGrow": 1},
     )
-    dropdown = Dropdown(
+    select = Select(
         id="selected_variable_name",
         value=var_name,
         label="Variable",
@@ -37,7 +37,7 @@ def render_panel(
             "justifyContent": "center",
             "gap": 4,
         },
-        children=[dropdown],
+        children=[select],
     )
     return Box(
         style={

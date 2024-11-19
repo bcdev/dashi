@@ -1,5 +1,5 @@
 from chartlets import Component, Input, State, Output
-from chartlets.components import Box, Dropdown, Checkbox, Typography
+from chartlets.components import Box, Select, Checkbox, Typography
 from chartlets.demo.contribs import Panel
 from chartlets.demo.context import Context
 
@@ -7,7 +7,7 @@ from chartlets.demo.context import Context
 panel = Panel(__name__, title="Panel C")
 
 
-COLORS = [("red", 0), ("green", 1), ("blue", 2), ("yellow", 3)]
+COLORS = [(0, "red"), (1, "green"), (2, "blue"), (3, "yellow")]
 
 
 @panel.layout(
@@ -27,7 +27,7 @@ def render_panel(
         label="Opaque",
     )
 
-    color_dropdown = Dropdown(
+    color_select = Select(
         id="color",
         value=color,
         label="Color",
@@ -36,7 +36,7 @@ def render_panel(
     )
 
     info_text = Typography(
-        id="info_text", text=update_info_text(ctx, dataset_id, opaque, color)
+        id="info_text", children=update_info_text(ctx, dataset_id, opaque, color)
     )
 
     return Box(
@@ -47,7 +47,7 @@ def render_panel(
             "height": "100%",
             "gap": "6px",
         },
-        children=[opaque_checkbox, color_dropdown, info_text],
+        children=[opaque_checkbox, color_select, info_text],
     )
 
 
@@ -56,22 +56,23 @@ def render_panel(
     Input(source="app", property="selectedDatasetId"),
     Input("opaque"),
     Input("color"),
-    State("info_text", "text"),
-    Output("info_text", "text"),
+    State("info_text", "children"),
+    Output("info_text", "children"),
 )
 def update_info_text(
     ctx: Context,
     dataset_id: str = "",
     opaque: bool = False,
     color: int = 0,
-    info_text: str = ""
-) -> str:
+    info_elems: list[str] | None = None,
+) -> list[str]:
     opaque = opaque or False
     color = color if color is not None else 0
-    return (
+    info_text = info_elems[0] if info_elems else ""
+    return [
         f"The dataset is {dataset_id},"
-        f" the color is {COLORS[color][0]} and"
+        f" the color is {COLORS[color][1]} and"
         f" it {'is' if opaque else 'is not'} opaque."
         f" The length of the last info text"
-        f" was {len(info_text or "")}."
-    )
+        f" was {len(info_text)}."
+    ]

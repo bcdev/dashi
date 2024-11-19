@@ -15,14 +15,14 @@ import {
 const componentTree: ComponentState = {
   type: "Box",
   id: "b1",
-  components: [
+  children: [
     { type: "Plot", id: "p1", chart: null } as PlotState,
     {
       type: "Box",
       id: "b2",
-      components: [
+      children: [
         { type: "Checkbox", id: "cb1", value: true },
-        { type: "Dropdown", id: "dd1", value: 13 },
+        { type: "Select", id: "dd1", value: 13 },
       ],
     },
   ],
@@ -73,7 +73,10 @@ describe("Test that applyContributionChangeRequests()", () => {
     ]);
     expect(newState).not.toBe(contributionsRecord);
     expect(
-      newState["panels"][0].component!.components![1].components![1].value,
+      (
+        (newState["panels"][0].component!.children![1] as ComponentState)
+          .children![1] as ComponentState
+      ).value,
     ).toEqual(14);
   });
 
@@ -94,7 +97,10 @@ describe("Test that applyComponentStateChange()", () => {
       value: false,
     });
     expect(newState).not.toBe(componentTree);
-    expect(newState.components![1].components![0].value).toEqual(false);
+    expect(
+      ((newState.children![1] as ComponentState).children![0] as ComponentState)
+        .value,
+    ).toEqual(false);
   });
 
   it("doesn't change the state if value stays the same", () => {

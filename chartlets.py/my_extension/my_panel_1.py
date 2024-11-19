@@ -1,7 +1,7 @@
 import altair as alt
 
 from chartlets import Component, Input, Output
-from chartlets.components import Plot, Box, Dropdown
+from chartlets.components import Plot, Box, Select
 from chartlets.demo.contribs import Panel
 from chartlets.demo.context import Context
 
@@ -15,11 +15,11 @@ def render_panel(ctx: Context) -> Component:
     plot = Plot(
         id="plot", chart=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
     )
-    dropdown = Dropdown(
+    select = Select(
         id="selected_dataset",
         value=selected_dataset,
         label="Dataset",
-        options=[(f"DS #{i + 1}", i) for i in range(len(ctx.datasets))],
+        options=[(i, f"DS #{i + 1}") for i in range(len(ctx.datasets))],
         style={"flexGrow": 0, "minWidth": 120},
     )
     control_group = Box(
@@ -30,7 +30,7 @@ def render_panel(ctx: Context) -> Component:
             "justifyContent": "center",
             "gap": 4,
         },
-        children=[dropdown],
+        children=[select],
     )
     return Box(
         style={

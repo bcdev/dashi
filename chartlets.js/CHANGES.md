@@ -1,3 +1,17 @@
+## Version 0.0.21 (from 2024/11/19)
+
+* `Component` children can now also be text nodes (of type `string`).
+
+* `Typography` component has children instead of `text`.
+
+* A component's `children` property can now be changed, even from a
+  scalar.
+
+* Renamed `Dropdown` component into `Select`
+  (to refer to MUI component with same name).
+
+* `Select` component has more flexible options.
+
 ## Version 0.0.20 (from 2024/11/19)
 
 * Using `FrameworkOptions.getDerivedHostState` also in

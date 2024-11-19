@@ -9,14 +9,14 @@ import {
 const componentState: ComponentState = {
   type: "Box",
   id: "b1",
-  components: [
+  children: [
     { type: "Plot", id: "p1", chart: null } as PlotState,
     {
       type: "Box",
       id: "b2",
-      components: [
+      children: [
         { type: "Checkbox", id: "cb1", value: true },
-        { type: "Dropdown", id: "dd1", value: 13 },
+        { type: "Select", id: "dd1", value: 13 },
       ],
     },
   ],
@@ -119,15 +119,18 @@ describe("Test that getInputValueFromState()", () => {
 
   it("works with derived state", () => {
     const state = { x: { y: [4, 5, 6] } };
-    const getDerivedState = (_state: object, name: string): number | undefined =>
-        name === "x.ySum"
+    const getDerivedState = (
+      _state: object,
+      name: string,
+    ): number | undefined =>
+      name === "x.ySum"
         ? state.x.y[0] + state.x.y[1] + state.x.y[2]
         : undefined;
     expect(
       getInputValueFromState(
-          { link: "container", property: "x.ySum" },
-          state,
-          getDerivedState,
+        { link: "container", property: "x.ySum" },
+        state,
+        getDerivedState,
       ),
     ).toEqual(4 + 5 + 6);
   });

@@ -1,18 +1,19 @@
 import { type CSSProperties } from "react";
 import type { VisualizationSpec } from "react-vega";
+import { isObject } from "@/lib/utils/isObject";
 
 export type ComponentType =
+  | "Box"
   | "Button"
   | "Checkbox"
-  | "Dropdown"
   | "Plot"
-  | "Box"
+  | "Select"
   | "Typography";
 
 export interface ComponentState {
   type: ComponentType;
   label?: string;
-  components?: ComponentState[];
+  children?: ComponentItem[];
   // common HTML attributes
   id?: string;
   name?: string;
@@ -21,13 +22,22 @@ export interface ComponentState {
   disabled?: boolean;
 }
 
+export type ComponentItem = ComponentState | string;
+
 export interface ContainerState extends ComponentState {
-  components: ComponentState[];
+  children: ComponentItem[];
 }
 
-export interface DropdownState extends ComponentState {
-  type: "Dropdown";
-  options: Array<[string, string | number]>;
+export type SelectOption =
+  | string
+  | number
+  | [string, string]
+  | [number, string]
+  | { value: string | number; label?: string };
+
+export interface SelectState extends ComponentState {
+  type: "Select";
+  options: SelectOption[];
 }
 
 export interface ButtonState extends ComponentState {
@@ -54,7 +64,14 @@ export interface BoxState extends ContainerState {
   type: "Box";
 }
 
-export interface TypographyState extends ComponentState {
+export interface TypographyState extends ContainerState {
   type: "Typography";
-  text?: string;
+}
+
+export function isComponentState(object: unknown): object is ComponentState {
+  return isObject(object) && typeof object.type === "string";
+}
+
+export function isContainerState(object: unknown): object is ContainerState {
+  return isComponentState(object) && Array.isArray(object.children);
 }

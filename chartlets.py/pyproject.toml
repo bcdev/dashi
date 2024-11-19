@@ -8,9 +8,7 @@ dynamic = ["version", "readme"]
 authors = [
   {name = "chartlets Development Team"}
 ]
-description = """\
-  Backend for server-configured charts powered by Vega Altair.
-  """
+description = "Backend for server-configured charts powered by Vega Altair."
 keywords = [
   "dashboard", "charts", "vega", "altair", "plots"
 ]

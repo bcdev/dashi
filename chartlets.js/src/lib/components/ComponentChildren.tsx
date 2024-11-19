@@ -1,9 +1,12 @@
 import { type ComponentChangeHandler } from "@/lib/types/state/event";
-import { type ComponentState } from "@/lib/types/state/component";
+import {
+  type ComponentItem,
+  isComponentState,
+} from "@/lib/types/state/component";
 import { Component } from "./Component";
 
 export interface ComponentChildrenProps {
-  components?: ComponentState[];
+  components?: ComponentItem[];
   onChange: ComponentChangeHandler;
 }
 
@@ -16,9 +19,13 @@ export function ComponentChildren({
   }
   return (
     <>
-      {components.map((component, index) => {
-        const key = component.id || index;
-        return <Component key={key} {...component} onChange={onChange} />;
+      {components.map((item, index) => {
+        if (isComponentState(item)) {
+          const key = item.id || index;
+          return <Component key={key} {...item} onChange={onChange} />;
+        } else {
+          return item;
+        }
       })}
     </>
   );

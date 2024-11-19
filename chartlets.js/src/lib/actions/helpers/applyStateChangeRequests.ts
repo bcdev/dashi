@@ -3,15 +3,16 @@ import type {
   StateChangeRequest,
 } from "@/lib/types/model/callback";
 import { store } from "@/lib/store";
-import type {
-  ComponentState,
-  ContainerState,
+import {
+  type ComponentState,
+  type ContainerState,
+  isComponentState,
+  isContainerState,
 } from "@/lib/types/state/component";
 import type { ContribPoint } from "@/lib/types/model/extension";
 import type { ContributionState } from "@/lib";
 import { updateArray } from "@/lib/utils/updateArray";
-import { isContainerState } from "@/lib/actions/helpers/isContainerState";
-import { getValue, setValue } from "@/lib/utils/objPath";
+import { getValue, normalizeObjPath, setValue } from "@/lib/utils/objPath";
 
 export function applyStateChangeRequests(
   stateChangeRequests: StateChangeRequest[],
@@ -106,26 +107,37 @@ export function applyComponentStateChange(
   stateChange: StateChange,
 ): ComponentState {
   if (component.id === stateChange.id) {
-    const property = stateChange.property;
+    const property = normalizeObjPath(stateChange.property);
     const valueOld = getValue(component, property);
     const valueNew = stateChange.value;
-    if (valueOld !== valueNew) {
+    if (
+      property[property.length - 1] === "children" &&
+      !Array.isArray(valueNew) &&
+      valueNew !== null &&
+      valueNew !== undefined
+    ) {
+      // Special case if the value of "children" is changed:
+      // convert scalar valueNew into one-element array
+      return setValue(component, property, [valueNew]);
+    } else if (valueOld !== valueNew) {
       return setValue(component, property, valueNew);
     }
   } else if (isContainerState(component)) {
     const containerOld: ContainerState = component;
     let containerNew: ContainerState = containerOld;
-    for (let i = 0; i < containerOld.components.length; i++) {
-      const itemOld = containerOld.components[i];
-      const itemNew = applyComponentStateChange(itemOld, stateChange);
-      if (itemNew !== itemOld) {
-        if (containerNew === containerOld) {
-          containerNew = {
-            ...containerOld,
-            components: [...containerOld.components],
-          };
+    for (let i = 0; i < containerOld.children.length; i++) {
+      const itemOld = containerOld.children[i];
+      if (isComponentState(itemOld)) {
+        const itemNew = applyComponentStateChange(itemOld, stateChange);
+        if (itemNew !== itemOld) {
+          if (containerNew === containerOld) {
+            containerNew = {
+              ...containerOld,
+              children: [...containerOld.children],
+            };
+          }
+          containerNew.children[i] = itemNew;
         }
-        containerNew.components[i] = itemNew;
       }
     }
     return containerNew;
