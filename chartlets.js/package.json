@@ -1,6 +1,6 @@
 {
   "name": "chartlets",
-  "version": "0.0.18",
+  "version": "0.0.20",
   "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
   "files": [
@@ -18,10 +18,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bcdev/charlet.git"
+    "url": "https://github.com/bcdev/chartlets.git"
   },
   "bugs": {
-    "url": "https://github.com/bcdev/charlet/issues"
+    "url": "https://github.com/bcdev/chartlets/issues"
   },
   "homepage": "https://github.com/bcdev/charlet/blob/main/chartlets/README.md",
   "author": "Brockmann Consult GmbH",

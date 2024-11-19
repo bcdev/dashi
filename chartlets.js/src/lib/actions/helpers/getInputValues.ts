@@ -2,14 +2,15 @@ import type { Input } from "@/lib/types/model/channel";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ComponentState } from "@/lib/types/state/component";
 import { isContainerState } from "@/lib/actions/helpers/isContainerState";
-import { getValue, toObjPath } from '@/lib/utils/objPath';
+import { formatObjPath, getValue, normalizeObjPath } from "@/lib/utils/objPath";
 import { isObject } from "@/lib/utils/isObject";
+import type { GetDerivedState } from "@/lib/types/state/store";
 
 export function getInputValues<S extends object = object>(
   inputs: Input[],
   contributionState: ContributionState,
   hostState?: S | undefined,
-  getDerivedHostState?: (hostState: object, property: string) => unknown,
+  getDerivedHostState?: GetDerivedState,
 ): unknown[] {
   return inputs.map((input) =>
     getInputValue(input, contributionState, hostState, getDerivedHostState),
@@ -22,7 +23,7 @@ export function getInputValue<S extends object = object>(
   input: Input,
   contributionState: ContributionState,
   hostState?: S,
-  getDerivedHostState?: (hostState: object, propertyName: string) => unknown,
+  getDerivedHostState?: GetDerivedState<S>,
 ): unknown {
   let inputValue: unknown = undefined;
   const dataSource = input.link || "component";
@@ -31,7 +32,11 @@ export function getInputValue<S extends object = object>(
   } else if (dataSource === "container" && contributionState.container) {
     inputValue = getInputValueFromState(input, contributionState.container);
   } else if (dataSource === "app" && hostState) {
-    inputValue = getInputValueFromState(input, hostState, getDerivedHostState);
+    inputValue = getInputValueFromState(
+      input,
+      hostState,
+      getDerivedHostState as GetDerivedState,
+    );
   } else {
     console.warn(`input with unknown data source:`, input);
   }
@@ -66,7 +71,7 @@ export function getInputValueFromComponent(
 export function getInputValueFromState(
   input: Input,
   state: object | undefined,
-  getDerivedState?: (state: object, propertyName: string) => unknown,
+  getDerivedState?: GetDerivedState,
 ): unknown {
   let inputValue: unknown = state;
   if (input.id && isObject(inputValue)) {
@@ -74,11 +79,10 @@ export function getInputValueFromState(
   }
   if (isObject(inputValue)) {
     const state = inputValue;
-    const property = toObjPath(input.property);
+    const property = normalizeObjPath(input.property);
     inputValue = getValue(state, property);
     if (inputValue === undefined && getDerivedState !== undefined) {
-      const propertyName = property.map(v => typeof v === "number" ? v.toString() : v).join(".");
-      inputValue = getDerivedState(state, propertyName);
+      inputValue = getDerivedState(state, formatObjPath(input.property));
     }
   }
   return inputValue;

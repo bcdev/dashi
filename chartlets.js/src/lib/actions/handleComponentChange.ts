@@ -12,6 +12,10 @@ export function handleComponentChange(
   contribIndex: number,
   changeEvent: ComponentChangeEvent,
 ) {
+  if (store.getState().extensions.length === 0) {
+    // Exit immediately if there are no extensions (yet)
+    return;
+  }
   // Apply actual component state change immediately
   applyStateChangeRequests([
     {

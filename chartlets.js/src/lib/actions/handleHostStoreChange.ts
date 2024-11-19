@@ -7,9 +7,15 @@ import type {
 } from "@/lib/types/model/callback";
 import type { Input } from "@/lib/types/model/channel";
 import { getInputValues } from "@/lib/actions/helpers/getInputValues";
-import { getValue, type ObjPath, toObjPath } from "@/lib/utils/objPath";
+import {
+  getValue,
+  type ObjPath,
+  normalizeObjPath,
+  formatObjPath,
+} from "@/lib/utils/objPath";
 import { invokeCallbacks } from "@/lib/actions/helpers/invokeCallbacks";
 import type { ContributionState } from "@/lib/types/state/contribution";
+import type { GetDerivedState } from "@/lib/types/state/store";
 
 /**
  * A reference to a property of an input of a callback of a contribution.
@@ -23,11 +29,17 @@ export function handleHostStoreChange<S extends object = object>(
   currState: S,
   prevState: S,
 ) {
-  const { contributionsRecord } = store.getState();
+  if (store.getState().extensions.length === 0) {
+    // Exit immediately if there are no extensions (yet)
+    return;
+  }
+  const { configuration, contributionsRecord } = store.getState();
+  const { getDerivedHostState } = configuration;
   const callbackRequests = getCallbackRequests(
     contributionsRecord,
     currState,
     prevState,
+    getDerivedHostState,
   );
   invokeCallbacks(callbackRequests);
 }
@@ -36,10 +48,16 @@ function getCallbackRequests<S extends object = object>(
   contributionsRecord: Record<string, ContributionState[]>,
   hostState: S,
   prevHostState: S,
+  getDerivedHostState: GetDerivedState<S> | undefined,
 ): CallbackRequest[] {
   return getHostStorePropertyRefs()
     .filter((propertyRef) =>
-      hasPropertyChanged(propertyRef.propertyPath, hostState, prevHostState),
+      hasPropertyChanged(
+        propertyRef.propertyPath,
+        hostState,
+        prevHostState,
+        getDerivedHostState,
+      ),
     )
     .map((propertyRef) => {
       const contributions = contributionsRecord[propertyRef.contribPoint];
@@ -49,6 +67,7 @@ function getCallbackRequests<S extends object = object>(
         callback.inputs!,
         contribution,
         hostState,
+        getDerivedHostState as GetDerivedState,
       );
       return { ...propertyRef, inputValues };
     });
@@ -74,7 +93,7 @@ function getHostStorePropertyRefs(): PropertyRef[] {
                 contribIndex,
                 callbackIndex,
                 inputIndex,
-                propertyPath: toObjPath(input.property!),
+                propertyPath: normalizeObjPath(input.property!),
               });
             }
           }),
@@ -89,8 +108,20 @@ function hasPropertyChanged<S extends object = object>(
   propertyPath: ObjPath,
   currState: S,
   prevState: S,
+  getDerivedHostState: GetDerivedState<S> | undefined,
 ): boolean {
   const currValue = getValue(currState, propertyPath);
   const prevValue = getValue(prevState, propertyPath);
+  if (
+    currValue === undefined &&
+    prevValue === undefined &&
+    getDerivedHostState !== undefined
+  ) {
+    const propertyName = formatObjPath(propertyPath);
+    return !Object.is(
+      getDerivedHostState(currState, propertyName),
+      getDerivedHostState(prevState, propertyName),
+    );
+  }
   return !Object.is(currValue, prevValue);
 }

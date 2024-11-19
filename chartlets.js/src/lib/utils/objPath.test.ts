@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { equalObjPaths, getValue, setValue, toObjPath } from "./objPath";
+import { equalObjPaths, getValue, setValue, normalizeObjPath } from "./objPath";
 
 describe("Test that getValue()", () => {
   it("works on 0th level", () => {
@@ -72,30 +72,30 @@ describe("Test that setValue()", () => {
   });
 });
 
-describe("Test that toObjPath()", () => {
+describe("Test that normalizeObjPath()", () => {
   it("does not convert arrays", () => {
     const value = [1, 2, 3];
-    expect(toObjPath(value)).toBe(value);
-    expect(toObjPath(value)).toEqual([1, 2, 3]);
+    expect(normalizeObjPath(value)).toBe(value);
+    expect(normalizeObjPath(value)).toEqual([1, 2, 3]);
   });
 
   it("converts undefined", () => {
-    expect(toObjPath(undefined)).toEqual([]);
+    expect(normalizeObjPath(undefined)).toEqual([]);
   });
 
   it("converts null", () => {
-    expect(toObjPath(null)).toEqual([]);
+    expect(normalizeObjPath(null)).toEqual([]);
   });
 
   it("converts numbers", () => {
-    expect(toObjPath(3)).toEqual([3]);
+    expect(normalizeObjPath(3)).toEqual([3]);
   });
 
   it("converts strings", () => {
-    expect(toObjPath("")).toEqual([]);
-    expect(toObjPath("colors")).toEqual(["colors"]);
-    expect(toObjPath("colors.6")).toEqual(["colors", 6]);
-    expect(toObjPath("colors.6.red")).toEqual(["colors", 6, "red"]);
+    expect(normalizeObjPath("")).toEqual([]);
+    expect(normalizeObjPath("colors")).toEqual(["colors"]);
+    expect(normalizeObjPath("colors.6")).toEqual(["colors", 6]);
+    expect(normalizeObjPath("colors.6.red")).toEqual(["colors", 6, "red"]);
   });
 });
 

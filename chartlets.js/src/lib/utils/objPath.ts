@@ -6,7 +6,7 @@ export type ObjPathLike = ObjPath | string | number | undefined | null;
 type Obj = Record<string | number, unknown>;
 
 export function getValue(obj: object | undefined, path: ObjPathLike): unknown {
-  path = toObjPath(path);
+  path = normalizeObjPath(path);
   let value: unknown = obj;
   for (const key of path) {
     if (isObject(value)) {
@@ -23,7 +23,7 @@ export function setValue<S extends object | undefined>(
   path: ObjPathLike,
   value: unknown,
 ): S {
-  return _setValue(obj, toObjPath(path), value);
+  return _setValue(obj, normalizeObjPath(path), value);
 }
 
 function _setValue<S extends object | undefined>(
@@ -63,7 +63,7 @@ function _setValue<S extends object | undefined>(
   return obj;
 }
 
-export function toObjPath(pathLike: ObjPathLike): ObjPath {
+export function normalizeObjPath(pathLike: ObjPathLike): ObjPath {
   if (Array.isArray(pathLike)) {
     return pathLike as ObjPath;
   } else if (!pathLike || pathLike === "") {
@@ -82,12 +82,25 @@ export function toObjPath(pathLike: ObjPathLike): ObjPath {
   }
 }
 
+export function formatObjPath(objPath: ObjPathLike): string {
+  if (typeof objPath === "string") {
+    return objPath;
+  } else if (Array.isArray(objPath)) {
+    return objPath
+      .map((key) => (typeof key === "number" ? key.toString() : key))
+      .join(".");
+  } else if (typeof objPath === "number") {
+    return objPath.toString();
+  }
+  return "";
+}
+
 export function equalObjPaths(pathLike1: ObjPathLike, pathLike2: ObjPathLike) {
   if (pathLike1 === pathLike2) {
     return true;
   }
-  const path1 = toObjPath(pathLike1);
-  const path2 = toObjPath(pathLike2);
+  const path1 = normalizeObjPath(pathLike1);
+  const path2 = normalizeObjPath(pathLike2);
   return (
     path1.length === path2.length &&
     path1.every((item, index) => item === path2[index])

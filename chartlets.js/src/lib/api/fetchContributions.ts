@@ -1,6 +1,6 @@
 import { type Contributions } from "@/lib/types/model/extension";
 import { type Callback } from "@/lib/types/model/callback";
-import { toObjPath } from "@/lib/utils/objPath";
+import { normalizeObjPath } from "@/lib/utils/objPath";
 import { mapObject } from "@/lib/utils/mapObject";
 import type { Contribution } from "@/lib/types/model/contribution";
 import type { Channel } from "@/lib/types/model/channel";
@@ -61,6 +61,6 @@ function normalizeChannels<S extends Channel>(channels: S[]): S[] {
 function normalizeChannel<S extends Channel>(channel: S): S {
   return {
     ...channel,
-    property: toObjPath(channel.property),
+    property: normalizeObjPath(channel.property),
   };
 }

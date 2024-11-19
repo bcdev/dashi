@@ -9,11 +9,16 @@ import type { ContributionState } from "@/lib/types/state/contribution";
 import type { ApiOptions, ApiResult } from "@/lib/types/api";
 import type { LoggingOptions } from "@/lib/actions/helpers/configureLogging";
 
+export type GetDerivedState<S extends object = object> = (
+  hostState: S,
+  propertyName: string,
+) => unknown;
+
 export interface FrameworkOptions<S extends object = object> {
   /** The host applications state management store. */
   hostStore?: StoreApi<S>;
   /** Get a derived state from given host state. */
-  getDerivedHostState?: (hostState: S, propertyName: string) => unknown;
+  getDerivedHostState?: GetDerivedState<S>;
   /** API options to configure backend. */
   api?: ApiOptions;
   /** Logging options. */
