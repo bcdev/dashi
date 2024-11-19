@@ -190,6 +190,11 @@ def _annotation_to_json_schema(annotation: Any) -> dict:
                 return {
                     "type": "array",
                 }
+    elif issubclass(annotation, list):
+        try:
+            return {"type": "array"}
+        except KeyError:
+            pass
     else:
         type_name = (
             annotation.__name__ if hasattr(annotation, "__name__") else str(annotation)
