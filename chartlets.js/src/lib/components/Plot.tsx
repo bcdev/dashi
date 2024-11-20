@@ -42,7 +42,6 @@ export function Plot({ id, style, chart, onChange }: PlotProps) {
     }
   });
 
-  const { datasets, ...spec } = chart;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const handleClickSignal = (signalName: string, value: unknown) => {
@@ -82,8 +81,7 @@ export function Plot({ id, style, chart, onChange }: PlotProps) {
 
   return (
     <VegaLite
-      spec={spec}
-      data={datasets}
+      spec={chart}
       style={style}
       signalListeners={signalListeners}
       actions={false}
