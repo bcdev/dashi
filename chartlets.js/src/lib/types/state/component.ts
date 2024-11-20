@@ -1,6 +1,6 @@
 import { type CSSProperties } from "react";
 import { isObject } from "@/lib/utils/isObject";
-import type {TopLevelSpec} from "vega-lite/src/spec";
+import type { TopLevelSpec } from "vega-lite/src/spec";
 
 export type ComponentType =
   | "Box"
@@ -54,7 +54,7 @@ export interface CheckboxState extends ComponentState {
 export interface PlotState extends ComponentState {
   type: "Plot";
   chart:
-    | TopLevelSpec
+    | TopLevelSpec // This is the vega-lite specification type
     | null;
 }
 
