@@ -69,8 +69,8 @@ demo = [
 ]
 
 [project.urls]
-Repository = "https://github.com/bcdev/chartlets"
 Documentation = "https://bcdev.github.io/chartlets"
+Repository = "https://github.com/bcdev/chartlets"
+Changelog = "https://github.com/bcdev/chartlets/blob/main/chartlets.py/CHANGES.md"
 # Not yet:
 #Issues = "https://github.com/bcdev/chartlets/issues"
-#Changelog = "https://github.com/bcdev/chartlets/blob/main/CHANGES.md"

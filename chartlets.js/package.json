@@ -16,6 +16,7 @@
     "plotting",
     "charting"
   ],
+  "homepage": "https://bcdev.github.io/chartlets",
   "repository": {
     "type": "git",
     "url": "https://github.com/bcdev/chartlets.git"
@@ -23,7 +24,6 @@
   "bugs": {
     "url": "https://github.com/bcdev/chartlets/issues"
   },
-  "homepage": "https://github.com/bcdev/charlet/blob/main/chartlets/README.md",
   "author": "Brockmann Consult GmbH",
   "license": "MIT",
   "types": "./dist/index.d.ts",
