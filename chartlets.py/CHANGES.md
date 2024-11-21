@@ -1,5 +1,8 @@
 ## Version 0.0.22 (in development)
 
+* Replacing components is now possible by using an 
+  `Output` with `property` set to an empty string. (#38)
+
 * `Component` children can now also be text nodes (of type `string`).
 
 * `Typography` component has children instead of `text`.
