@@ -7,12 +7,45 @@ jobs:
       steps:
         - name: git-checkout chartlets
           uses: actions/checkout@v4
+          
         - name: Set up Micromamba
           uses: mamba-org/setup-micromamba@v1
           with:
             environment-file: chartlets.py/environment.yml
+            
         - name: Run unit tests
           shell: bash -l {0}
           run: |
             cd chartlets.py 
             pytest
+            
+  frontend_react-ts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git-checkout chartlets
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install dependencies
+        run: |
+          cd chartlets.js 
+          npm install 
+
+      - name: Linter
+        run: |
+          cd chartlets.js  
+          npm run lint
+
+      - name: Run frontend tests
+        run: |
+          cd chartlets.js  
+          npm run test
+
+      - name: Build frontedn
+        run: |
+          cd chartlets.js  
+          npm run build
