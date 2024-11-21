@@ -2,7 +2,7 @@ name: Chartlets CI workflow
 on: [push]
 
 jobs:
-  backend_chartlets-py:
+  backend:
       runs-on: ubuntu-latest
       steps:
         - name: git-checkout chartlets
@@ -19,7 +19,7 @@ jobs:
             cd chartlets.py 
             pytest
             
-  frontend_react-ts:
+  frontend:
     runs-on: ubuntu-latest
     steps:
       - name: git-checkout chartlets
