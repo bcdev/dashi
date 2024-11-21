@@ -114,7 +114,7 @@ describe("Test that applyComponentStateChange()", () => {
     expect(newState).toBe(componentTree);
   });
 
-  it("replaces state if no property given", () => {
+  it("replaces state if property is empty string", () => {
     const value: BoxState = {
       type: "Box",
       id: "b1",
