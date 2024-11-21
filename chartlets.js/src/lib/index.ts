@@ -18,5 +18,7 @@ export {
   useExtensions,
   useContributionsResult,
   useContributionsRecord,
+  useContributions,
+  useComponentChangeHandlers,
   makeContributionsHook,
 } from "@/lib/hooks";
