@@ -11,11 +11,9 @@ def make_base():
         channel_cls: Type[Channel]
         link_name: str
 
-        def test_no_args(self):
-            obj = self.channel_cls()
-            self.assertEqual("component", obj.link)
-            self.assertEqual(None, obj.id)
-            self.assertEqual(None, obj.property)
+        def test_no_args_given(self):
+            with pytest.raises(ValueError, match="value for 'id' must be given and must not be empty"):
+                obj = self.channel_cls()
 
         def test_id_given(self):
             obj = self.channel_cls("dataset_select")
@@ -23,7 +21,7 @@ def make_base():
             self.assertEqual("dataset_select", obj.id)
             self.assertEqual("value", obj.property)
 
-        def test_app(self):
+        def test_app_ok(self):
             obj = self.channel_cls(property="datasetId", **{self.link_name: "app"})
             self.assertEqual("app", obj.link)
             self.assertEqual(None, obj.id)
@@ -39,10 +37,7 @@ def make_base():
         def test_app_no_prop(self):
             with pytest.raises(
                 TypeError,
-                match=(
-                    "value of 'property' must be an instance"
-                    " of <class 'str'>, but was None"
-                ),
+                match="value for 'property' must be given",
             ):
                 self.channel_cls(**{self.link_name: "app"})
 

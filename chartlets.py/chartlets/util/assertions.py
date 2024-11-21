@@ -18,3 +18,8 @@ def assert_is_instance_of(name: str, value: Any, type_set: Type | tuple[Type, ..
 def assert_is_none(name: str, value: Any):
     if value is not None:
         raise TypeError(f"value of {name!r} must be None, but was {value!r}")
+
+
+def assert_is_given(name: str, value: Any):
+    if not value:
+        raise TypeError(f"value for {name!r} must be given")
