@@ -1,0 +1,24 @@
+name: Backend CI workflow
+
+on: 
+  push:
+    paths:
+      - chartlets.py/**
+      
+jobs:
+  backend:
+      runs-on: ubuntu-latest
+      steps:
+        - name: git-checkout chartlets
+          uses: actions/checkout@v4
+          
+        - name: Set up Micromamba
+          uses: mamba-org/setup-micromamba@v1
+          with:
+            environment-file: chartlets.py/environment.yml
+            
+        - name: Run unit tests
+          shell: bash -l {0}
+          run: |
+            cd chartlets.py 
+            pytest
