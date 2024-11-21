@@ -45,7 +45,7 @@ jobs:
           cd chartlets.js  
           npm run test
 
-      - name: Build frontedn
+      - name: Build frontend application
         run: |
           cd chartlets.js  
           npm run build
