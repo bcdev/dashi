@@ -1,0 +1,26 @@
+name: Chartlets CI workflow
+on: [push]
+
+jobs:
+  backend_chartlets-py:
+      runs-on: ubuntu-latest
+      steps:
+        - name: git-checkout chartlets
+          uses: actions/checkout@v4
+        - name: Set up Micromamba
+          uses: mamba-org/setup-micromamba@v1
+          with:
+            micromamba-version: '1.4.8-0'
+            environment-file: chartlets.py/environment.yml
+            init-shell: >-
+              bash
+            cache-environment: false
+            post-cleanup: 'all'
+        - name: Install dependencies
+          run: |
+            cd chartlets.py
+            mamba env install
+        - name: Run tests
+          run: |
+            cd chartlets.py 
+            pytest
