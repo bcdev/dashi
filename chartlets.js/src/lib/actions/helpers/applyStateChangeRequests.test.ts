@@ -3,6 +3,7 @@ import { describe, it, expect } from "vitest";
 import { type ContribPoint } from "@/lib/types/model/extension";
 import { type StateChangeRequest } from "@/lib/types/model/callback";
 import {
+  type BoxState,
   type ComponentState,
   type PlotState,
 } from "@/lib/types/state/component";
@@ -111,5 +112,25 @@ describe("Test that applyComponentStateChange()", () => {
       value: true,
     });
     expect(newState).toBe(componentTree);
+  });
+
+  it("replaces state if no property given", () => {
+    const value: BoxState = {
+      type: "Box",
+      id: "b1",
+      children: ["Hello", "World"],
+    };
+    const newState = applyComponentStateChange(componentTree, {
+      link: "component",
+      id: "b1",
+      property: "",
+      value,
+    });
+    expect(newState).toBe(value);
+    expect(newState).toEqual({
+      type: "Box",
+      id: "b1",
+      children: ["Hello", "World"],
+    });
   });
 });
