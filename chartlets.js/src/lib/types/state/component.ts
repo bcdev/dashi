@@ -1,6 +1,7 @@
 import { type CSSProperties } from "react";
 import { isObject } from "@/lib/utils/isObject";
 import type { TopLevelSpec } from "vega-lite/src/spec";
+import { isString } from "@/lib/utils/isString";
 
 export type ComponentType =
   | "Box"
@@ -67,7 +68,7 @@ export interface TypographyState extends ContainerState {
 }
 
 export function isComponentState(object: unknown): object is ComponentState {
-  return isObject(object) && typeof object.type === "string";
+  return isObject(object) && isString(object.type);
 }
 
 export function isContainerState(object: unknown): object is ContainerState {

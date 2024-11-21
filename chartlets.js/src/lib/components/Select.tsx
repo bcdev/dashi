@@ -8,6 +8,7 @@ import {
   type SelectState,
 } from "@/lib/types/state/component";
 import { type ComponentChangeHandler } from "@/lib/types/state/event";
+import { isString } from "@/lib/utils/isString";
 
 export interface SelectProps extends Omit<SelectState, "type"> {
   onChange: ComponentChangeHandler;
@@ -64,7 +65,7 @@ export function Select({
 function normalizeSelectOption(
   option: SelectOption,
 ): [string | number, string] {
-  if (typeof option === "string") {
+  if (isString(option)) {
     return [option, option];
   } else if (typeof option === "number") {
     return [option, option.toString()];

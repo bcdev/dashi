@@ -1,4 +1,5 @@
 import { isObject } from "@/lib/utils/isObject";
+import { isString } from "@/lib/utils/isString";
 
 export type ObjPath = (string | number)[];
 export type ObjPathLike = ObjPath | string | number | undefined | null;
@@ -83,7 +84,7 @@ export function normalizeObjPath(pathLike: ObjPathLike): ObjPath {
 }
 
 export function formatObjPath(objPath: ObjPathLike): string {
-  if (typeof objPath === "string") {
+  if (isString(objPath)) {
     return objPath;
   } else if (Array.isArray(objPath)) {
     return objPath
