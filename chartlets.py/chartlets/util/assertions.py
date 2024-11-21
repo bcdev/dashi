@@ -22,4 +22,4 @@ def assert_is_none(name: str, value: Any):
 
 def assert_is_given(name: str, value: Any):
     if not value:
-        raise TypeError(f"value for {name!r} must be given")
+        raise ValueError(f"value for {name!r} must be given")
