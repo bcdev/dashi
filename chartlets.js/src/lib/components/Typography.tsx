@@ -8,15 +8,10 @@ export interface TypographyProps extends Omit<TypographyState, "type"> {
   onChange: ComponentChangeHandler;
 }
 
-export function Typography({
-  id,
-  style,
-  children: components,
-  onChange,
-}: TypographyProps) {
+export function Typography({ id, style, children, onChange }: TypographyProps) {
   return (
     <MuiTypography id={id} style={style}>
-      <ComponentChildren components={components} onChange={onChange} />
+      <ComponentChildren nodes={children} onChange={onChange} />
     </MuiTypography>
   );
 }
