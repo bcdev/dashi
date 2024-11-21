@@ -11,7 +11,8 @@ jobs:
           uses: mamba-org/setup-micromamba@v1
           with:
             environment-file: chartlets.py/environment.yml
-        - name: Run tests
+        - name: Run unit tests
+          shell: bash -l {0}
           run: |
             cd chartlets.py 
             pytest
