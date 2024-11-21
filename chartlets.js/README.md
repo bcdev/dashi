@@ -1,5 +1,7 @@
 # chartlets 
 
+[![Frontend CI workflow](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml)
+
 Chartlets is a software framework that allows websites developed with
 React to be extended by server-side widgets programmed in Python or other
 programming languages. 
