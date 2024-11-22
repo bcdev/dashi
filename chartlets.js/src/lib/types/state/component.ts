@@ -1,6 +1,6 @@
 import { type CSSProperties } from "react";
 import { isObject } from "@/lib/utils/isObject";
-import type { TopLevelSpec } from "vega-lite/src/spec";
+import type { TopLevelSpec } from "vega-lite";
 import { isString } from "@/lib/utils/isString";
 
 export type ComponentType =
