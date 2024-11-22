@@ -1,16 +1,15 @@
 import MuiCircularProgress from "@mui/material/CircularProgress";
 
 import { type ComponentState } from "@/lib/types/state/component";
+import type { ComponentProps } from "@/lib/component/Component";
 
-export interface CircularProgressState extends ComponentState {
-  type: "CircularProgress";
+interface CircularProgressState extends ComponentState {
   size?: number | string;
   value?: number;
   variant?: "determinate" | "indeterminate";
 }
 
-export interface CircularProgressProps
-  extends Omit<CircularProgressState, "type"> {}
+interface CircularProgressProps extends ComponentProps, CircularProgressState {}
 
 export function CircularProgress({
   id,

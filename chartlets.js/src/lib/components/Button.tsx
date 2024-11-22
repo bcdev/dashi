@@ -2,18 +2,16 @@ import { type MouseEvent } from "react";
 import MuiButton from "@mui/material/Button";
 
 import { type ComponentState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/state/event";
+import type { ComponentProps } from "@/lib/component/Component";
 
-export interface ButtonState extends ComponentState {
-  type: "Button";
-  text: string;
+interface ButtonState extends ComponentState {
+  text?: string;
 }
 
-export interface ButtonProps extends Omit<ButtonState, "type"> {
-  onChange: ComponentChangeHandler;
-}
+interface ButtonProps extends ComponentProps, ButtonState {}
 
 export function Button({
+  type,
   id,
   name,
   style,
@@ -24,7 +22,7 @@ export function Button({
   const handleClick = (_event: MouseEvent<HTMLButtonElement>) => {
     if (id) {
       onChange({
-        componentType: "Button",
+        componentType: type,
         id: id,
         property: "clicked",
         value: true,

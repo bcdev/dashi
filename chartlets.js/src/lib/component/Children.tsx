@@ -5,12 +5,12 @@ import {
 } from "@/lib/types/state/component";
 import { Component } from "./Component";
 
-export interface ComponentChildrenProps {
+export interface ChildrenProps {
   nodes?: ComponentNode[];
   onChange: ComponentChangeHandler;
 }
 
-export function ComponentChildren({ nodes, onChange }: ComponentChildrenProps) {
+export function Children({ nodes, onChange }: ChildrenProps) {
   if (!nodes || nodes.length === 0) {
     return null;
   }

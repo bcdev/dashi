@@ -3,19 +3,17 @@ import { describe, it, expect } from "vitest";
 import { type ComponentState } from "@/lib";
 import { type ContribPoint } from "@/lib/types/model/extension";
 import { type StateChangeRequest } from "@/lib/types/model/callback";
-import { type BoxState } from "@/lib/components/Box";
-import { type PlotState } from "@/lib/components/Plot";
 import { type ContributionState } from "@/lib/types/state/contribution";
 import {
   applyComponentStateChange,
   applyContributionChangeRequests,
 } from "./applyStateChangeRequests";
 
-const componentTree: ComponentState = {
+const componentTree = {
   type: "Box",
   id: "b1",
   children: [
-    { type: "Plot", id: "p1", chart: null } as PlotState,
+    { type: "Plot", id: "p1", chart: null },
     {
       type: "Box",
       id: "b2",
@@ -113,7 +111,7 @@ describe("Test that applyComponentStateChange()", () => {
   });
 
   it("replaces state if property is empty string", () => {
-    const value: BoxState = {
+    const value = {
       type: "Box",
       id: "b1",
       children: ["Hello", "World"],

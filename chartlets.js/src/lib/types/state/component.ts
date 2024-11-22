@@ -25,7 +25,7 @@ export interface ComponentState {
   // common HTML attributes
   id?: string;
   name?: string;
-  value?: boolean | string | number | null | undefined;
+  value?: unknown;
   style?: CSSProperties;
   disabled?: boolean;
   label?: string;

@@ -4,19 +4,17 @@ import MuiFormControl from "@mui/material/FormControl";
 import MuiFormControlLabel from "@mui/material/FormControlLabel";
 
 import { type ComponentState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/state/event";
+import type { ComponentProps } from "@/lib/component/Component";
 
-export interface CheckboxState extends ComponentState {
-  type: "Checkbox";
-  label: string;
-  value?: boolean;
+interface CheckboxState extends ComponentState {
+  label?: string;
+  value?: boolean | undefined;
 }
 
-export interface CheckboxProps extends Omit<CheckboxState, "type"> {
-  onChange: ComponentChangeHandler;
-}
+interface CheckboxProps extends ComponentProps, CheckboxState {}
 
 export function Checkbox({
+  type,
   id,
   name,
   value,
@@ -28,7 +26,7 @@ export function Checkbox({
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (id) {
       return onChange({
-        componentType: "Checkbox",
+        componentType: type,
         id: id,
         property: "value",
         value: event.currentTarget.checked,
