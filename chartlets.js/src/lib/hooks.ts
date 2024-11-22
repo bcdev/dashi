@@ -50,11 +50,11 @@ export function useSignalListeners(
   onChange: ComponentChangeHandler,
 ): { [key: string]: SignalHandler } {
   /*
-   Here, we loop through all the params to create map of signals which will
-   be then used to create the map of signal-listeners because not all
-   params are event-listeners, and we need to identify them. Later in the
-   code, we then see which handlers do we have so that we can create
-   those listeners with the `name` specified in the event-listener object.
+     Here, we loop through all the params to create map of signals which will
+     be then used to create the map of signal-listeners because not all
+     params are event-listeners, and we need to identify them. Later in the
+     code, we then see which handlers do we have so that we can create
+     those listeners with the `name` specified in the event-listener object.
    */
   const signals: { [key: string]: string } = useMemo(() => {
     if (!chart) return {};
@@ -68,12 +68,12 @@ export function useSignalListeners(
         ) {
           const signalName = param.select.on;
           /*
-           The signal name extracted from the `select.on` property can be
-           either a string or of Stream type (internal Vega
-           type). But since we create the selection events in
-           Altair (in the server) using `on="click"` etc., the event type
-           will be a string, but we need this type-guard to be sure.
-           If it is a Stream object, that case is not handled yet.
+             The signal name extracted from the `select.on` property can be
+             either a string or of Stream type (internal Vega
+             type). But since we create the selection events in
+             Altair (in the server) using `on="click"` etc., the event type
+             will be a string, but we need this type-guard to be sure.
+             If it is a Stream object, that case is not handled yet.
            */
           if (isString(signalName)) {
             tempSignals[signalName] = param.name;
@@ -104,9 +104,9 @@ export function useSignalListeners(
   );
 
   /*
-   Currently, we only have click events support, but if more are required,
-   they can be implemented and added in the map below.
-   */
+     Currently, we only have click events support, but if more are required,
+     they can be implemented and added in the map below.
+     */
   const signalHandlerMap: { [key: string]: SignalHandler } = useMemo(
     () => ({
       click: handleClickSignal,
@@ -115,9 +115,9 @@ export function useSignalListeners(
   );
 
   /*
-   This function creates the map of signal listeners based on the `signals`
-   map computed above.
-   */
+     This function creates the map of signal listeners based on the `signals`
+     map computed above.
+     */
   const createSignalListeners = useCallback(
     (signals: { [key: string]: string }) => {
       const signalListeners: { [key: string]: SignalHandler } = {};
@@ -139,6 +139,8 @@ export function useSignalListeners(
   return useMemo(
     () => createSignalListeners(signals),
     [createSignalListeners, signals],
+  );
+}
 
 /**
  * A hook that retrieves the contributions for the given contribution
