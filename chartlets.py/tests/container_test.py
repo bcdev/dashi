@@ -35,7 +35,7 @@ class ContainerTest(unittest.TestCase):
                 "type": "ItemGroup",
                 "id": "ig13",
                 "style": {"color": "red"},
-                "components": [
+                "children": [
                     {"type": "Item", "id": "i1"},
                     {"type": "Item", "id": "i2"},
                 ],

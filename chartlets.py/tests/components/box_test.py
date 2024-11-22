@@ -16,8 +16,7 @@ class BoxTest(unittest.TestCase):
 
         d = box.to_dict()
         self.assertIsInstance(d, dict)
-        self.assertIsInstance(d.get("components"), list)
-        self.assertNotIn("children", d)
+        self.assertIsInstance(d.get("children"), list)
         json_text = json.dumps(d)
         self.assertEqual("{", json_text[0])
         self.assertEqual("}", json_text[-1])
