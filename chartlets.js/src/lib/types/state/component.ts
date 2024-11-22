@@ -1,6 +1,7 @@
 import { type CSSProperties } from "react";
-import type { VisualizationSpec } from "react-vega";
 import { isObject } from "@/lib/utils/isObject";
+import type { TopLevelSpec } from "vega-lite/src/spec";
+import { isString } from "@/lib/utils/isString";
 
 export type ComponentType =
   | "Box"
@@ -54,9 +55,7 @@ export interface CheckboxState extends ComponentState {
 export interface PlotState extends ComponentState {
   type: "Plot";
   chart:
-    | (VisualizationSpec & {
-        datasets?: Record<string, unknown>; // Add the datasets property
-      })
+    | TopLevelSpec // This is the vega-lite specification type
     | null;
 }
 
@@ -69,7 +68,7 @@ export interface TypographyState extends ContainerState {
 }
 
 export function isComponentState(object: unknown): object is ComponentState {
-  return isObject(object) && typeof object.type === "string";
+  return isObject(object) && isString(object.type);
 }
 
 export function isContainerState(object: unknown): object is ContainerState {
