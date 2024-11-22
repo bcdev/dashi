@@ -1,20 +1,18 @@
-import { type ComponentChangeEvent, handleComponentChange } from "@/lib";
-import { usePanelStates } from "@/demo/hooks";
+import type { PanelState } from "@/demo/types";
+import { useComponentChangeHandlers, useContributions } from "@/lib/hooks";
 import Panel from "./Panel";
 
 function PanelsRow() {
-  const panelStates = usePanelStates();
+  const panelStates = useContributions<PanelState>("panels");
+  const panelChangeHandlers = useComponentChangeHandlers(
+    "panels",
+    panelStates?.length || 0,
+  );
   if (!panelStates) {
     // Ok, not ready yet
     return null;
   }
 
-  const handlePanelChange = (
-    panelIndex: number,
-    panelEvent: ComponentChangeEvent,
-  ) => {
-    handleComponentChange("panels", panelIndex, panelEvent);
-  };
   const panels = panelStates.map((panelState, panelIndex) => {
     const { container, component, componentResult } = panelState;
     return (
@@ -24,7 +22,7 @@ function PanelsRow() {
         componentProps={component}
         componentStatus={componentResult.status}
         componentError={componentResult.error}
-        onChange={(e) => handlePanelChange(panelIndex, e)}
+        onChange={panelChangeHandlers[panelIndex]}
       />
     );
   });
