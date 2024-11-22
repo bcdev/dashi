@@ -60,7 +60,7 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     # Create another parameter to handle the click events and send the data as
     # specified in the fields
     click_param = alt.selection_point(
-        on="click", name="onClick", fields=["x", variable_name]
+        on="click", name="points", fields=["x", variable_name]
     )
     # Create a chart type using mark_* where * could be any kind of chart
     # supported by Vega. We can add properties and parameters as shown below.
@@ -81,3 +81,13 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     )
 
     return chart
+
+
+# # TODO: see if we can get the value of the clicked points from the click params above
+# @panel.callback(
+#     Input("selected_dataset"),
+#     Output("plot", "chart"),
+# )
+# def test_callback(
+#     self,
+# ): ...

@@ -86,15 +86,13 @@ export function useSignalListeners(
   }, [chart]);
 
   const handleClickSignal = useCallback(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    (signalName: string, value: unknown) => {
+    (signalName: string, signalValue: unknown) => {
       if (id) {
         return onChange({
           componentType: "Plot",
           id: id,
-          property: "points",
-          value: value,
+          property: signalName,
+          value: signalValue,
         });
       }
     },
