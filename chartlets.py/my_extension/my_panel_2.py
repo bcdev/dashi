@@ -83,13 +83,7 @@ def make_figure(
         )
         .properties(width=300, height=300, title="Vega charts using Shorthand syntax")
         .add_params(selector)
-        # .interactive() # Using interactive mode will lead to warning
-        # `WARN Scale bindings are currently only supported for scales with
-        # unbinned, continuous domains.`
-        # because it expects both x and y to be continuous scales,
-        # but we have x as Nominal which leads to this warning.
-        # This still works where we can only zoom in on the y axis but
-        # with a warning.
+        .interactive()
     )
     return chart
 
