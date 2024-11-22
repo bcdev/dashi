@@ -1,0 +1,38 @@
+name: Frontend CI workflow
+
+on: 
+  push:
+    paths:
+      - chartlets.js/**
+
+jobs:       
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git-checkout chartlets
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install dependencies
+        run: |
+          cd chartlets.js 
+          npm install 
+
+      - name: Linter
+        run: |
+          cd chartlets.js  
+          npm run lint
+
+      - name: Run frontend tests
+        run: |
+          cd chartlets.js  
+          npm run test
+
+      - name: Build frontend application
+        run: |
+          cd chartlets.js  
+          npm run build
