@@ -30,39 +30,6 @@ export function applyStateChangeRequests(
   applyHostStateChanges(stateChangeRequests);
 }
 
-function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
-  const { configuration } = store.getState();
-  const { hostStore } = configuration;
-  if (hostStore) {
-    const hostStateOld = hostStore.getState();
-    let hostState: object | undefined = hostStateOld;
-    stateChangeRequests.forEach((stateChangeRequest) => {
-      hostState = applyStateChanges(
-        hostState,
-        stateChangeRequest.stateChanges.filter(
-          (stateChange) => stateChange.link === "app",
-        ),
-      );
-    });
-    if (hostState !== hostStateOld) {
-      hostStore.setState(hostState);
-    }
-  }
-}
-
-function applyComponentStateChanges(
-  componentOld: ComponentState | undefined,
-  stateChanges: StateChange[],
-) {
-  let component = componentOld;
-  if (component) {
-    stateChanges.forEach((stateChange) => {
-      component = applyComponentStateChange(component!, stateChange);
-    });
-  }
-  return component;
-}
-
 // we export for testing only
 export function applyContributionChangeRequests(
   contributionsRecord: Record<ContribPoint, ContributionState[]>,
@@ -101,22 +68,40 @@ export function applyContributionChangeRequests(
   return contributionsRecord;
 }
 
+function applyComponentStateChanges(
+  componentOld: ComponentState | undefined,
+  stateChanges: StateChange[],
+) {
+  let component = componentOld;
+  if (component) {
+    stateChanges.forEach((stateChange) => {
+      component = applyComponentStateChange(component!, stateChange);
+    });
+  }
+  return component;
+}
+
 // we export for testing only
 export function applyComponentStateChange(
   component: ComponentState,
   stateChange: StateChange,
 ): ComponentState {
-  if (component.id === stateChange.id) {
+  if (isComponentState(component) && component.id === stateChange.id) {
     const property = normalizeObjPath(stateChange.property);
-    const valueOld = getValue(component, property);
     const valueNew = stateChange.value;
+    if (property.length === 0) {
+      // Special case: If no property given, replace entire component.
+      // But only if it is one, otherwise don't change state.
+      return isComponentState(valueNew) ? valueNew : component;
+    }
+    const valueOld = getValue(component, property);
     if (
       property[property.length - 1] === "children" &&
       !Array.isArray(valueNew) &&
       valueNew !== null &&
       valueNew !== undefined
     ) {
-      // Special case if the value of "children" is changed:
+      // Special case: if the value of "children" is changed:
       // convert scalar valueNew into one-element array
       return setValue(component, property, [valueNew]);
     } else if (valueOld !== valueNew) {
@@ -143,6 +128,26 @@ export function applyComponentStateChange(
     return containerNew;
   }
   return component;
+}
+
+function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
+  const { configuration } = store.getState();
+  const { hostStore } = configuration;
+  if (hostStore) {
+    const hostStateOld = hostStore.getState();
+    let hostState: object | undefined = hostStateOld;
+    stateChangeRequests.forEach((stateChangeRequest) => {
+      hostState = applyStateChanges(
+        hostState,
+        stateChangeRequest.stateChanges.filter(
+          (stateChange) => stateChange.link === "app",
+        ),
+      );
+    });
+    if (hostState !== hostStateOld) {
+      hostStore.setState(hostState);
+    }
+  }
 }
 
 // we export for testing only

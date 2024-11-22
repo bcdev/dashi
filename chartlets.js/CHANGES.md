@@ -1,3 +1,11 @@
+## Version 0.0.23 (in development)
+
+* Replacing entire components if a related component `StateChange` 
+  has an empty `property`. (#38)
+
+* Added handy hooks `useContributions` and `useComponentChangeHandlers`.
+
+
 ## Version 0.0.22 (from 2024/11/19)
 
 * Improved robustness while rendering the in `Select` component
