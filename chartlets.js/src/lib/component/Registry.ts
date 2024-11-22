@@ -53,4 +53,16 @@ export class RegistryImpl implements Registry {
   }
 }
 
+/**
+ * The Chartly component registry.
+ *
+ * Use `registry.register(C)` to register your own component `C`.
+ *
+ * `C` must be a functional React component with at least the following
+ * two properties:
+ *
+ *   - `type: string`: your component's type name.
+ *   - `onChange: ComponentChangeHandler`: an event handler
+ *     that your component may call to signal change events.
+ */
 export const registry = new RegistryImpl();
