@@ -11,11 +11,9 @@ def make_base():
         channel_cls: Type[Channel]
         link_name: str
 
-        def test_no_args(self):
-            obj = self.channel_cls()
-            self.assertEqual("component", obj.link)
-            self.assertEqual(None, obj.id)
-            self.assertEqual(None, obj.property)
+        def test_no_args_given(self):
+            with pytest.raises(ValueError, match="value for 'id' must be given"):
+                obj = self.channel_cls()
 
         def test_id_given(self):
             obj = self.channel_cls("dataset_select")
@@ -23,7 +21,7 @@ def make_base():
             self.assertEqual("dataset_select", obj.id)
             self.assertEqual("value", obj.property)
 
-        def test_app(self):
+        def test_app_ok(self):
             obj = self.channel_cls(property="datasetId", **{self.link_name: "app"})
             self.assertEqual("app", obj.link)
             self.assertEqual(None, obj.id)
@@ -31,18 +29,15 @@ def make_base():
 
         def test_container_with_id(self):
             with pytest.raises(
-                TypeError,
-                match="value of 'id' must be None, but was 'test_id'",
+                ValueError,
+                match="value for 'property' must be given",
             ):
                 self.channel_cls("test_id", **{self.link_name: "container"})
 
         def test_app_no_prop(self):
             with pytest.raises(
-                TypeError,
-                match=(
-                    "value of 'property' must be an instance"
-                    " of <class 'str'>, but was None"
-                ),
+                ValueError,
+                match="value for 'property' must be given",
             ):
                 self.channel_cls(**{self.link_name: "app"})
 
@@ -50,15 +45,14 @@ def make_base():
             with pytest.raises(
                 ValueError,
                 match=(
-                    f"value of '{self.link_name}' must be one of"
-                    f" \\('component', 'container', 'app', None\\),"
-                    f" but was 'host'"
+                    f"value of {self.link_name!r} must be one of"
+                    r" \('container', 'app'\), but was 'host'"
                 ),
             ):
                 self.channel_cls(**{self.link_name: "host"})
 
         def test_no_trigger(self):
-            obj = self.channel_cls()
+            obj = self.channel_cls("some_id")
             if isinstance(obj, State):
                 self.assertTrue(obj.no_trigger)
             else:
@@ -93,6 +87,10 @@ class InputTest(make_base(), unittest.TestCase):
     channel_cls = Input
     link_name = "source"
 
+    def test_disallow_empty_property(self):
+        with pytest.raises(ValueError, match="value for 'property' must be given"):
+            self.channel_cls("some_id", "")
+
 
 class StateTest(make_base(), unittest.TestCase):
     channel_cls = State
@@ -102,3 +100,9 @@ class StateTest(make_base(), unittest.TestCase):
 class OutputTest(make_base(), unittest.TestCase):
     channel_cls = Output
     link_name = "target"
+
+    def test_allow_empty_property(self):
+        obj = self.channel_cls("some_id", "")
+        self.assertEqual("component", obj.link)
+        self.assertEqual("some_id", obj.id)
+        self.assertEqual("", obj.property)

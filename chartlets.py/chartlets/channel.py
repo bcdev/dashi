@@ -1,12 +1,20 @@
 from abc import ABC
 from typing import Any, Literal
 
-from .util.assertions import assert_is_instance_of
-from .util.assertions import assert_is_none
-from .util.assertions import assert_is_one_of
+from .util.assertions import (
+    assert_is_given,
+    assert_is_instance_of,
+    assert_is_none,
+    assert_is_one_of,
+)
 
 
 Link = Literal["component"] | Literal["container"] | Literal["app"]
+
+COMPONENT = ""
+"""Special property value that can be used 
+to refer to the entire component.
+"""
 
 
 class Channel(ABC):
@@ -53,7 +61,8 @@ class Input(Channel):
     Args:
         id:
             Value of a component's "id" property.
-            Used only if `source` is `"component"`.
+            Required, if `source` is `"component"` (the default).
+            Otherwise, it must not be passed.
         property:
             Name of the property of a component or state.
             To address properties in nested objects or arrays
@@ -82,7 +91,7 @@ class State(Input):
 
     Just like an `Input`, a `State` describes from which property in which state
     a parameter value is read, but according state changes
-    will **not*Ü* trigger callback invocation.
+    will **not* trigger callback invocation.
 
     Args:
         id:
@@ -125,6 +134,8 @@ class Output(Channel):
             To address properties in nested objects or arrays
             use a dot (`.`) to separate property names and array
             indexes.
+            If `target` is `"component"` the empty string can be used
+            to refer to entire components.
         target: One of `"component"` (the default), `"container"`,
             or `"app"`.
     """
@@ -154,22 +165,37 @@ def _validate_input_params(
 def _validate_output_params(
     target: Link | None, id: str | None, property: str | None
 ) -> tuple[Link, str | None, str | None]:
-    return _validate_params("target", target, id, property)
+    return _validate_params("target", target, id, property, output=True)
 
 
 # noinspection PyShadowingBuiltins
 def _validate_params(
-    link_name: str, link: Link | None, id: str | None, property: str | None
+    link_name: str,
+    link: Link | None,
+    id: str | None,
+    property: str | None,
+    output: bool = False,
 ) -> tuple[Link, str | None, str | None]:
-    assert_is_one_of(link_name, link, ("component", "container", "app", None))
-    if not link or link == "component":
-        assert_is_instance_of("id", id, (str, NoneType))
+    if link is None or link == "component":
+        # Component states require an id
+        # and property which defaults to "value"
+        link = "component"
+        assert_is_given("id", id)
+        assert_is_instance_of("id", id, str)
         assert_is_instance_of("property", id, (str, NoneType))
-        link = link or "component"
-        if property is None and id is not None:
+        if property is None:
+            # property, if not provided, defaults to "value"
             property = "value"
+        elif not output:
+            # outputs are allowed to have an empty property value
+            assert_is_given("property", property)
     else:
-        assert_is_none("id", id)
+        # Other states require a link and property
+        # and should have no id
+        assert_is_given(link_name, link)
+        assert_is_one_of(link_name, link, ("container", "app"))
+        assert_is_given("property", property)
         assert_is_instance_of("property", property, str)
+        assert_is_none("id", id)
     # noinspection PyTypeChecker
     return link, id, property
