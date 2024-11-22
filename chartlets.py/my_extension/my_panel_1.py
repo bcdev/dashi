@@ -1,6 +1,10 @@
-import altair as alt
+import copy
+from types import NoneType
 
-from chartlets import Component, Input, Output
+import altair as alt
+import pandas as pd
+
+from chartlets import Component, Input, Output, State
 from chartlets.components import Plot, Box, Select
 from chartlets.demo.contribs import Panel
 from chartlets.demo.context import Context
@@ -79,15 +83,45 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
         .properties(width=290, height=300, title="Vega charts")
         .add_params(corner_var, click_param)
     )
-
     return chart
 
 
-# # TODO: see if we can get the value of the clicked points from the click params above
-# @panel.callback(
-#     Input("selected_dataset"),
-#     Output("plot", "chart"),
-# )
-# def test_callback(
-#     self,
-# ): ...
+@panel.callback(
+    Input("plot", property="points"), State("plot", "chart"), Output("plot", "chart")
+)
+def get_click_event_points(ctx: Context, points, plot) -> alt.Chart:
+    """
+    This callback function shows how we can use the event handlers output
+    (property="points") which was defined in the `make_figure` callback
+    function as a `on='click'` handler. Here, we access the variables as
+    defined in the `fields` argument when creating the `click_param` parameter.
+
+    Based on the click event, the user can access the point that was clicked.
+    The function below extracts the points and changes the color of the bar
+    that was clicked.
+
+    """
+    if points:
+        conditions = []
+        for field, values in points.items():
+            if field != "vlPoint":
+                for value in values:
+                    field_type = plot["encoding"].get(field, {}).get("type", "")
+                    if field_type == "nominal":
+                        conditions.append(f"datum.{field} === '{value}'")
+                    else:
+                        conditions.append(f"datum.{field} === {value}")
+                    conditions.append(f"datum.{field} === {repr(value)}")
+
+        condition_expr = " && ".join(conditions)
+
+        plot["encoding"]["color"] = {
+            "condition": {
+                "test": condition_expr,
+                # Highlight color when the condition is true
+                "value": "orange",
+            },
+            "value": "steelblue",  # Default color
+        }
+
+    return alt.Chart.from_dict(plot)
