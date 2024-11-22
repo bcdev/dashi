@@ -2,12 +2,13 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 
+import { useContributions } from "@/lib";
 import { hidePanel } from "@/demo/actions/hidePanel";
 import { showPanel } from "@/demo/actions/showPanel";
-import { usePanelStates } from "@/demo/hooks";
+import type { PanelState } from "@/demo/types";
 
 function PanelsControl() {
-  const panelStates = usePanelStates();
+  const panelStates = useContributions<PanelState>("panels");
   if (!panelStates) {
     // Ok, not ready yet
     return null;

@@ -1,5 +1,8 @@
 ## Version 0.0.22 (in development)
 
+* Added progress components `CircularProgress`, `CircularProgressWithLabel`, 
+  `LinearProgress`, `LinearProgressWithLabel`.
+
 * Replacing components is now possible by using an 
   `Output` with `property` set to an empty string. (#38)
 

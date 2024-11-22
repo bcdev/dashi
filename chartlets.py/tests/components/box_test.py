@@ -1,22 +1,24 @@
-import json
-import unittest
-
 from chartlets.components import Box
+from tests.component_test import make_base
 
 
-class BoxTest(unittest.TestCase):
+class BoxTest(make_base(Box)):
 
     def test_is_json_serializable(self):
-        box = Box(
-            children=[
-                Box(id="b1"),
-                Box(id="b2"),
-            ]
+        self.assert_is_json_serializable(
+            self.cls(
+                children=[
+                    Box(id="b1"),
+                    Box(id="b2"),
+                ],
+                style={"color": "grey", "display": "flex"},
+            ),
+            {
+                "type": "Box",
+                "children": [
+                    {"children": [], "id": "b1", "type": "Box"},
+                    {"children": [], "id": "b2", "type": "Box"},
+                ],
+                "style": {"color": "grey", "display": "flex"},
+            },
         )
-
-        d = box.to_dict()
-        self.assertIsInstance(d, dict)
-        self.assertIsInstance(d.get("children"), list)
-        json_text = json.dumps(d)
-        self.assertEqual("{", json_text[0])
-        self.assertEqual("}", json_text[-1])

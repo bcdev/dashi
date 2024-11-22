@@ -31,6 +31,9 @@ class Component(ABC):
     label: str | None = None
     """HTML `label` attribute. Optional."""
 
+    color: str | None = None
+    """HTML `color` attribute. Optional."""
+
     children: list[Union["Component", str, None]] | None = None
     """Children used by many specific components. Optional."""
 
