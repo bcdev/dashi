@@ -7,9 +7,15 @@ import ControlBar from "@/demo/components/ControlBar";
 import PanelsControl from "./components/PanelsControl";
 import PanelsRow from "./components/PanelsRow";
 import { appStore } from "@/demo/store";
+import { getValue, setValue } from "@/lib/utils/objPath";
 
 initializeContributions({
-  hostStore: appStore,
+  hostStore: {
+    subscribe: (listener: () => void) => appStore.subscribe(listener),
+    get: (property: string): unknown => getValue(appStore.getState(), property),
+    set: (property: string, value: unknown) =>
+      void appStore.setState(setValue(appStore.getState(), property, value)),
+  },
   logging: { enabled: true },
 });
 

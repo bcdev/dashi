@@ -6,15 +6,6 @@ import { applyStateChangeRequests } from "@/lib/actions/helpers/applyStateChange
 export function invokeCallbacks(callbackRequests: CallbackRequest[]) {
   const { configuration } = store.getState();
   const shouldLog = configuration.logging?.enabled;
-  if (!callbackRequests.length) {
-    if (shouldLog) {
-      console.info(
-        `chartlets: invokeCallbacks - no requests`,
-        callbackRequests,
-      );
-    }
-    return;
-  }
   const invocationId = getInvocationId();
   if (shouldLog) {
     console.info(

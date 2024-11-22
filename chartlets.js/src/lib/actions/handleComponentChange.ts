@@ -36,7 +36,9 @@ export function handleComponentChange(
     contribIndex,
     changeEvent,
   );
-  invokeCallbacks(callbackRequests);
+  if (callbackRequests && callbackRequests.length > 0) {
+    invokeCallbacks(callbackRequests);
+  }
 }
 
 /**
@@ -53,8 +55,7 @@ function getCallbackRequests(
   changeEvent: ComponentChangeEvent,
 ): CallbackRequest[] {
   const { configuration, contributionsRecord } = store.getState();
-  const { hostStore, getDerivedHostState } = configuration;
-  const hostState = hostStore?.getState();
+  const { hostStore } = configuration;
   const contributions = contributionsRecord[contribPoint];
   const contribution = contributions[contribIndex];
   const callbackRequests: CallbackRequest[] = [];
@@ -75,12 +76,7 @@ function getCallbackRequests(
           contribIndex,
           callbackIndex,
           inputIndex,
-          inputValues: getInputValues(
-            inputs,
-            contribution,
-            hostState,
-            getDerivedHostState,
-          ),
+          inputValues: getInputValues(inputs, contribution, hostStore),
         });
       }
     }

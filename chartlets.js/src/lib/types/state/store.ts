@@ -1,33 +1,15 @@
-import type { StoreApi } from "zustand";
-
 import type {
   ContribPoint,
   Contributions,
   Extension,
 } from "@/lib/types/model/extension";
 import type { ContributionState } from "@/lib/types/state/contribution";
-import type { ApiOptions, ApiResult } from "@/lib/types/api";
-import type { LoggingOptions } from "@/lib/actions/helpers/configureLogging";
+import type { ApiResult } from "@/lib/types/api";
+import type { FrameworkOptions } from "./options";
 
-export type GetDerivedState<S extends object = object> = (
-  hostState: S,
-  propertyName: string,
-) => unknown;
-
-export interface FrameworkOptions<S extends object = object> {
-  /** The host applications state management store. */
-  hostStore?: StoreApi<S>;
-  /** Get a derived state from given host state. */
-  getDerivedHostState?: GetDerivedState<S>;
-  /** API options to configure backend. */
-  api?: ApiOptions;
-  /** Logging options. */
-  logging?: LoggingOptions;
-}
-
-export interface StoreState<S extends object = object> {
+export interface StoreState {
   /** Framework configuration */
-  configuration: FrameworkOptions<S>;
+  configuration: FrameworkOptions;
   /** All extensions */
   extensions: Extension[];
   /** API call result from `GET /contributions`. */

@@ -4,13 +4,12 @@ import { fetchContributions } from "@/lib/api/fetchContributions";
 import { type Contribution } from "@/lib/types/model/contribution";
 import { type ContributionState } from "@/lib/types/state/contribution";
 import { type Contributions } from "@/lib/types/model/extension";
-import type { FrameworkOptions, StoreState } from "@/lib/types/state/store";
+import { type FrameworkOptions } from "@/lib/types/state/options";
+import { type StoreState } from "@/lib/types/state/store";
 import { configureFramework } from "./configureFramework";
 import { mapObject } from "@/lib/utils/mapObject";
 
-export function initializeContributions<S extends object = object>(
-  options?: FrameworkOptions<S>,
-) {
+export function initializeContributions(options?: FrameworkOptions) {
   if (options) {
     configureFramework(options);
   }
