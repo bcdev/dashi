@@ -11,22 +11,30 @@ export type ComponentType =
   | "Select"
   | "Typography";
 
+export type ComponentNode =
+  | ComponentState
+  | string
+  | 0
+  | false
+  | null
+  | undefined;
+
 export interface ComponentState {
+  // TODO: Rename to tag, so we can also have
+  //   (Html)ElementState along with ComponentState
   type: ComponentType;
-  label?: string;
-  children?: ComponentItem[];
+  children?: ComponentNode[];
   // common HTML attributes
   id?: string;
   name?: string;
   value?: boolean | string | number;
   style?: CSSProperties;
   disabled?: boolean;
+  label?: string;
 }
 
-export type ComponentItem = ComponentState | string;
-
 export interface ContainerState extends ComponentState {
-  children: ComponentItem[];
+  children: ComponentNode[];
 }
 
 export type SelectOption =

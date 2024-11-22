@@ -1,30 +1,31 @@
 import { type ComponentChangeHandler } from "@/lib/types/state/event";
 import {
-  type ComponentItem,
+  type ComponentNode,
   isComponentState,
 } from "@/lib/types/state/component";
 import { Component } from "./Component";
 
 export interface ComponentChildrenProps {
-  components?: ComponentItem[];
+  nodes?: ComponentNode[];
   onChange: ComponentChangeHandler;
 }
 
-export function ComponentChildren({
-  components,
-  onChange,
-}: ComponentChildrenProps) {
-  if (!components || components.length === 0) {
+export function ComponentChildren({ nodes, onChange }: ComponentChildrenProps) {
+  if (!nodes || nodes.length === 0) {
     return null;
   }
   return (
     <>
-      {components.map((item, index) => {
-        if (isComponentState(item)) {
-          const key = item.id || index;
-          return <Component key={key} {...item} onChange={onChange} />;
+      {nodes.map((node, index) => {
+        if (isComponentState(node)) {
+          const key = node.id || index;
+          return <Component key={key} {...node} onChange={onChange} />;
+        } else if (typeof node === "string") {
+          return node;
+        } else if (!node) {
+          // This is ok, just as with React, don't render
         } else {
-          return item;
+          console.warn("chartlets: invalid child node encountered:", node);
         }
       })}
     </>
