@@ -3,17 +3,24 @@ import MuiInputLabel from "@mui/material/InputLabel";
 import MuiMenuItem from "@mui/material/MenuItem";
 import MuiSelect, { type SelectChangeEvent } from "@mui/material/Select";
 
-import {
-  type SelectOption,
-  type SelectState,
-} from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/state/event";
+import { type ComponentState } from "@/lib/types/state/component";
+import type { ComponentProps } from "@/lib/component/Component";
 
-export interface SelectProps extends Omit<SelectState, "type"> {
-  onChange: ComponentChangeHandler;
+export type SelectOption =
+  | string
+  | number
+  | [string, string]
+  | [number, string]
+  | { value: string | number; label?: string };
+
+interface SelectState extends ComponentState {
+  options?: SelectOption[];
 }
 
+interface SelectProps extends ComponentProps, SelectState {}
+
 export function Select({
+  type,
   id,
   name,
   value,
@@ -31,9 +38,8 @@ export function Select({
     if (typeof value == "number") {
       newValue = Number.parseInt(newValue);
     }
-
     return onChange({
-      componentType: "Select",
+      componentType: type,
       id: id,
       property: "value",
       value: newValue,

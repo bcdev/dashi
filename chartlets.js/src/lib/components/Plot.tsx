@@ -1,13 +1,20 @@
-import { VegaLite } from "react-vega";
+import { VegaLite, type VisualizationSpec } from "react-vega";
 
-import { type PlotState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/state/event";
+import { type ComponentState } from "@/lib/types/state/component";
+import type { ComponentProps } from "@/lib/component/Component";
 
-export interface PlotProps extends Omit<PlotState, "type"> {
-  onChange: ComponentChangeHandler;
+interface PlotState extends ComponentState {
+  chart?:
+    | (VisualizationSpec & {
+        datasets?: Record<string, unknown>; // Add the datasets property
+      })
+    | null
+    | undefined;
 }
 
-export function Plot({ id, style, chart, onChange }: PlotProps) {
+interface PlotProps extends ComponentProps, PlotState {}
+
+export function Plot({ type, id, style, chart, onChange }: PlotProps) {
   if (!chart) {
     return <div id={id} style={style} />;
   }
@@ -15,7 +22,7 @@ export function Plot({ id, style, chart, onChange }: PlotProps) {
   const handleSignal = (_signalName: string, value: unknown) => {
     if (id) {
       return onChange({
-        componentType: "Plot",
+        componentType: type,
         id: id,
         property: "points",
         value: value,

@@ -1,5 +1,4 @@
 import { type CSSProperties } from "react";
-import type { VisualizationSpec } from "react-vega";
 import { isObject } from "@/lib/utils/isObject";
 
 export type ComponentType =
@@ -21,12 +20,12 @@ export type ComponentNode =
 export interface ComponentState {
   // TODO: Rename to tag, so we can also have
   //   (Html)ElementState along with ComponentState
-  type: ComponentType;
+  type: string;
   children?: ComponentNode[];
   // common HTML attributes
   id?: string;
   name?: string;
-  value?: boolean | string | number;
+  value?: unknown;
   style?: CSSProperties;
   disabled?: boolean;
   label?: string;
@@ -34,46 +33,6 @@ export interface ComponentState {
 
 export interface ContainerState extends ComponentState {
   children: ComponentNode[];
-}
-
-export type SelectOption =
-  | string
-  | number
-  | [string, string]
-  | [number, string]
-  | { value: string | number; label?: string };
-
-export interface SelectState extends ComponentState {
-  type: "Select";
-  options: SelectOption[];
-}
-
-export interface ButtonState extends ComponentState {
-  type: "Button";
-  text: string;
-}
-
-export interface CheckboxState extends ComponentState {
-  type: "Checkbox";
-  label: string;
-  value?: boolean;
-}
-
-export interface PlotState extends ComponentState {
-  type: "Plot";
-  chart:
-    | (VisualizationSpec & {
-        datasets?: Record<string, unknown>; // Add the datasets property
-      })
-    | null;
-}
-
-export interface BoxState extends ContainerState {
-  type: "Box";
-}
-
-export interface TypographyState extends ContainerState {
-  type: "Typography";
 }
 
 export function isComponentState(object: unknown): object is ComponentState {

@@ -1,16 +1,15 @@
 import { describe, it, expect } from "vitest";
 
-import type { ComponentState, PlotState } from "@/lib/types/state/component";
 import {
   getInputValueFromComponent,
   getInputValueFromState,
 } from "./getInputValues";
 
-const componentState: ComponentState = {
+const componentState = {
   type: "Box",
   id: "b1",
   children: [
-    { type: "Plot", id: "p1", chart: null } as PlotState,
+    { type: "Plot", id: "p1", chart: null },
     {
       type: "Box",
       id: "b2",
