@@ -20,7 +20,7 @@ export type ComponentNode =
 export interface ComponentState {
   // TODO: Rename to tag, so we can also have
   //   (Html)ElementState along with ComponentState
-  type: ComponentType;
+  type: string;
   children?: ComponentNode[];
   // common HTML attributes
   id?: string;

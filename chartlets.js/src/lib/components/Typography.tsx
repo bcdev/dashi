@@ -23,7 +23,7 @@ export function Typography({
   gutterBottom,
   noWrap,
   variant,
-  children: components,
+  children: nodes,
   onChange,
 }: TypographyProps) {
   return (
@@ -35,7 +35,7 @@ export function Typography({
       noWrap={noWrap}
       variant={variant}
     >
-      <ComponentChildren components={components} onChange={onChange} />
+      <ComponentChildren nodes={nodes} onChange={onChange} />
     </MuiTypography>
   );
 }
