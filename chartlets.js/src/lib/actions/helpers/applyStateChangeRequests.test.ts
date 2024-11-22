@@ -1,12 +1,10 @@
 import { describe, it, expect } from "vitest";
 
+import { type ComponentState } from "@/lib";
 import { type ContribPoint } from "@/lib/types/model/extension";
 import { type StateChangeRequest } from "@/lib/types/model/callback";
-import {
-  type BoxState,
-  type ComponentState,
-  type PlotState,
-} from "@/lib/types/state/component";
+import { type BoxState } from "@/lib/components/Box";
+import { type PlotState } from "@/lib/components/Plot";
 import { type ContributionState } from "@/lib/types/state/contribution";
 import {
   applyComponentStateChange,

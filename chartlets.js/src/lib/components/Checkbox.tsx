@@ -3,8 +3,14 @@ import MuiCheckbox from "@mui/material/Checkbox";
 import MuiFormControl from "@mui/material/FormControl";
 import MuiFormControlLabel from "@mui/material/FormControlLabel";
 
-import { type CheckboxState } from "@/lib/types/state/component";
+import { type ComponentState } from "@/lib/types/state/component";
 import { type ComponentChangeHandler } from "@/lib/types/state/event";
+
+export interface CheckboxState extends ComponentState {
+  type: "Checkbox";
+  label: string;
+  value?: boolean;
+}
 
 export interface CheckboxProps extends Omit<CheckboxState, "type"> {
   onChange: ComponentChangeHandler;

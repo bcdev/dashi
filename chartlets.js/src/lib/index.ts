@@ -1,7 +1,10 @@
 // Types
 export { type Contribution } from "@/lib/types/model/contribution";
 export { type ContributionState } from "@/lib/types/state/contribution";
-export { type ComponentState } from "@/lib/types/state/component";
+export type {
+  ComponentState,
+  ContainerState,
+} from "@/lib/types/state/component";
 export {
   type ComponentChangeEvent,
   type ComponentChangeHandler,

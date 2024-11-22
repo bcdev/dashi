@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 
-import type { ComponentState, PlotState } from "@/lib/types/state/component";
+import type { ComponentState } from "@/lib";
+import type { PlotState } from "@/lib/components/Plot";
 import {
   getInputValueFromComponent,
   getInputValueFromState,

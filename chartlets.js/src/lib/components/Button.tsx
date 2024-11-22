@@ -1,8 +1,13 @@
 import { type MouseEvent } from "react";
 import MuiButton from "@mui/material/Button";
 
-import { type ButtonState } from "@/lib/types/state/component";
+import { type ComponentState } from "@/lib/types/state/component";
 import { type ComponentChangeHandler } from "@/lib/types/state/event";
+
+export interface ButtonState extends ComponentState {
+  type: "Button";
+  text: string;
+}
 
 export interface ButtonProps extends Omit<ButtonState, "type"> {
   onChange: ComponentChangeHandler;

@@ -6,6 +6,10 @@ import { Checkbox, type CheckboxProps } from "./Checkbox";
 import { Select, type SelectProps } from "./Select";
 import { Plot, type PlotProps } from "./Plot";
 import { Typography, type TypographyProps } from "@/lib/components/Typography";
+import {
+  CircularProgress,
+  type CircularProgressProps,
+} from "./CircularProgress";
 
 export interface ComponentProps extends ComponentState {
   onChange: ComponentChangeHandler;
@@ -28,7 +32,11 @@ export function Component({ type, ...props }: ComponentProps) {
     return <Box {...(props as BoxProps)} />;
   } else if (type === "Checkbox") {
     return <Checkbox {...(props as CheckboxProps)} />;
+  } else if (type === "CircularProgress") {
+    return <CircularProgress {...(props as CircularProgressProps)} />;
   } else if (type === "Typography") {
     return <Typography {...(props as TypographyProps)} />;
+  } else {
+    console.error(`Cannot render unknown component type ${type}`);
   }
 }

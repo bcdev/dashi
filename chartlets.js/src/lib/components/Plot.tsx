@@ -1,7 +1,16 @@
-import { VegaLite } from "react-vega";
+import { VegaLite, type VisualizationSpec } from "react-vega";
 
-import { type PlotState } from "@/lib/types/state/component";
+import { type ComponentState } from "@/lib/types/state/component";
 import { type ComponentChangeHandler } from "@/lib/types/state/event";
+
+export interface PlotState extends ComponentState {
+  type: "Plot";
+  chart:
+    | (VisualizationSpec & {
+        datasets?: Record<string, unknown>; // Add the datasets property
+      })
+    | null;
+}
 
 export interface PlotProps extends Omit<PlotState, "type"> {
   onChange: ComponentChangeHandler;
