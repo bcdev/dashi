@@ -7,13 +7,17 @@ import altair as alt
 from chartlets.components import Plot
 
 
-class PlotTest(unittest.TestCase):
-    def setUp(self):
-        dataset = pd.DataFrame(
+from tests.component_test import make_base
+
+
+class PlotTest(make_base(Plot)):
+
+    def test_is_json_serializable(self):
+        source = pd.DataFrame(
             {"x": ["A", "B", "C", "D", "E"], "a": [28, 55, 43, 91, 81]}
         )
         self.chart = (
-            alt.Chart(dataset)
+            alt.Chart(source)
             .mark_bar()
             .encode(
                 x=alt.X("x:N", title="x"),
@@ -21,16 +25,31 @@ class PlotTest(unittest.TestCase):
             )
         )
 
-    def test_is_json_serializable(self):
-
-        plot = Plot(id="plot", chart=self.chart)
-        p = plot.to_dict()
-
-        print(p)
-        self.assertIsInstance(p, dict)
-        self.assertEqual(p["type"], "Plot")
-        self.assertIsInstance(p["chart"], dict)
-        self.assertEqual(p["chart"]["mark"], {"type": "bar"})
-        json_text = json.dumps(p)
-        self.assertEqual("{", json_text[0])
-        self.assertEqual("}", json_text[-1])
+        self.assert_is_json_serializable(
+            self.cls(id="plot", chart=self.chart),
+            {
+                "chart": {
+                    "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+                    "config": {
+                        "view": {"continuousHeight": 300, "continuousWidth": 300}
+                    },
+                    "data": {"name": "data-2780b27b376c14369bf3f449cf25f092"},
+                    "datasets": {
+                        "data-2780b27b376c14369bf3f449cf25f092": [
+                            {"a": 28, "x": "A"},
+                            {"a": 55, "x": "B"},
+                            {"a": 43, "x": "C"},
+                            {"a": 91, "x": "D"},
+                            {"a": 81, "x": "E"},
+                        ]
+                    },
+                    "encoding": {
+                        "x": {"field": "x", "title": "x", "type": "nominal"},
+                        "y": {"field": "a", "title": "a", "type": "quantitative"},
+                    },
+                    "mark": {"type": "bar"},
+                },
+                "id": "plot",
+                "type": "Plot",
+            },
+        )
