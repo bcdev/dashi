@@ -1,22 +1,38 @@
 import { type CSSProperties } from "react";
 import { isObject } from "@/lib/utils/isObject";
 
+export type ComponentType =
+  | "Box"
+  | "Button"
+  | "Checkbox"
+  | "Plot"
+  | "Select"
+  | "Typography";
+
+export type ComponentNode =
+  | ComponentState
+  | string
+  | 0
+  | false
+  | null
+  | undefined;
+
 export interface ComponentState {
-  type: string;
-  label?: string;
-  children?: ComponentItem[];
+  // TODO: Rename to tag, so we can also have
+  //   (Html)ElementState along with ComponentState
+  type: ComponentType;
+  children?: ComponentNode[];
   // common HTML attributes
   id?: string;
   name?: string;
   value?: boolean | string | number | null | undefined;
   style?: CSSProperties;
   disabled?: boolean;
+  label?: string;
 }
 
-export type ComponentItem = ComponentState | string;
-
 export interface ContainerState extends ComponentState {
-  children: ComponentItem[];
+  children: ComponentNode[];
 }
 
 export function isComponentState(object: unknown): object is ComponentState {

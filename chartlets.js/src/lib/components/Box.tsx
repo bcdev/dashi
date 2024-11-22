@@ -12,10 +12,10 @@ export interface BoxProps extends Omit<BoxState, "type"> {
   onChange: ComponentChangeHandler;
 }
 
-export function Box({ id, style, children: components, onChange }: BoxProps) {
+export function Box({ id, style, children, onChange }: BoxProps) {
   return (
     <MuiBox id={id} style={style}>
-      <ComponentChildren components={components} onChange={onChange} />
+      <ComponentChildren nodes={children} onChange={onChange} />
     </MuiBox>
   );
 }
