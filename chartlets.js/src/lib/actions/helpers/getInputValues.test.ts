@@ -27,7 +27,6 @@ describe("Test that getInputValueFromComponent()", () => {
     expect(
       getInputValueFromComponent(
         {
-          link: "component",
           id: "b1",
           property: "value",
         },
@@ -40,7 +39,6 @@ describe("Test that getInputValueFromComponent()", () => {
     expect(
       getInputValueFromComponent(
         {
-          link: "component",
           id: "p1",
           property: "chart",
         },
@@ -53,7 +51,6 @@ describe("Test that getInputValueFromComponent()", () => {
     expect(
       getInputValueFromComponent(
         {
-          link: "component",
           id: "cb1",
           property: "value",
         },
@@ -64,7 +61,6 @@ describe("Test that getInputValueFromComponent()", () => {
     expect(
       getInputValueFromComponent(
         {
-          link: "component",
           id: "dd1",
           property: "value",
         },
@@ -77,42 +73,36 @@ describe("Test that getInputValueFromComponent()", () => {
 describe("Test that getInputValueFromState()", () => {
   it("works with input.id and input.property", () => {
     const state = { x: { y: 26 } };
-    expect(
-      getInputValueFromState(
-        { link: "component", id: "x", property: "y" },
-        state,
-      ),
-    ).toEqual(26);
+    expect(getInputValueFromState({ id: "x", property: "y" }, state)).toEqual(
+      26,
+    );
   });
 
   it("works with arrays indexes", () => {
     const state = { x: [4, 5, 6] };
-    expect(
-      getInputValueFromState(
-        { link: "component", id: "x", property: "1" },
-        state,
-      ),
-    ).toEqual(5);
+    expect(getInputValueFromState({ id: "x", property: "1" }, state)).toEqual(
+      5,
+    );
   });
 
   it("works without input.id", () => {
     const state = { x: [4, 5, 6] };
     expect(
-      getInputValueFromState({ link: "container", property: "x" }, state),
+      getInputValueFromState({ id: "@container", property: "x" }, state),
     ).toEqual([4, 5, 6]);
   });
 
   it("works on 2nd level", () => {
     const state = { x: { y: 15 } };
     expect(
-      getInputValueFromState({ link: "container", property: "x.y" }, state),
+      getInputValueFromState({ id: "@container", property: "x.y" }, state),
     ).toEqual(15);
   });
 
   it("works on 3nd level", () => {
     const state = { x: { y: [4, 5, 6] } };
     expect(
-      getInputValueFromState({ link: "container", property: "x.y.2" }, state),
+      getInputValueFromState({ id: "@container", property: "x.y.2" }, state),
     ).toEqual(6);
   });
 });

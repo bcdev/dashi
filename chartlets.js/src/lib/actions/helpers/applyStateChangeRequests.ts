@@ -22,6 +22,11 @@ import {
   isMutableHostStore,
   type MutableHostStore,
 } from "@/lib/types/state/options";
+import {
+  isHostChannel,
+  isComponentChannel,
+  isContainerChannel,
+} from "@/lib/types/model/channel";
 
 export function applyStateChangeRequests(
   stateChangeRequests: StateChangeRequest[],
@@ -52,14 +57,11 @@ export function applyContributionChangeRequests(
       const contribution = contributionsRecord[contribPoint][contribIndex];
       const container = applyStateChanges(
         contribution.container,
-        stateChanges.filter((stateChange) => stateChange.link === "container"),
+        stateChanges.filter(isContainerChannel),
       );
       const component = applyComponentStateChanges(
         contribution.component,
-        stateChanges.filter(
-          (stateChange) =>
-            !stateChange.link || stateChange.link === "component",
-        ),
+        stateChanges.filter(isComponentChannel),
       );
       if (
         container !== contribution.container ||
@@ -148,7 +150,7 @@ function applyHostStateChanges(
 ) {
   stateChangeRequests.forEach((stateChangeRequest) => {
     stateChangeRequest.stateChanges.forEach((stateChange) => {
-      if (stateChange.link === "app") {
+      if (isHostChannel(stateChange)) {
         hostStore.set(formatObjPath(stateChange.property), stateChange.value);
       }
     });

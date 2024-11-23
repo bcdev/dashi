@@ -1,3 +1,9 @@
+## Version 0.0.26 (from 2024/11/23)
+
+* Channels such as `Input`, `State`, `Output` no longer have a `link` property.
+  Instead, we use a special `id` format, namely `"@app"` and `@container`
+  to address states other than components. (#52)
+
 ## Version 0.0.25 (from 2024/11/23)
 
 * `Registry.register()` now requires the `type`

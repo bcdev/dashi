@@ -61,22 +61,18 @@ class CallbackTest(unittest.TestCase):
                 },
                 "inputs": [
                     {
-                        "link": "component",
                         "id": "a",
                         "property": "value",
                     },
                     {
-                        "link": "component",
                         "id": "b",
                         "property": "value",
                     },
                     {
-                        "link": "component",
                         "id": "c",
                         "property": "value",
                     },
                     {
-                        "link": "component",
                         "id": "d",
                         "property": "value",
                     },
@@ -111,19 +107,16 @@ class CallbackTest(unittest.TestCase):
                 },
                 "inputs": [
                     {
-                        "link": "component",
                         "id": "n",
                         "property": "value",
                     }
                 ],
                 "outputs": [
                     {
-                        "link": "component",
                         "id": "select",
                         "property": "options",
                     },
                     {
-                        "link": "component",
                         "id": "select",
                         "property": "value",
                     },

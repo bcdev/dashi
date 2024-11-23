@@ -11,7 +11,7 @@ COLORS = [(0, "red"), (1, "green"), (2, "blue"), (3, "yellow")]
 
 
 @panel.layout(
-    Input(source="app", property="selectedDatasetId"),
+    Input("@app", "selectedDatasetId"),
 )
 def render_panel(
     ctx: Context,
@@ -53,7 +53,7 @@ def render_panel(
 
 # noinspection PyUnusedLocal
 @panel.callback(
-    Input(source="app", property="selectedDatasetId"),
+    Input("@app", "selectedDatasetId"),
     Input("opaque"),
     Input("color"),
     State("info_text", "children"),

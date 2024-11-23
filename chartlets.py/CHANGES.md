@@ -1,4 +1,11 @@
-## Version 0.0.22 (in development)
+## Version 0.0.x (in development)
+
+* Channels such as `Input`, `State`, `Output` no longer have a `link` property. 
+  Instead, we use a special `id` format, namely `"@app"` and `@container` 
+  to address states other than components. 
+  This way, the call syntax `Input(id, property)` is the same for all states, 
+  e.g., `Input("@app", "selectedDatasetId")`, instead of 
+  `Input(source="app", property="selectedDatasetId")`. (#52)
 
 * Added progress components `CircularProgress`, `CircularProgressWithLabel`, 
   `LinearProgress`, `LinearProgressWithLabel`.

@@ -23,7 +23,6 @@ export function handleComponentChange(
       contribIndex,
       stateChanges: [
         {
-          link: "component",
           id: changeEvent.id,
           property: changeEvent.property,
           value: changeEvent.value,
@@ -65,7 +64,8 @@ function getCallbackRequests(
       const inputIndex = inputs.findIndex(
         (input) =>
           !input.noTrigger &&
-          (!input.link || input.link === "component") &&
+          input.id &&
+          !input.id.startsWith("@") &&
           input.id === changeEvent.id &&
           equalObjPaths(input.property, changeEvent.property),
       );

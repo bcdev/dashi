@@ -1,4 +1,9 @@
-import type { Input } from "@/lib/types/model/channel";
+import {
+  type Input,
+  isComponentChannel,
+  isContainerChannel,
+  isHostChannel,
+} from "@/lib/types/model/channel";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import {
   type ComponentState,
@@ -27,12 +32,11 @@ export function getInputValue(
   hostStore?: HostStore,
 ): unknown {
   let inputValue: unknown = undefined;
-  const dataSource = input.link || "component";
-  if (dataSource === "component" && contributionState.component) {
+  if (isComponentChannel(input) && contributionState.component) {
     inputValue = getInputValueFromComponent(input, contributionState.component);
-  } else if (dataSource === "container" && contributionState.container) {
+  } else if (isContainerChannel(input) && contributionState.container) {
     inputValue = getInputValueFromState(input, contributionState.container);
-  } else if (dataSource === "app" && hostStore) {
+  } else if (isHostChannel(input) && hostStore) {
     inputValue = getInputValueFromHostStore(input, hostStore);
   } else {
     console.warn(`input with unknown data source:`, input);
