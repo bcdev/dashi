@@ -1,4 +1,7 @@
-## Version 0.0.23 (in development)
+## Version 0.0.23 (from 2024/11/19)
+
+* Introduced new interface `HostState` that applications may implement
+  to provide computed properties, i.e., a derived state. (#43)
 
 * Replacing entire components if a related component `StateChange` 
   has an empty `property`. (#38)
