@@ -7,26 +7,24 @@ import {
 } from "@/lib/types/state/component";
 import { formatObjPath, getValue, normalizeObjPath } from "@/lib/utils/objPath";
 import { isObject } from "@/lib/utils/isObject";
-import type { GetDerivedState } from "@/lib/types/state/store";
+import type { HostStore } from "@/lib/types/state/options";
 
-export function getInputValues<S extends object = object>(
+export function getInputValues(
   inputs: Input[],
   contributionState: ContributionState,
-  hostState?: S | undefined,
-  getDerivedHostState?: GetDerivedState,
+  hostStore?: HostStore,
 ): unknown[] {
   return inputs.map((input) =>
-    getInputValue(input, contributionState, hostState, getDerivedHostState),
+    getInputValue(input, contributionState, hostStore),
   );
 }
 
 const noValue = {};
 
-export function getInputValue<S extends object = object>(
+export function getInputValue(
   input: Input,
   contributionState: ContributionState,
-  hostState?: S,
-  getDerivedHostState?: GetDerivedState<S>,
+  hostStore?: HostStore,
 ): unknown {
   let inputValue: unknown = undefined;
   const dataSource = input.link || "component";
@@ -34,12 +32,8 @@ export function getInputValue<S extends object = object>(
     inputValue = getInputValueFromComponent(input, contributionState.component);
   } else if (dataSource === "container" && contributionState.container) {
     inputValue = getInputValueFromState(input, contributionState.container);
-  } else if (dataSource === "app" && hostState) {
-    inputValue = getInputValueFromState(
-      input,
-      hostState,
-      getDerivedHostState as GetDerivedState,
-    );
+  } else if (dataSource === "app" && hostStore) {
+    inputValue = getInputValueFromHostStore(input, hostStore);
   } else {
     console.warn(`input with unknown data source:`, input);
   }
@@ -76,7 +70,6 @@ export function getInputValueFromComponent(
 export function getInputValueFromState(
   input: Input,
   state: object | undefined,
-  getDerivedState?: GetDerivedState,
 ): unknown {
   let inputValue: unknown = state;
   if (input.id && isObject(inputValue)) {
@@ -86,9 +79,13 @@ export function getInputValueFromState(
     const state = inputValue;
     const property = normalizeObjPath(input.property);
     inputValue = getValue(state, property);
-    if (inputValue === undefined && getDerivedState !== undefined) {
-      inputValue = getDerivedState(state, formatObjPath(input.property));
-    }
   }
   return inputValue;
+}
+
+export function getInputValueFromHostStore(
+  input: Input,
+  hostStore: HostStore,
+): unknown {
+  return hostStore.get(formatObjPath(input.property));
 }
