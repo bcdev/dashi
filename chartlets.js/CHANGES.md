@@ -1,4 +1,8 @@
-## Version 0.0.23 (from 2024/11/19)
+## Version 0.0.24 (from 2024/11/23)
+
+* Exporting required `HostStore` type.
+
+## Version 0.0.23 (from 2024/11/23)
 
 * Introduced new interface `HostState` that applications may implement
   to provide computed properties, i.e., a derived state. (#43)

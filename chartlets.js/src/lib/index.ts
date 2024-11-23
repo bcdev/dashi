@@ -31,6 +31,8 @@ export {
   useComponentChangeHandlers,
   makeContributionsHook,
 } from "@/lib/hooks";
+// Application interface
+export { type HostStore } from "@/lib/types/state/options";
 
 /////////////////////////////////////////////////////////////////////
 // Register standard Chartlets components
