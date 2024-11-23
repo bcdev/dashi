@@ -47,10 +47,10 @@ import { Plot } from "@/lib/components/Plot";
 import { Select } from "@/lib/components/Select";
 import { Typography } from "@/lib/components/Typography";
 
-registry.register(Box);
-registry.register(Button);
-registry.register(Checkbox);
-registry.register(CircularProgress);
-registry.register(Plot);
-registry.register(Select);
-registry.register(Typography);
+registry.register("Box", Box);
+registry.register("Button", Button);
+registry.register("Checkbox", Checkbox);
+registry.register("CircularProgress", CircularProgress);
+registry.register("Plot", Plot);
+registry.register("Select", Select);
+registry.register("Typography", Typography);

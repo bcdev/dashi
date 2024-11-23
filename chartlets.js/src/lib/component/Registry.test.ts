@@ -10,9 +10,9 @@ describe("Test that RegistryImpl", () => {
     const A = () => void 0;
     const B = () => void 0;
     const C = () => void 0;
-    const unregisterA = registry.register(A);
-    const unregisterB = registry.register(B);
-    const unregisterC = registry.register(C);
+    const unregisterA = registry.register("A", A);
+    const unregisterB = registry.register("B", B);
+    const unregisterC = registry.register("C", C);
 
     expect(registry.lookup("A")).toBe(A);
     expect(registry.lookup("B")).toBe(B);
@@ -32,7 +32,7 @@ describe("Test that RegistryImpl", () => {
     expect(new Set(registry.types)).toEqual(new Set(["C"]));
 
     const C2 = () => void 0;
-    const unregisterC2 = registry.register(C2, "C");
+    const unregisterC2 = registry.register("C", C2);
     expect(registry.lookup("A")).toBeUndefined();
     expect(registry.lookup("B")).toBeUndefined();
     expect(registry.lookup("C")).toBe(C2);

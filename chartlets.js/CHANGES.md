@@ -1,3 +1,9 @@
+## Version 0.0.25 (from 2024/11/23)
+
+* `Registry.register()` now requires the `type`
+  to be passed as 1st argument because `component.name` will
+  be a mangled name in most cases.
+
 ## Version 0.0.24 (from 2024/11/23)
 
 * Exporting required `HostStore` type.
