@@ -89,7 +89,7 @@ export function useSignalListeners(
         });
       }
     },
-    [id, onChange],
+    [id, onChange, type],
   );
 
   /*
