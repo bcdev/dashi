@@ -1,3 +1,7 @@
+## Version 0.0.27 (from 2024/11/25)
+
+* Added component `IconButton` and enhanced other components' attributes.
+
 ## Version 0.0.26 (from 2024/11/23)
 
 * Channels such as `Input`, `State`, `Output` no longer have a `link` property.

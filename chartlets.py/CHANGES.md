@@ -1,5 +1,7 @@
 ## Version 0.0.x (in development)
 
+* Added component `IconButton` and enhanced other components' attributes.
+
 * Channels such as `Input`, `State`, `Output` no longer have a `link` property. 
   Instead, we use a special `id` format, namely `"@app"` and `@container` 
   to address states other than components. 

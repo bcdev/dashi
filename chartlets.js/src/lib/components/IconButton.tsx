@@ -1,15 +1,12 @@
 import { type MouseEvent } from "react";
-import MuiButton from "@mui/material/Button";
+import MuiIconButton from "@mui/material/IconButton";
 import MuiIcon from "@mui/material/Icon";
 
 import { type ComponentState } from "@/lib/types/state/component";
 import type { ComponentProps } from "@/lib/component/Component";
 
-interface ButtonState extends ComponentState {
-  text?: string;
-  startIcon?: string;
-  endIcon?: string;
-  variant?: "contained" | "outlined" | "text";
+interface IconButtonState extends ComponentState {
+  icon?: string;
   color?:
     | "inherit"
     | "primary"
@@ -18,23 +15,22 @@ interface ButtonState extends ComponentState {
     | "error"
     | "info"
     | "warning";
+  size?: "small" | "medium" | "large";
 }
 
-interface ButtonProps extends ComponentProps, ButtonState {}
+interface IconButtonProps extends ComponentProps, IconButtonState {}
 
-export function Button({
+export function IconButton({
   type,
   id,
   name,
   style,
-  variant,
   color,
+  icon,
+  size,
   disabled,
-  text,
-  startIcon,
-  endIcon,
   onChange,
-}: ButtonProps) {
+}: IconButtonProps) {
   const handleClick = (_event: MouseEvent<HTMLButtonElement>) => {
     if (id) {
       onChange({
@@ -46,18 +42,16 @@ export function Button({
     }
   };
   return (
-    <MuiButton
+    <MuiIconButton
       id={id}
       name={name}
       style={style}
-      variant={variant}
       color={color}
+      size={size}
       disabled={disabled}
-      startIcon={startIcon && <MuiIcon>{startIcon}</MuiIcon>}
-      endIcon={endIcon && <MuiIcon>{endIcon}</MuiIcon>}
       onClick={handleClick}
     >
-      {text}
-    </MuiButton>
+      <MuiIcon>{icon}</MuiIcon>
+    </MuiIconButton>
   );
 }
