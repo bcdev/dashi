@@ -2,7 +2,7 @@ from typing import Any, Callable
 from abc import ABC
 
 from .callback import Callback
-from .channel import Channel
+from .channel import Input, State, Output
 
 
 class Contribution(ABC):
@@ -20,7 +20,7 @@ class Contribution(ABC):
     """
 
     # noinspection PyShadowingBuiltins
-    def __init__(self, name: str, **initial_state):
+    def __init__(self, name: str, **initial_state: Any):
         self.name = name
         self.initial_state = initial_state
         self.extension: str | None = None
@@ -47,7 +47,7 @@ class Contribution(ABC):
             d.update(callbacks=[cb.to_dict() for cb in self.callbacks])
         return d
 
-    def layout(self, *args) -> Callable[[Callable], Callable]:
+    def layout(self, *args: State) -> Callable[[Callable], Callable]:
         """Provides a decorator for a user-provided function that
         returns the initial user interface layout.
 
@@ -65,13 +65,12 @@ class Contribution(ABC):
         called `ctx`.
 
         Other parameters of the decorated function are user-defined
-        and must have a corresponding `chartlets.Input` or
-        `chartlets.State` arguments in the `layout` decorator in the
-        same order.
+        and must have a corresponding `chartlets.State` arguments
+        in the `layout` decorator in the same order.
 
         Args:
             args:
-                `chartlets.Input` or `chartlets.State` objects that
+                `chartlets.State` objects that
                 define the source of the value for the corresponding
                 parameter of the decorated function. Optional.
 
@@ -81,13 +80,13 @@ class Contribution(ABC):
 
         def decorator(function: Callable) -> Callable:
             self.layout_callback = Callback.from_decorator(
-                "layout", args, function, outputs_allowed=False
+                "layout", args, function, states_only=True
             )
             return function
 
         return decorator
 
-    def callback(self, *args: Channel) -> Callable[[Callable], Callable]:
+    def callback(self, *args: Input | State | Output) -> Callable[[Callable], Callable]:
         """Provide a decorator for a user-provided callback function.
 
         Callback functions are event handlers that react
@@ -125,7 +124,7 @@ class Contribution(ABC):
         def decorator(function: Callable) -> Callable:
             self.callbacks.append(
                 Callback.from_decorator(
-                    "callback", args, function, outputs_allowed=True
+                    "callback", args, function, states_only=False
                 )
             )
             return function

@@ -170,4 +170,4 @@ class FromDecoratorTest(unittest.TestCase):
                 " State, Output, AppInput, or AppOutput, but got 'int'"
             ),
         ):
-            Callback.from_decorator("test", (13,), my_callback, outputs_allowed=True)
+            Callback.from_decorator("test", (13,), my_callback, states_only=True)

@@ -22,7 +22,7 @@ class Callback:
         decorator_name: str,
         decorator_args: tuple[Any, ...],
         function: Any,
-        outputs_allowed: bool = False,
+        states_only: bool = False,
     ) -> "Callback":
         try:
             signature = inspect.signature(function)
@@ -45,22 +45,22 @@ class Callback:
         inputs: list[Input | State] = []
         outputs: list[Output] = []
         for arg in decorator_args:
-            if isinstance(arg, (Input, State)):
-                inputs.append(arg)
-            elif outputs_allowed and isinstance(arg, Output):
-                outputs.append(arg)
-            elif outputs_allowed:
+            if states_only and not isinstance(arg, State):
                 raise TypeError(
                     f"arguments for decorator {decorator_name!r}"
-                    f" must be of type Input, State, Output, AppInput,"
-                    f" or AppOutput, but got {arg.__class__.__name__!r}"
-                )
-            else:
-                raise TypeError(
-                    f"arguments for decorator {decorator_name!r}"
-                    f" must be of type Input,"
+                    f" must be of type State,"
                     f" but got {arg.__class__.__name__!r}"
                 )
+            if not isinstance(arg, (Input, State, Output)):
+                raise TypeError(
+                    f"arguments for decorator {decorator_name!r}"
+                    f" must be of type Input, State, or Output,"
+                    f" but got {arg.__class__.__name__!r}"
+                )
+            if not isinstance(arg, Output):
+                outputs.append(arg)
+            else:
+                inputs.append(arg)
 
         num_params = len(signature.parameters) - 1
         num_inputs = len(inputs)

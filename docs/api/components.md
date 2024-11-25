@@ -18,9 +18,11 @@ and providers:
 
 ::: chartlets.components.Checkbox
 
-::: chartlets.components.Dropdown
+::: chartlets.components.IconButton
 
 ::: chartlets.components.Plot
+
+::: chartlets.components.Select
 
 ::: chartlets.components.Typography
 

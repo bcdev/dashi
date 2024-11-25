@@ -1,7 +1,7 @@
 import altair as alt
 import pandas as pd
 
-from chartlets import Component, Input, Output
+from chartlets import Component, Input, State, Output
 from chartlets.components import Plot, Box, Select
 from chartlets.demo.contribs import Panel
 from chartlets.demo.context import Context
@@ -10,7 +10,7 @@ from chartlets.demo.context import Context
 panel = Panel(__name__, title="Panel B")
 
 
-@panel.layout(Input("@app", "selectedDatasetId"))
+@panel.layout(State("@app", "selectedDatasetId"))
 def render_panel(
     ctx: Context,
     selected_dataset_id: str = "",
