@@ -35,7 +35,9 @@ export {
 export { type HostStore } from "@/lib/types/state/options";
 
 /////////////////////////////////////////////////////////////////////
-// Register standard Chartlets components
+// Register standard Chartlets components that can be rendered
+// by the Chartlets `Component` component.
+// Plugins may register their own components.
 
 import { registry } from "@/lib/component/Registry";
 
@@ -43,6 +45,7 @@ import { Box } from "@/lib/components/Box";
 import { Button } from "@/lib/components/Button";
 import { Checkbox } from "@/lib/components/Checkbox";
 import { CircularProgress } from "@/lib/components/CircularProgress";
+import { IconButton } from "@/lib/components/IconButton";
 import { Plot } from "@/lib/components/Plot";
 import { Select } from "@/lib/components/Select";
 import { Typography } from "@/lib/components/Typography";
@@ -51,6 +54,7 @@ registry.register("Box", Box);
 registry.register("Button", Button);
 registry.register("Checkbox", Checkbox);
 registry.register("CircularProgress", CircularProgress);
+registry.register("IconButton", IconButton);
 registry.register("Plot", Plot);
 registry.register("Select", Select);
 registry.register("Typography", Typography);

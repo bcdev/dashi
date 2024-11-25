@@ -29,6 +29,7 @@ export interface ComponentState {
   style?: CSSProperties;
   disabled?: boolean;
   label?: string;
+  color?: string;
 }
 
 export interface ContainerState extends ComponentState {
