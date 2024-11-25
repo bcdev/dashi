@@ -458,6 +458,48 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Extension">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chartlets.Extension.add" class="md-nav__link">
+    <span class="md-ellipsis">
+      add
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chartlets.Extension.add_contrib_point" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_contrib_point
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chartlets.Extension.get_contrib_point_names" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_contrib_point_names
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chartlets.Extension.to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      to_dict
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -552,7 +594,8 @@
     <div class="doc doc-contents first">
 
 
-        <p>A UI Extension.</p>
+        <p>An extension for a UI application that
+uses the Chartlets JS framework.</p>
 
 
 
@@ -566,6 +609,160 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="chartlets.Extension.add" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add a contribution to this extension.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>contribution</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="chartlets.contribution.Contribution" href="../contribution/#chartlets.Contribution">Contribution</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The contribution.
+Its type must be an instance of one of the
+registered contribution types.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="chartlets.Extension.add_contrib_point" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add_contrib_point</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">item_type</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add a contribution point.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>name</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the contribution point.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>item_type</code></td>
+            <td>
+                  <code>type[<a class="autorefs autorefs-internal" title="chartlets.contribution.Contribution" href="../contribution/#chartlets.Contribution">Contribution</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The type of items that can be added
+to the new contribution point.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="chartlets.Extension.get_contrib_point_names" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_contrib_point_names</span><span class="p">()</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Get names of all known contribution points added
+by the <code>add_contrib_point()</code> method.</p>
+<p>Returns: Tuple of registered contribution point names.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="chartlets.Extension.to_dict" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">to_dict</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Convert this extension into a JSON-serializable dictionary.</p>
+<p>Returns: A dictionary representing this extension.</p>
+
+    </div>
+
+</div>
 
 
 
