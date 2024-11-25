@@ -158,16 +158,17 @@ class FromDecoratorTest(unittest.TestCase):
     def test_decorator_args(self):
         with pytest.raises(
             TypeError,
-            match="arguments for decorator 'test' must be of"
-            " type Input, but got 'int'",
+            match=(
+                "arguments for decorator 'test' must be of type"
+                " Input, State, or Output, but got 'int'"
+            ),
         ):
             Callback.from_decorator("test", (13,), my_callback)
 
         with pytest.raises(
             TypeError,
             match=(
-                "arguments for decorator 'test' must be of type Input,"
-                " State, Output, AppInput, or AppOutput, but got 'int'"
+                "arguments for decorator 'test' must be of type State, but got 'int'"
             ),
         ):
             Callback.from_decorator("test", (13,), my_callback, states_only=True)

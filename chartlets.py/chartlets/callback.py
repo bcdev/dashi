@@ -57,7 +57,7 @@ class Callback:
                     f" must be of type Input, State, or Output,"
                     f" but got {arg.__class__.__name__!r}"
                 )
-            if not isinstance(arg, Output):
+            if isinstance(arg, Output):
                 outputs.append(arg)
             else:
                 inputs.append(arg)
