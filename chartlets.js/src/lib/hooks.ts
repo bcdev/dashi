@@ -49,6 +49,13 @@ export function useSignalListeners(
   onChange: ComponentChangeHandler,
 ): { [key: string]: SignalHandler } {
   /*
+       This is a partial representation of the parameter type from
+       SelectionParameter type from the `vega-lite` module. Since we are
+       only interested in extracting the handlers, the following
+       properties are required.
+     */
+  type SelectionParameter = { name: string; select: { on: string } };
+  /*
      Here, we create map of signals which will be then used to create the
      map of signal-listeners because not all params are event-listeners, and we
      need to identify them. Later in the code, we then see which handlers do we
@@ -60,7 +67,7 @@ export function useSignalListeners(
     if (!chart.params) return {};
     return chart.params
       .filter(
-        (param): param is { name: string; select: { on: string } } =>
+        (param): param is SelectionParameter =>
           isObject(param) &&
           param !== null &&
           "name" in param &&
