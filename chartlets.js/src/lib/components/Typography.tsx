@@ -1,17 +1,39 @@
 import MuiTypography from "@mui/material/Typography";
+import { type TypographyVariant } from "@mui/material";
 
-import type { TypographyState } from "@/lib/types/state/component";
-import { ComponentChildren } from "@/lib/components/ComponentChildren";
-import type { ComponentChangeHandler } from "@/lib";
+import type { ComponentState } from "@/lib/types/state/component";
+import type { ComponentProps } from "@/lib/component/Component";
+import { Children } from "@/lib/component/Children";
 
-export interface TypographyProps extends Omit<TypographyState, "type"> {
-  onChange: ComponentChangeHandler;
+interface TypographyState extends ComponentState {
+  align?: "right" | "left" | "center" | "inherit" | "justify";
+  gutterBottom?: boolean;
+  noWrap?: boolean;
+  variant?: TypographyVariant;
 }
 
-export function Typography({ id, style, children, onChange }: TypographyProps) {
+interface TypographyProps extends ComponentProps, TypographyState {}
+
+export function Typography({
+  id,
+  style,
+  align,
+  gutterBottom,
+  noWrap,
+  variant,
+  children: nodes,
+  onChange,
+}: TypographyProps) {
   return (
-    <MuiTypography id={id} style={style}>
-      <ComponentChildren nodes={children} onChange={onChange} />
+    <MuiTypography
+      id={id}
+      style={style}
+      align={align}
+      gutterBottom={gutterBottom}
+      noWrap={noWrap}
+      variant={variant}
+    >
+      <Children nodes={nodes} onChange={onChange} />
     </MuiTypography>
   );
 }

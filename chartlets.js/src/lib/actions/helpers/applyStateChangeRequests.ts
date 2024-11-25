@@ -12,12 +12,26 @@ import {
 import type { ContribPoint } from "@/lib/types/model/extension";
 import type { ContributionState } from "@/lib";
 import { updateArray } from "@/lib/utils/updateArray";
-import { getValue, normalizeObjPath, setValue } from "@/lib/utils/objPath";
+import {
+  formatObjPath,
+  getValue,
+  normalizeObjPath,
+  setValue,
+} from "@/lib/utils/objPath";
+import {
+  isMutableHostStore,
+  type MutableHostStore,
+} from "@/lib/types/state/options";
+import {
+  isHostChannel,
+  isComponentChannel,
+  isContainerChannel,
+} from "@/lib/types/model/channel";
 
 export function applyStateChangeRequests(
   stateChangeRequests: StateChangeRequest[],
 ) {
-  const { contributionsRecord } = store.getState();
+  const { configuration, contributionsRecord } = store.getState();
   const contributionsRecordNew = applyContributionChangeRequests(
     contributionsRecord,
     stateChangeRequests,
@@ -27,7 +41,10 @@ export function applyStateChangeRequests(
       contributionsRecord: contributionsRecordNew,
     });
   }
-  applyHostStateChanges(stateChangeRequests);
+  const { hostStore } = configuration;
+  if (isMutableHostStore(hostStore)) {
+    applyHostStateChanges(stateChangeRequests, hostStore);
+  }
 }
 
 // we export for testing only
@@ -40,14 +57,11 @@ export function applyContributionChangeRequests(
       const contribution = contributionsRecord[contribPoint][contribIndex];
       const container = applyStateChanges(
         contribution.container,
-        stateChanges.filter((stateChange) => stateChange.link === "container"),
+        stateChanges.filter(isContainerChannel),
       );
       const component = applyComponentStateChanges(
         contribution.component,
-        stateChanges.filter(
-          (stateChange) =>
-            !stateChange.link || stateChange.link === "component",
-        ),
+        stateChanges.filter(isComponentChannel),
       );
       if (
         container !== contribution.container ||
@@ -130,24 +144,17 @@ export function applyComponentStateChange(
   return component;
 }
 
-function applyHostStateChanges(stateChangeRequests: StateChangeRequest[]) {
-  const { configuration } = store.getState();
-  const { hostStore } = configuration;
-  if (hostStore) {
-    const hostStateOld = hostStore.getState();
-    let hostState: object | undefined = hostStateOld;
-    stateChangeRequests.forEach((stateChangeRequest) => {
-      hostState = applyStateChanges(
-        hostState,
-        stateChangeRequest.stateChanges.filter(
-          (stateChange) => stateChange.link === "app",
-        ),
-      );
+function applyHostStateChanges(
+  stateChangeRequests: StateChangeRequest[],
+  hostStore: MutableHostStore,
+) {
+  stateChangeRequests.forEach((stateChangeRequest) => {
+    stateChangeRequest.stateChanges.forEach((stateChange) => {
+      if (isHostChannel(stateChange)) {
+        hostStore.set(formatObjPath(stateChange.property), stateChange.value);
+      }
     });
-    if (hostState !== hostStateOld) {
-      hostStore.setState(hostState);
-    }
-  }
+  });
 }
 
 // we export for testing only

@@ -1,17 +1,27 @@
 import MuiBox from "@mui/material/Box";
 
-import { type BoxState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/state/event";
-import { ComponentChildren } from "./ComponentChildren";
+import type { ElementType } from "react";
+import type { ComponentState } from "@/lib/types/state/component";
+import type { ComponentProps } from "@/lib/component/Component";
+import { Children } from "@/lib/component/Children";
 
-export interface BoxProps extends Omit<BoxState, "type"> {
-  onChange: ComponentChangeHandler;
+interface BoxState extends ComponentState {
+  component?: ElementType<Element>;
 }
 
-export function Box({ id, style, children, onChange }: BoxProps) {
+interface BoxProps extends ComponentProps, BoxState {}
+
+export function Box({
+  id,
+  style,
+  color,
+  component,
+  children: nodes,
+  onChange,
+}: BoxProps) {
   return (
-    <MuiBox id={id} style={style}>
-      <ComponentChildren nodes={children} onChange={onChange} />
+    <MuiBox id={id} style={style} color={color} component={component || "div"}>
+      <Children nodes={nodes} onChange={onChange} />
     </MuiBox>
   );
 }

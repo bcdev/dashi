@@ -10,7 +10,7 @@ from chartlets.demo.context import Context
 panel = Panel(__name__, title="Panel B")
 
 
-@panel.layout(Input(property="selectedDatasetId", source="app"))
+@panel.layout(Input("@app", "selectedDatasetId"))
 def render_panel(
     ctx: Context,
     selected_dataset_id: str = "",
@@ -51,7 +51,7 @@ def render_panel(
 
 
 @panel.callback(
-    Input(property="selectedDatasetId", source="app"),
+    Input("@app", "selectedDatasetId"),
     Input("selected_variable_name"),
     Output("plot", "chart"),
 )
@@ -95,7 +95,7 @@ def make_figure(
 
 
 @panel.callback(
-    Input(property="selectedDatasetId", source="app"),
+    Input("@app", "selectedDatasetId"),
     Output("selected_variable_name", "options"),
     Output("selected_variable_name", "value"),
 )

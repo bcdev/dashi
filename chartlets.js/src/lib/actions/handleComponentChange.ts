@@ -23,7 +23,6 @@ export function handleComponentChange(
       contribIndex,
       stateChanges: [
         {
-          link: "component",
           id: changeEvent.id,
           property: changeEvent.property,
           value: changeEvent.value,
@@ -36,7 +35,9 @@ export function handleComponentChange(
     contribIndex,
     changeEvent,
   );
-  invokeCallbacks(callbackRequests);
+  if (callbackRequests && callbackRequests.length > 0) {
+    invokeCallbacks(callbackRequests);
+  }
 }
 
 /**
@@ -53,8 +54,7 @@ function getCallbackRequests(
   changeEvent: ComponentChangeEvent,
 ): CallbackRequest[] {
   const { configuration, contributionsRecord } = store.getState();
-  const { hostStore, getDerivedHostState } = configuration;
-  const hostState = hostStore?.getState();
+  const { hostStore } = configuration;
   const contributions = contributionsRecord[contribPoint];
   const contribution = contributions[contribIndex];
   const callbackRequests: CallbackRequest[] = [];
@@ -64,7 +64,8 @@ function getCallbackRequests(
       const inputIndex = inputs.findIndex(
         (input) =>
           !input.noTrigger &&
-          (!input.link || input.link === "component") &&
+          input.id &&
+          !input.id.startsWith("@") &&
           input.id === changeEvent.id &&
           equalObjPaths(input.property, changeEvent.property),
       );
@@ -75,12 +76,7 @@ function getCallbackRequests(
           contribIndex,
           callbackIndex,
           inputIndex,
-          inputValues: getInputValues(
-            inputs,
-            contribution,
-            hostState,
-            getDerivedHostState,
-          ),
+          inputValues: getInputValues(inputs, contribution, hostStore),
         });
       }
     }

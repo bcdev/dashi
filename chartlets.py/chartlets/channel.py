@@ -1,52 +1,52 @@
 from abc import ABC
-from typing import Any, Literal
+from typing import Any
 
 from .util.assertions import (
     assert_is_given,
     assert_is_instance_of,
-    assert_is_none,
     assert_is_one_of,
 )
 
 
-Link = Literal["component"] | Literal["container"] | Literal["app"]
-
-COMPONENT = ""
-"""Special property value that can be used 
-to refer to the entire component.
-"""
-
-
+# noinspection PyShadowingBuiltins
 class Channel(ABC):
     """Base class for `Input`, `State`, and `Output`.
     Instances are used as argument passed to
     the `layout` and `callback` decorators.
     """
 
-    # noinspection PyShadowingBuiltins
-    def __init__(
-        self,
-        link: Link | None = None,
-        id: str | None = None,
-        property: str | None = None,
-    ):
-        self.link = link
-        self.id = id
-        self.property = property
+    def __init__(self, id: str, property: str | None = None):
+        self.id, self.property = self._validate_params(id, property)
 
     def to_dict(self) -> dict[str, Any]:
-        d = {
-            k: v
-            for k, v in self.__dict__.items()
-            if not k.startswith("_") and v is not None
-        }
-        if self.no_trigger:
-            d |= dict(noTrigger=True)
-        return d
+        """Convert this channel into a JSON-serializable dictionary."""
+        if isinstance(self, State):
+            return dict(id=self.id, property=self.property, noTrigger=True)
+        else:
+            return dict(id=self.id, property=self.property)
 
-    @property
-    def no_trigger(self):
-        return isinstance(self, State)
+    def _validate_params(self, id_: Any, property: Any) -> tuple[str, str | None]:
+        assert_is_given("id", id_)
+        assert_is_instance_of("id", id_, str)
+        id: str = id_
+        if id.startswith("@"):
+            # Other states than component states
+            assert_is_one_of("id", id, ("@app", "@container"))
+            assert_is_given("property", property)
+            assert_is_instance_of("property", property, str)
+        else:
+            # Component state
+            if property is None:
+                # Default property value for components is "value"
+                property = "value"
+            elif isinstance(self, Output) and property == "":
+                # Outputs may have an empty property
+                pass
+            else:
+                # Components must have valid properties
+                assert_is_given("property", property)
+                assert_is_instance_of("property", property, str)
+        return id, property
 
 
 class Input(Channel):
@@ -60,27 +60,19 @@ class Input(Channel):
 
     Args:
         id:
-            Value of a component's "id" property.
-            Required, if `source` is `"component"` (the default).
-            Otherwise, it must not be passed.
+            Either the value of a component's `id` property,
+            or a special state of the form `"@<state>"`, e.g.,
+            `"@app"` or `@container`.
         property:
             Name of the property of a component or state.
             To address properties in nested objects or arrays
             use a dot (`.`) to separate property names and array
             indexes.
-        source: One of `"component"` (the default), `"container"`,
-            or `"app"`.
     """
 
     # noinspection PyShadowingBuiltins
-    def __init__(
-        self,
-        id: str | None = None,
-        property: str | None = None,
-        source: Link | None = None,
-    ):
-        link, id, property = _validate_input_params(source, id, property)
-        super().__init__(link=link, id=id, property=property)
+    def __init__(self, id: str, property: str | None = None):
+        super().__init__(id, property)
 
 
 class State(Input):
@@ -95,25 +87,19 @@ class State(Input):
 
     Args:
         id:
-            Value of a component's "id" property.
-            Used only if `source` is `"component"`.
+            Either the value of a component's `id` property,
+            or a special state of the form `"@<state>"`, e.g.,
+            `"@app"` or `@container`.
         property:
             Name of the property of a component or state.
             To address properties in nested objects or arrays
             use a dot (`.`) to separate property names and array
             indexes.
-        source: One of `"component"` (the default), `"container"`,
-            or `"app"`.
     """
 
     # noinspection PyShadowingBuiltins
-    def __init__(
-        self,
-        id: str | None = None,
-        property: str | None = None,
-        source: Link | None = None,
-    ):
-        super().__init__(id=id, property=property, source=source)
+    def __init__(self, id: str, property: str | None = None):
+        super().__init__(id, property)
 
 
 class Output(Channel):
@@ -127,75 +113,19 @@ class Output(Channel):
 
     Args:
         id:
-            Value of a component's "id" property.
-            Used only if `source` is `"component"`.
+            Either the value of a component's `id` property,
+            or a special state of the form `"@<state>"`, e.g.,
+            `"@app"` or `@container`.
         property:
             Name of the property of a component or state.
             To address properties in nested objects or arrays
             use a dot (`.`) to separate property names and array
             indexes.
-            If `target` is `"component"` the empty string can be used
-            to refer to entire components.
-        target: One of `"component"` (the default), `"container"`,
-            or `"app"`.
+            If `id` identifies a component, then `property` may
+            be passed an empty string to replace components.
+            and the output's value must be a component or `None`.
     """
 
     # noinspection PyShadowingBuiltins
-    def __init__(
-        self,
-        id: str | None = None,
-        property: str | None = None,
-        target: Link | None = None,
-    ):
-        target, id, property = _validate_output_params(target, id, property)
-        super().__init__(link=target, id=id, property=property)
-
-
-NoneType = type(None)
-
-
-# noinspection PyShadowingBuiltins
-def _validate_input_params(
-    source: Link | None, id: str | None, property: str | None
-) -> tuple[Link, str | None, str | None]:
-    return _validate_params("source", source, id, property)
-
-
-# noinspection PyShadowingBuiltins
-def _validate_output_params(
-    target: Link | None, id: str | None, property: str | None
-) -> tuple[Link, str | None, str | None]:
-    return _validate_params("target", target, id, property, output=True)
-
-
-# noinspection PyShadowingBuiltins
-def _validate_params(
-    link_name: str,
-    link: Link | None,
-    id: str | None,
-    property: str | None,
-    output: bool = False,
-) -> tuple[Link, str | None, str | None]:
-    if link is None or link == "component":
-        # Component states require an id
-        # and property which defaults to "value"
-        link = "component"
-        assert_is_given("id", id)
-        assert_is_instance_of("id", id, str)
-        assert_is_instance_of("property", id, (str, NoneType))
-        if property is None:
-            # property, if not provided, defaults to "value"
-            property = "value"
-        elif not output:
-            # outputs are allowed to have an empty property value
-            assert_is_given("property", property)
-    else:
-        # Other states require a link and property
-        # and should have no id
-        assert_is_given(link_name, link)
-        assert_is_one_of(link_name, link, ("container", "app"))
-        assert_is_given("property", property)
-        assert_is_instance_of("property", property, str)
-        assert_is_none("id", id)
-    # noinspection PyTypeChecker
-    return link, id, property
+    def __init__(self, id: str, property: str | None = None):
+        super().__init__(id, property)

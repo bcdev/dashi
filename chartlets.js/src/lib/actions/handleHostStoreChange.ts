@@ -7,73 +7,65 @@ import type {
 } from "@/lib/types/model/callback";
 import type { Input } from "@/lib/types/model/channel";
 import { getInputValues } from "@/lib/actions/helpers/getInputValues";
-import {
-  getValue,
-  type ObjPath,
-  normalizeObjPath,
-  formatObjPath,
-} from "@/lib/utils/objPath";
+import { formatObjPath } from "@/lib/utils/objPath";
 import { invokeCallbacks } from "@/lib/actions/helpers/invokeCallbacks";
 import type { ContributionState } from "@/lib/types/state/contribution";
-import type { GetDerivedState } from "@/lib/types/state/store";
+import type { HostStore } from "@/lib/types/state/options";
 
 /**
  * A reference to a property of an input of a callback of a contribution.
  */
 export interface PropertyRef extends ContribRef, CallbackRef, InputRef {
-  /** The property name as path. */
-  propertyPath: ObjPath;
+  /** The property. */
+  property: string;
 }
 
-export function handleHostStoreChange<S extends object = object>(
-  currState: S,
-  prevState: S,
-) {
-  if (store.getState().extensions.length === 0) {
-    // Exit immediately if there are no extensions (yet)
+export function handleHostStoreChange() {
+  const { extensions, configuration, contributionsRecord } = store.getState();
+  const { hostStore } = configuration;
+  if (!hostStore || extensions.length === 0) {
+    // Exit if no host store configured or
+    // there are no extensions (yet)
     return;
   }
-  const { configuration, contributionsRecord } = store.getState();
-  const { getDerivedHostState } = configuration;
+  const propertyRefs = getHostStorePropertyRefs();
+  if (!propertyRefs || propertyRefs.length === 0) {
+    // Exit if there are is nothing to be changed
+    return;
+  }
   const callbackRequests = getCallbackRequests(
+    propertyRefs,
     contributionsRecord,
-    currState,
-    prevState,
-    getDerivedHostState,
+    hostStore,
   );
-  invokeCallbacks(callbackRequests);
+  if (callbackRequests && callbackRequests.length > 0) {
+    invokeCallbacks(callbackRequests);
+  }
 }
 
-function getCallbackRequests<S extends object = object>(
+function getCallbackRequests(
+  propertyRefs: PropertyRef[],
   contributionsRecord: Record<string, ContributionState[]>,
-  hostState: S,
-  prevHostState: S,
-  getDerivedHostState: GetDerivedState<S> | undefined,
+  hostStore: HostStore,
 ): CallbackRequest[] {
-  return getHostStorePropertyRefs()
-    .filter((propertyRef) =>
-      hasPropertyChanged(
-        propertyRef.propertyPath,
-        hostState,
-        prevHostState,
-        getDerivedHostState,
-      ),
-    )
-    .map((propertyRef) => {
-      const contributions = contributionsRecord[propertyRef.contribPoint];
-      const contribution = contributions[propertyRef.contribIndex];
-      const callback = contribution.callbacks![propertyRef.callbackIndex];
-      const inputValues = getInputValues(
-        callback.inputs!,
-        contribution,
-        hostState,
-        getDerivedHostState as GetDerivedState,
-      );
-      return { ...propertyRef, inputValues };
-    });
+  return propertyRefs.map((propertyRef) => {
+    const contributions = contributionsRecord[propertyRef.contribPoint];
+    const contribution = contributions[propertyRef.contribIndex];
+    const callback = contribution.callbacks![propertyRef.callbackIndex];
+    const inputValues = getInputValues(
+      callback.inputs!,
+      contribution,
+      hostStore,
+    );
+    return { ...propertyRef, inputValues };
+  });
 }
 
-// const getHostStorePropertyRefs = memoizeOne(_getHostStorePropertyRefs);
+// TODO: use a memoized selector to get hostStorePropertyRefs
+// Note that this will only be effective and once we split the
+// static contribution infos and dynamic contribution states.
+// The hostStorePropertyRefs only depend on the static
+// contribution infos.
 
 /**
  * Get the static list of host state property references for all contributions.
@@ -87,13 +79,13 @@ function getHostStorePropertyRefs(): PropertyRef[] {
       (contribution.callbacks || []).forEach(
         (callback, callbackIndex) =>
           (callback.inputs || []).forEach((input, inputIndex) => {
-            if (!input.noTrigger && input.link === "app") {
+            if (!input.noTrigger && input.id === "@app" && input.property) {
               propertyRefs.push({
                 contribPoint,
                 contribIndex,
                 callbackIndex,
                 inputIndex,
-                propertyPath: normalizeObjPath(input.property!),
+                property: formatObjPath(input.property),
               });
             }
           }),
@@ -102,26 +94,4 @@ function getHostStorePropertyRefs(): PropertyRef[] {
     });
   });
   return propertyRefs;
-}
-
-function hasPropertyChanged<S extends object = object>(
-  propertyPath: ObjPath,
-  currState: S,
-  prevState: S,
-  getDerivedHostState: GetDerivedState<S> | undefined,
-): boolean {
-  const currValue = getValue(currState, propertyPath);
-  const prevValue = getValue(prevState, propertyPath);
-  if (
-    currValue === undefined &&
-    prevValue === undefined &&
-    getDerivedHostState !== undefined
-  ) {
-    const propertyName = formatObjPath(propertyPath);
-    return !Object.is(
-      getDerivedHostState(currState, propertyName),
-      getDerivedHostState(prevState, propertyName),
-    );
-  }
-  return !Object.is(currValue, prevValue);
 }

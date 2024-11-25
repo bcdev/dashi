@@ -43,7 +43,8 @@ export function makeContributionsHook<S extends object = object>(
 }
 
 export function useSignalListeners(
-  chart: TopLevelSpec | null,
+  chart: TopLevelSpec | null | undefined,
+  type: string,
   id: string | undefined,
   onChange: ComponentChangeHandler,
 ): { [key: string]: SignalHandler } {
@@ -81,7 +82,7 @@ export function useSignalListeners(
     (signalName: string, signalValue: unknown) => {
       if (id) {
         return onChange({
-          componentType: "Plot",
+          componentType: type,
           id: id,
           property: signalName,
           value: signalValue,

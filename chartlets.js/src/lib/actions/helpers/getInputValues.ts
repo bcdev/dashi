@@ -1,45 +1,48 @@
-import type { Input } from "@/lib/types/model/channel";
+import {
+  type Input,
+  isComponentChannel,
+  isContainerChannel,
+  isHostChannel,
+} from "@/lib/types/model/channel";
 import type { ContributionState } from "@/lib/types/state/contribution";
 import {
   type ComponentState,
   isComponentState,
   isContainerState,
 } from "@/lib/types/state/component";
-import { formatObjPath, getValue, normalizeObjPath } from "@/lib/utils/objPath";
+import { formatObjPath, getValue, type ObjPathLike } from "@/lib/utils/objPath";
 import { isObject } from "@/lib/utils/isObject";
-import type { GetDerivedState } from "@/lib/types/state/store";
+import type { HostStore } from "@/lib/types/state/options";
 
-export function getInputValues<S extends object = object>(
+export function getInputValues(
   inputs: Input[],
   contributionState: ContributionState,
-  hostState?: S | undefined,
-  getDerivedHostState?: GetDerivedState,
+  hostStore?: HostStore,
 ): unknown[] {
   return inputs.map((input) =>
-    getInputValue(input, contributionState, hostState, getDerivedHostState),
+    getInputValue(input, contributionState, hostStore),
   );
 }
 
 const noValue = {};
 
-export function getInputValue<S extends object = object>(
+export function getInputValue(
   input: Input,
   contributionState: ContributionState,
-  hostState?: S,
-  getDerivedHostState?: GetDerivedState<S>,
+  hostStore?: HostStore,
 ): unknown {
   let inputValue: unknown = undefined;
-  const dataSource = input.link || "component";
-  if (dataSource === "component" && contributionState.component) {
-    inputValue = getInputValueFromComponent(input, contributionState.component);
-  } else if (dataSource === "container" && contributionState.container) {
-    inputValue = getInputValueFromState(input, contributionState.container);
-  } else if (dataSource === "app" && hostState) {
-    inputValue = getInputValueFromState(
-      input,
-      hostState,
-      getDerivedHostState as GetDerivedState,
+  const { id, property } = input;
+  if (isComponentChannel(input) && contributionState.component) {
+    inputValue = getInputValueFromComponent(
+      contributionState.component,
+      id,
+      property,
     );
+  } else if (isContainerChannel(input) && contributionState.container) {
+    inputValue = getInputValueFromState(contributionState.container, property);
+  } else if (isHostChannel(input) && hostStore) {
+    inputValue = getInputValueFromHostStore(hostStore, property);
   } else {
     console.warn(`input with unknown data source:`, input);
   }
@@ -53,16 +56,17 @@ export function getInputValue<S extends object = object>(
 
 // we export for testing only
 export function getInputValueFromComponent(
-  input: Input,
   componentState: ComponentState,
+  id: string,
+  property: ObjPathLike,
 ): unknown {
-  if (componentState.id === input.id) {
-    return getValue(componentState, input.property);
+  if (componentState.id === id) {
+    return getValue(componentState, property);
   } else if (isContainerState(componentState)) {
     for (let i = 0; i < componentState.children.length; i++) {
       const item = componentState.children[i];
       if (isComponentState(item)) {
-        const itemValue = getInputValueFromComponent(input, item);
+        const itemValue = getInputValueFromComponent(item, id, property);
         if (itemValue !== noValue) {
           return itemValue;
         }
@@ -74,21 +78,16 @@ export function getInputValueFromComponent(
 
 // we export for testing only
 export function getInputValueFromState(
-  input: Input,
   state: object | undefined,
-  getDerivedState?: GetDerivedState,
+  property: ObjPathLike,
 ): unknown {
-  let inputValue: unknown = state;
-  if (input.id && isObject(inputValue)) {
-    inputValue = inputValue[input.id];
-  }
-  if (isObject(inputValue)) {
-    const state = inputValue;
-    const property = normalizeObjPath(input.property);
-    inputValue = getValue(state, property);
-    if (inputValue === undefined && getDerivedState !== undefined) {
-      inputValue = getDerivedState(state, formatObjPath(input.property));
-    }
-  }
-  return inputValue;
+  return isObject(state) ? getValue(state, property) : undefined;
+}
+
+// we export for testing only
+export function getInputValueFromHostStore(
+  hostStore: HostStore,
+  property: ObjPathLike,
+): unknown {
+  return hostStore.get(formatObjPath(property));
 }

@@ -1,15 +1,20 @@
 import { VegaLite } from "react-vega";
 
-import { type PlotState } from "@/lib/types/state/component";
-import { type ComponentChangeHandler } from "@/lib/types/state/event";
+import { type ComponentState } from "@/lib/types/state/component";
+import type { ComponentProps } from "@/lib/component/Component";
 import { useSignalListeners } from "@/lib/hooks";
+import type { TopLevelSpec } from "vega-lite";
 
-export interface PlotProps extends Omit<PlotState, "type"> {
-  onChange: ComponentChangeHandler;
+interface PlotState extends ComponentState {
+  chart?:
+    | TopLevelSpec // This is the vega-lite specification type
+    | null;
 }
 
-export function Plot({ id, style, chart, onChange }: PlotProps) {
-  const signalListeners = useSignalListeners(chart, id, onChange);
+interface PlotProps extends ComponentProps, PlotState {}
+
+export function Plot({ type, id, style, chart, onChange }: PlotProps) {
+  const signalListeners = useSignalListeners(chart, type, id, onChange);
 
   if (!chart) {
     return <div id={id} style={style} />;

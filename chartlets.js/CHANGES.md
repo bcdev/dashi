@@ -1,4 +1,27 @@
-## Version 0.0.23 (in development)
+## Version 0.0.27 (from 2024/11/25)
+
+* Added component `IconButton` and enhanced other components' attributes.
+
+## Version 0.0.26 (from 2024/11/23)
+
+* Channels such as `Input`, `State`, `Output` no longer have a `link` property.
+  Instead, we use a special `id` format, namely `"@app"` and `@container`
+  to address states other than components. (#52)
+
+## Version 0.0.25 (from 2024/11/23)
+
+* `Registry.register()` now requires the `type`
+  to be passed as 1st argument because `component.name` will
+  be a mangled name in most cases.
+
+## Version 0.0.24 (from 2024/11/23)
+
+* Exporting required `HostStore` type.
+
+## Version 0.0.23 (from 2024/11/23)
+
+* Introduced new interface `HostState` that applications may implement
+  to provide computed properties, i.e., a derived state. (#43)
 
 * Replacing entire components if a related component `StateChange` 
   has an empty `property`. (#38)

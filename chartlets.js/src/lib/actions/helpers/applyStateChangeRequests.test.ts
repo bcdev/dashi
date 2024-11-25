@@ -1,23 +1,19 @@
 import { describe, it, expect } from "vitest";
 
+import { type ComponentState } from "@/lib";
 import { type ContribPoint } from "@/lib/types/model/extension";
 import { type StateChangeRequest } from "@/lib/types/model/callback";
-import {
-  type BoxState,
-  type ComponentState,
-  type PlotState,
-} from "@/lib/types/state/component";
 import { type ContributionState } from "@/lib/types/state/contribution";
 import {
   applyComponentStateChange,
   applyContributionChangeRequests,
 } from "./applyStateChangeRequests";
 
-const componentTree: ComponentState = {
+const componentTree = {
   type: "Box",
   id: "b1",
   children: [
-    { type: "Plot", id: "p1", chart: null } as PlotState,
+    { type: "Plot", id: "p1", chart: null },
     {
       type: "Box",
       id: "b2",
@@ -47,7 +43,6 @@ describe("Test that applyContributionChangeRequests()", () => {
     contribIndex: 0,
     stateChanges: [
       {
-        link: "component",
         id: "dd1",
         property: "value",
         value: 14,
@@ -60,7 +55,6 @@ describe("Test that applyContributionChangeRequests()", () => {
     contribIndex: 0,
     stateChanges: [
       {
-        link: "component",
         id: "dd1",
         property: "value",
         value: 13,
@@ -92,7 +86,6 @@ describe("Test that applyContributionChangeRequests()", () => {
 describe("Test that applyComponentStateChange()", () => {
   it("changes state if values are different", () => {
     const newState = applyComponentStateChange(componentTree, {
-      link: "component",
       id: "cb1",
       property: "value",
       value: false,
@@ -106,7 +99,6 @@ describe("Test that applyComponentStateChange()", () => {
 
   it("doesn't change the state if value stays the same", () => {
     const newState = applyComponentStateChange(componentTree, {
-      link: "component",
       id: "cb1",
       property: "value",
       value: true,
@@ -115,13 +107,12 @@ describe("Test that applyComponentStateChange()", () => {
   });
 
   it("replaces state if property is empty string", () => {
-    const value: BoxState = {
+    const value = {
       type: "Box",
       id: "b1",
       children: ["Hello", "World"],
     };
     const newState = applyComponentStateChange(componentTree, {
-      link: "component",
       id: "b1",
       property: "",
       value,
