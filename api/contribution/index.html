@@ -506,6 +506,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Channel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chartlets.Channel.to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      to_dict
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -668,6 +683,7 @@ contribution when it is rendered for the first time.</p>
           <tr class="doc-section-item">
             <td><code>initial_state</code></td>
             <td>
+                  <code><span title="typing.Any">Any</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -740,7 +756,7 @@ by the <code>Output</code> arguments passed to the decorator.</p>
           <tr class="doc-section-item">
             <td><code>args</code></td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="chartlets.channel.Channel" href="#chartlets.Channel">Channel</a></code>
+                  <code><a class="autorefs autorefs-internal" title="chartlets.channel.Input" href="#chartlets.Input">Input</a> | <a class="autorefs autorefs-internal" title="chartlets.channel.State" href="#chartlets.State">State</a> | <a class="autorefs autorefs-internal" title="chartlets.channel.Output" href="#chartlets.Output">Output</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -807,9 +823,8 @@ context that is used to allow for access server-side
 configuration and resources. The parameter should be
 called <code>ctx</code>.</p>
 <p>Other parameters of the decorated function are user-defined
-and must have a corresponding <code>chartlets.Input</code> or
-<code>chartlets.State</code> arguments in the <code>layout</code> decorator in the
-same order.</p>
+and must have a corresponding <code>chartlets.State</code> arguments
+in the <code>layout</code> decorator in the same order.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -826,10 +841,11 @@ same order.</p>
           <tr class="doc-section-item">
             <td><code>args</code></td>
             <td>
+                  <code><a class="autorefs autorefs-internal" title="chartlets.channel.State" href="#chartlets.State">State</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p><code>chartlets.Input</code> or <code>chartlets.State</code> objects that
+                <p><code>chartlets.State</code> objects that
 define the source of the value for the corresponding
 parameter of the decorated function. Optional.</p>
               </div>
@@ -956,16 +972,17 @@ value is read. According state changes trigger callback invocation.</p>
           <tr class="doc-section-item">
             <td><code>id</code></td>
             <td>
-                  <code>str | None</code>
+                  <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Value of a component's "id" property.
-Used only if <code>source</code> is <code>"component"</code>.</p>
+                <p>Either the value of a component's <code>id</code> property,
+or a special state of the form <code>"@&lt;state&gt;"</code>, e.g.,
+<code>"@app"</code> or <code>@container</code>.</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                <em>required</em>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -979,21 +996,6 @@ Used only if <code>source</code> is <code>"component"</code>.</p>
 To address properties in nested objects or arrays
 use a dot (<code>.</code>) to separate property names and array
 indexes.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>source</code></td>
-            <td>
-                  <code><span title="chartlets.channel.Link">Link</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>One of <code>"component"</code> (the default), <code>"container"</code>,
-or <code>"app"</code>.</p>
               </div>
             </td>
             <td>
@@ -1046,7 +1048,7 @@ layout and callback functions.
 <code>layout</code> and <code>callback</code> decorators.</p>
 <p>Just like an <code>Input</code>, a <code>State</code> describes from which property in which state
 a parameter value is read, but according state changes
-will <em><em>not</em>Ü</em> trigger callback invocation.</p>
+will *<em>not</em> trigger callback invocation.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1063,16 +1065,17 @@ will <em><em>not</em>Ü</em> trigger callback invocation.</p>
           <tr class="doc-section-item">
             <td><code>id</code></td>
             <td>
-                  <code>str | None</code>
+                  <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Value of a component's "id" property.
-Used only if <code>source</code> is <code>"component"</code>.</p>
+                <p>Either the value of a component's <code>id</code> property,
+or a special state of the form <code>"@&lt;state&gt;"</code>, e.g.,
+<code>"@app"</code> or <code>@container</code>.</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                <em>required</em>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1086,21 +1089,6 @@ Used only if <code>source</code> is <code>"component"</code>.</p>
 To address properties in nested objects or arrays
 use a dot (<code>.</code>) to separate property names and array
 indexes.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>source</code></td>
-            <td>
-                  <code><span title="chartlets.channel.Link">Link</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>One of <code>"component"</code> (the default), <code>"container"</code>,
-or <code>"app"</code>.</p>
               </div>
             </td>
             <td>
@@ -1169,16 +1157,17 @@ updated from the returned callback value.</p>
           <tr class="doc-section-item">
             <td><code>id</code></td>
             <td>
-                  <code>str | None</code>
+                  <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Value of a component's "id" property.
-Used only if <code>source</code> is <code>"component"</code>.</p>
+                <p>Either the value of a component's <code>id</code> property,
+or a special state of the form <code>"@&lt;state&gt;"</code>, e.g.,
+<code>"@app"</code> or <code>@container</code>.</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                <em>required</em>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1191,22 +1180,10 @@ Used only if <code>source</code> is <code>"component"</code>.</p>
                 <p>Name of the property of a component or state.
 To address properties in nested objects or arrays
 use a dot (<code>.</code>) to separate property names and array
-indexes.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>target</code></td>
-            <td>
-                  <code><span title="chartlets.channel.Link">Link</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>One of <code>"component"</code> (the default), <code>"container"</code>,
-or <code>"app"</code>.</p>
+indexes.
+If <code>id</code> identifies a component, then <code>property</code> may
+be passed an empty string to replace components.
+and the output's value must be a component or <code>None</code>.</p>
               </div>
             </td>
             <td>
@@ -1269,6 +1246,23 @@ the <code>layout</code> and <code>callback</code> decorators.</p>
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="chartlets.Channel.to_dict" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">to_dict</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Convert this channel into a JSON-serializable dictionary.</p>
+
+    </div>
+
+</div>
 
 
 
