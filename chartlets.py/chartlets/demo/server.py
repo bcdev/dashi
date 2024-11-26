@@ -19,16 +19,18 @@ from chartlets.demo.context import Context
 from chartlets.demo.contribs import Panel
 from chartlets.demo.utils import NumpyJSONEncoder
 
-DASHI_CONTEXT_KEY = "chartlets.context"
 
 # This would be done by a xcube server extension
 Extension.add_contrib_point("panels", Panel)
 
 
+_CONTEXT_KEY = "chartlets.context"
+
+
 class DashiHandler(tornado.web.RequestHandler):
     @property
     def ext_ctx(self) -> ExtensionContext:
-        return self.settings[DASHI_CONTEXT_KEY]
+        return self.settings[_CONTEXT_KEY]
 
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
@@ -97,7 +99,7 @@ def print_usage(app, port):
     print(f"Listening on {url}...")
     print(f"API:")
     print(f"- {url}/chartlets/contributions")
-    ext_ctx: ExtensionContext = app.settings[DASHI_CONTEXT_KEY]
+    ext_ctx: ExtensionContext = app.settings[_CONTEXT_KEY]
     for contrib_point_name, contributions in ext_ctx.contributions.items():
         for i in range(len(contributions)):
             print(f"- {url}/chartlets/layout/{contrib_point_name}/{i}")
@@ -120,7 +122,7 @@ def make_app():
 
     # Load extensions
     ext_ctx = ExtensionContext.load(Context(), server_config.get("extensions", []))
-    app.settings[DASHI_CONTEXT_KEY] = ext_ctx
+    app.settings[_CONTEXT_KEY] = ext_ctx
 
     return app
 

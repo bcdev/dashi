@@ -1,3 +1,7 @@
+## Version 0.0.28 (from 2024/11/26)
+
+* Updated docs.
+
 ## Version 0.0.27 (from 2024/11/25)
 
 * Added component `IconButton` and enhanced other components' attributes.
