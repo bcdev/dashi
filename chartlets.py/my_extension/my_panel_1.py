@@ -1,6 +1,11 @@
-import altair as alt
+import copy
+from types import NoneType
+from typing import Any
 
-from chartlets import Component, Input, Output
+import altair as alt
+import pandas as pd
+
+from chartlets import Component, Input, Output, State
 from chartlets.components import Plot, Box, Select
 from chartlets.demo.contribs import Panel
 from chartlets.demo.context import Context
@@ -60,7 +65,7 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     # Create another parameter to handle the click events and send the data as
     # specified in the fields
     click_param = alt.selection_point(
-        on="click", name="onClick", fields=["x", variable_name]
+        on="click", name="points", fields=["x", variable_name]
     )
     # Create a chart type using mark_* where * could be any kind of chart
     # supported by Vega. We can add properties and parameters as shown below.
@@ -79,5 +84,46 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
         .properties(width=290, height=300, title="Vega charts")
         .add_params(corner_var, click_param)
     )
-
     return chart
+
+
+@panel.callback(
+    Input("plot", property="points"),
+    State("plot", "chart.encoding"),
+    Output("plot", "chart.encoding.color"),
+)
+def get_click_event_points(
+    ctx: Context, points: dict[str, Any], encoding: dict[str, Any]
+) -> dict[str, Any]:
+    """
+    This callback function shows how we can use the event handlers output
+    (property="points") which was defined in the `make_figure` callback
+    function as a `on='click'` handler. Here, we access the variables as
+    defined in the `fields` argument when creating the `click_param` parameter.
+
+    Based on the click event, the user can access the point that was clicked.
+    The function below extracts the points and changes the color of the bar
+    that was clicked.
+
+    """
+    if points:
+        conditions = []
+        for field, values in points.items():
+            if field != "vlPoint":
+                field_type = encoding.get(field, {}).get("type", "")
+                for value in values:
+                    if field_type == "nominal":
+                        conditions.append(f"datum.{field} === '{value}'")
+                    else:
+                        conditions.append(f"datum.{field} === {value}")
+
+        condition_expr = " && ".join(conditions)
+
+        return {
+            "condition": {
+                "test": condition_expr,
+                # Highlight color when the condition is true
+                "value": "orange",
+            },
+            "value": "steelblue",  # Default color
+        }

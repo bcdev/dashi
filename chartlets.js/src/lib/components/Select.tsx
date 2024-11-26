@@ -5,6 +5,7 @@ import MuiSelect, { type SelectChangeEvent } from "@mui/material/Select";
 
 import { type ComponentState } from "@/lib/types/state/component";
 import type { ComponentProps } from "@/lib/component/Component";
+import { isString } from "@/lib/utils/isString";
 
 export type SelectOption =
   | string
@@ -70,7 +71,7 @@ export function Select({
 function normalizeSelectOption(
   option: SelectOption,
 ): [string | number, string] {
-  if (typeof option === "string") {
+  if (isString(option)) {
     return [option, option];
   } else if (typeof option === "number") {
     return [option, option.toString()];

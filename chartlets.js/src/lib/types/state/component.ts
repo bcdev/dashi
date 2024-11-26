@@ -1,5 +1,6 @@
 import { type CSSProperties } from "react";
 import { isObject } from "@/lib/utils/isObject";
+import { isString } from "@/lib/utils/isString";
 
 export type ComponentType =
   | "Box"
@@ -37,7 +38,7 @@ export interface ContainerState extends ComponentState {
 }
 
 export function isComponentState(object: unknown): object is ComponentState {
-  return isObject(object) && typeof object.type === "string";
+  return isObject(object) && isString(object.type);
 }
 
 export function isContainerState(object: unknown): object is ContainerState {

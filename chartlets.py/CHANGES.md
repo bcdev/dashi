@@ -1,7 +1,9 @@
-## Version 0.0.x (in development)
+## Version 0.0.29 (from 2024/11/26)
 
-* Fixed a bug that prevent using annotations of type `dict` or `dict[str, T]`.
+* Fixed a bug that prevents using annotations of type `dict` or `dict[str, T]`.
   in callback functions.
+* Introduced a callback function in `my_panel.py` to handle click events. 
+  Demonstrates how to dynamically change the color of a clicked bar.
 
 
 ## Version 0.0.28 (from 2024/11/26)
