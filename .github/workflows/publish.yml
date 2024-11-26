@@ -22,11 +22,13 @@ jobs:
         
     - name: Install dependencies
       run: |
+        cd chartlets.py 
         python -m pip install --upgrade pip
         pip install .[dev]
         
     - name: Lint with flake8
       run: |
+        cd chartlets.py 
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
@@ -34,6 +36,7 @@ jobs:
         
     - name: Test with pytest
       run: |
+        cd chartlets.py 
         pytest --cov=chartlets
         
     - name: Upload coverage reports to Codecov
@@ -56,15 +59,18 @@ jobs:
         
     - name: Install dependencies
       run: |
+        cd chartlets.py 
         python -m pip install --upgrade pip
         pip install build
         
     - name: Build package
       run: |
+        cd chartlets.py 
         python -m build
         
     - name: Publish to PyPI
       run: |
+        cd chartlets.py 
         pip install twine
         python -m twine upload --username __token__ --password ${{ secrets.PYPI_API_TOKEN }} dist/*
 
@@ -84,10 +90,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
-      - run: npm run test
+      - run: |
+            cd chartlets.js
+            npm ci
+      - run: |
+            cd chartlets.js
+            npm run lint
+      - run: | 
+            cd chartlets.js
+            npm run build
+      - run: |
+            cd chartlets.js
+            npm run test
   
   npm-Deploy:
     name: Publish TS-React Package to npmjs
@@ -102,8 +116,14 @@ jobs:
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm run build
-      - run: npm publish --access public
+      - run: |
+            cd chartlets.js
+            npm ci
+      - run: |
+            cd chartlets.js
+            npm run build
+      - run: |
+            cd chartlets.js
+            npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
