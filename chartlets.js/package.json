@@ -1,6 +1,6 @@
 {
   "name": "chartlets",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
   "files": [
