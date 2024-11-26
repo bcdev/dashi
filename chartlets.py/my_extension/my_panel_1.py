@@ -1,5 +1,6 @@
 import copy
 from types import NoneType
+from typing import Any
 
 import altair as alt
 import pandas as pd
@@ -91,7 +92,9 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     State("plot", "chart.encoding"),
     Output("plot", "chart.encoding.color"),
 )
-def get_click_event_points(ctx: Context, points: dict, encoding: dict) -> dict:
+def get_click_event_points(
+    ctx: Context, points: dict[str, Any], encoding: dict[str, Any]
+) -> dict[str, Any]:
     """
     This callback function shows how we can use the event handlers output
     (property="points") which was defined in the `make_figure` callback
@@ -113,10 +116,9 @@ def get_click_event_points(ctx: Context, points: dict, encoding: dict) -> dict:
                         conditions.append(f"datum.{field} === '{value}'")
                     else:
                         conditions.append(f"datum.{field} === {value}")
-                    conditions.append(f"datum.{field} === {repr(value)}")
 
         condition_expr = " && ".join(conditions)
-
+        print(condition_expr)
         return {
             "condition": {
                 "test": condition_expr,
