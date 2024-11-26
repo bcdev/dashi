@@ -87,9 +87,11 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
 
 
 @panel.callback(
-    Input("plot", property="points"), State("plot", "chart"), Output("plot", "chart")
+    Input("plot", property="points"),
+    State("plot", "chart.encoding"),
+    Output("plot", "chart.encoding.color"),
 )
-def get_click_event_points(ctx: Context, points, plot) -> alt.Chart:
+def get_click_event_points(ctx: Context, points: dict, encoding: dict) -> dict:
     """
     This callback function shows how we can use the event handlers output
     (property="points") which was defined in the `make_figure` callback
@@ -105,8 +107,8 @@ def get_click_event_points(ctx: Context, points, plot) -> alt.Chart:
         conditions = []
         for field, values in points.items():
             if field != "vlPoint":
+                field_type = encoding.get(field, {}).get("type", "")
                 for value in values:
-                    field_type = plot["encoding"].get(field, {}).get("type", "")
                     if field_type == "nominal":
                         conditions.append(f"datum.{field} === '{value}'")
                     else:
@@ -115,7 +117,7 @@ def get_click_event_points(ctx: Context, points, plot) -> alt.Chart:
 
         condition_expr = " && ".join(conditions)
 
-        plot["encoding"]["color"] = {
+        return {
             "condition": {
                 "test": condition_expr,
                 # Highlight color when the condition is true
@@ -123,5 +125,3 @@ def get_click_event_points(ctx: Context, points, plot) -> alt.Chart:
             },
             "value": "steelblue",  # Default color
         }
-
-    return alt.Chart.from_dict(plot)
