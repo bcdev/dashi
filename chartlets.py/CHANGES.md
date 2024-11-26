@@ -1,3 +1,9 @@
+## Version 0.0.x (in development)
+
+* Fixed a bug that prevent using annotations of type `dict` or `dict[str, T]`.
+  in callback functions.
+
+
 ## Version 0.0.28 (from 2024/11/26)
 
 * Updated docs.

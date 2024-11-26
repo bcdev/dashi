@@ -123,9 +123,7 @@ class Contribution(ABC):
 
         def decorator(function: Callable) -> Callable:
             self.callbacks.append(
-                Callback.from_decorator(
-                    "callback", args, function, states_only=False
-                )
+                Callback.from_decorator("callback", args, function, states_only=False)
             )
             return function
 

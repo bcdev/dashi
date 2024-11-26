@@ -1,8 +1,10 @@
 import unittest
+from typing import Any
 
 import pytest
 
-from chartlets.callback import Input, Callback, Output
+from chartlets.channel import Input, State, Output
+from chartlets.callback import Callback
 
 
 # noinspection PyUnusedLocal
@@ -13,6 +15,7 @@ def my_callback(
     b: str | int = "",
     c: bool | None = False,
     d: list[str] = (),
+    e: dict[str, Any] = (),
 ) -> str:
     return f"{a}-{b}-{c}-{d}"
 
@@ -31,7 +34,9 @@ class CallbackTest(unittest.TestCase):
 
     def test_to_dict_with_no_outputs(self):
         callback = Callback(
-            my_callback, [Input("a"), Input("b"), Input("c"), Input("d")], []
+            my_callback,
+            [Input("a"), Input("b"), Input("c"), Input("d"), State("e")],
+            [],
         )
         d = callback.to_dict()
         # print(json.dumps(d, indent=2))
@@ -44,38 +49,32 @@ class CallbackTest(unittest.TestCase):
                         {
                             "default": "",
                             "name": "b",
-                            "type": {"type": [{"type": "string"}, {"type": "integer"}]},
+                            "type": {"type": ["string", "integer"]},
                         },
                         {
                             "default": False,
                             "name": "c",
-                            "type": {"type": [{"type": "boolean"}, {"type": "null"}]},
+                            "type": {"type": ["boolean", "null"]},
                         },
                         {
                             "default": (),
                             "name": "d",
                             "type": {"items": {"type": "string"}, "type": "array"},
                         },
+                        {
+                            "default": (),
+                            "name": "e",
+                            "type": {"additionalProperties": {}, "type": "object"},
+                        },
                     ],
                     "returnType": {"type": "string"},
                 },
                 "inputs": [
-                    {
-                        "id": "a",
-                        "property": "value",
-                    },
-                    {
-                        "id": "b",
-                        "property": "value",
-                    },
-                    {
-                        "id": "c",
-                        "property": "value",
-                    },
-                    {
-                        "id": "d",
-                        "property": "value",
-                    },
+                    {"id": "a", "property": "value"},
+                    {"id": "b", "property": "value"},
+                    {"id": "c", "property": "value"},
+                    {"id": "d", "property": "value"},
+                    {"id": "e", "noTrigger": True, "property": "value"},
                 ],
             },
             d,
@@ -100,26 +99,15 @@ class CallbackTest(unittest.TestCase):
                     "returnType": {
                         "items": [
                             {"items": {"type": "string"}, "type": "array"},
-                            {"type": [{"type": "string"}, {"type": "null"}]},
+                            {"type": ["string", "null"]},
                         ],
                         "type": "array",
                     },
                 },
-                "inputs": [
-                    {
-                        "id": "n",
-                        "property": "value",
-                    }
-                ],
+                "inputs": [{"id": "n", "property": "value"}],
                 "outputs": [
-                    {
-                        "id": "select",
-                        "property": "options",
-                    },
-                    {
-                        "id": "select",
-                        "property": "value",
-                    },
+                    {"id": "select", "property": "options"},
+                    {"id": "select", "property": "value"},
                 ],
             },
             d,
@@ -133,7 +121,7 @@ class FromDecoratorTest(unittest.TestCase):
         with pytest.raises(
             TypeError,
             match="too few inputs in decorator 'test' for function"
-            " 'my_callback': expected 4, but got 0",
+            " 'my_callback': expected 5, but got 0",
         ):
             Callback.from_decorator("test", (), my_callback)
 
@@ -141,10 +129,10 @@ class FromDecoratorTest(unittest.TestCase):
         with pytest.raises(
             TypeError,
             match="too many inputs in decorator 'test' for function"
-            " 'my_callback': expected 4, but got 5",
+            " 'my_callback': expected 5, but got 7",
         ):
             Callback.from_decorator(
-                "test", tuple(Input(c) for c in "abcde"), my_callback
+                "test", tuple(Input(c) for c in "abcdefg"), my_callback
             )
 
     def test_decorator_target(self):

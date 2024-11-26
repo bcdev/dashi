@@ -158,23 +158,45 @@ def _parameter_to_dict(parameter: inspect.Parameter) -> dict[str, Any]:
     return d
 
 
-_scalar_types = {
-    "None": "null",
-    "NoneType": "null",
-    "bool": "boolean",
-    "int": "integer",
-    "float": "number",
-    "str": "string",
-    "object": "object",
+_basic_types = {
+    None: "null",
+    type(None): "null",
+    bool: "boolean",
+    int: "integer",
+    float: "number",
+    str: "string",
+    list: "array",
+    tuple: "array",
+    dict: "object",
 }
 
 _object_types = {"Component": "Component", "Chart": "Chart"}
 
 
 def _annotation_to_json_schema(annotation: Any) -> dict:
+    if annotation is Any:
+        return {}
+
+    if annotation in _basic_types:
+        return {"type": _basic_types[annotation]}
+
     if isinstance(annotation, types.UnionType):
-        return {"type": list(map(_annotation_to_json_schema, annotation.__args__))}
-    elif isinstance(annotation, types.GenericAlias):
+        type_list = list(map(_annotation_to_json_schema, annotation.__args__))
+        type_name_list = [
+            t["type"] for t in type_list if isinstance(t.get("type"), str)
+        ]
+        if len(type_name_list) == 1:
+            return {"type": type_name_list[0]}
+        elif len(type_name_list) > 1:
+            return {"type": type_name_list}
+        elif len(type_list) == 1:
+            return type_list[0]
+        elif len(type_list) > 1:
+            return {"oneOf": type_list}
+        else:
+            return {}
+
+    if isinstance(annotation, types.GenericAlias):
         if annotation.__origin__ is tuple:
             return {
                 "type": "array",
@@ -190,21 +212,26 @@ def _annotation_to_json_schema(annotation: Any) -> dict:
                 return {
                     "type": "array",
                 }
-    elif issubclass(annotation, list):
-        try:
-            return {"type": "array"}
-        except KeyError:
-            pass
+        elif annotation.__origin__ is dict:
+            if annotation.__args__:
+                if len(annotation.__args__) == 2 and annotation.__args__[0] is str:
+                    return {
+                        "type": "object",
+                        "additionalProperties": _annotation_to_json_schema(
+                            annotation.__args__[1]
+                        ),
+                    }
+            else:
+                return {
+                    "type": "object",
+                }
     else:
         type_name = (
             annotation.__name__ if hasattr(annotation, "__name__") else str(annotation)
         )
         try:
-            return {"type": _scalar_types[type_name]}
-        except KeyError:
-            pass
-        try:
             return {"type": "object", "class": _object_types[type_name]}
         except KeyError:
             pass
+
     raise TypeError(f"unsupported type annotation: {annotation}")

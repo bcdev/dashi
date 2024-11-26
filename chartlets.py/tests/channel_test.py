@@ -80,7 +80,7 @@ def make_base():
 
         def test_no_arguments(self):
             with pytest.raises(
-                    TypeError, match="missing 1 required positional argument: 'id'"
+                TypeError, match="missing 1 required positional argument: 'id'"
             ):
                 # noinspection PyArgumentList
                 obj = self.channel_cls()
@@ -107,6 +107,7 @@ class StateTest(make_base(), unittest.TestCase):
     def test_component_empty_property(self):
         with pytest.raises(ValueError, match="value for 'property' must be given"):
             self.channel_cls("dataset_select", "")
+
 
 class OutputTest(make_base(), unittest.TestCase):
     channel_cls = Output
