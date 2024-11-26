@@ -118,7 +118,7 @@ def get_click_event_points(
                         conditions.append(f"datum.{field} === {value}")
 
         condition_expr = " && ".join(conditions)
-        print(condition_expr)
+
         return {
             "condition": {
                 "test": condition_expr,
