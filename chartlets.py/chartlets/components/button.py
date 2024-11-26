@@ -28,6 +28,7 @@ class Button(Component):
     One "contained" | "outlined" | "text". Defaults to "text".
     """
 
+
 @dataclass(frozen=True)
 class IconButton(Component):
     """Icon buttons are commonly found in app bars and toolbars.
@@ -49,5 +50,3 @@ class IconButton(Component):
     """The button variant. 
     One "contained" | "outlined" | "text". Defaults to "text".
     """
-
-
