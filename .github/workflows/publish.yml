@@ -75,6 +75,8 @@ jobs:
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
+        packages-dir: chartlets.py
+        verbose: true
 
   npm-tests:
     runs-on: ubuntu-latest
