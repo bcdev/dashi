@@ -69,11 +69,12 @@ jobs:
     - name: Build package
       run: |
         python -m build
-        
-    - name: Publish to PyPI
-      run: |
-        pip install twine
-        python -m twine upload --username __token__ --password ${{ secrets.PYPI_API_TOKEN }} dist/*
+
+    - name: Publish package to PyPI
+      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
 
   npm-tests:
     runs-on: ubuntu-latest
