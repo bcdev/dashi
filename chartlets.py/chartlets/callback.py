@@ -104,9 +104,7 @@ class Callback:
             "function": {
                 "name": self.function.__qualname__,
                 "parameters": [_parameter_to_dict(p) for p in parameters],
-                "returnType": _annotation_to_json_schema(
-                    self.signature.return_annotation
-                ),
+                "return": _return_to_dict(self.signature.return_annotation),
             }
         }
         if self.inputs:
@@ -152,10 +150,15 @@ def _parameter_to_dict(parameter: inspect.Parameter) -> dict[str, Any]:
     empty = inspect.Parameter.empty
     d = {"name": parameter.name}
     if parameter.annotation is not empty:
-        d |= {"type": _annotation_to_json_schema(parameter.annotation)}
+        d |= {"schema": _annotation_to_json_schema(parameter.annotation)}
     if parameter.default is not empty:
         d |= {"default": parameter.default}
     return d
+
+def _return_to_dict(return_annotation: Any) -> dict[str, Any]:
+    return {
+        "schema": _annotation_to_json_schema(return_annotation)
+    }
 
 
 _basic_types = {

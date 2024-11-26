@@ -1,3 +1,7 @@
+## Version 0.0.x (in development)
+
+* Changed the yet unused descriptor type `CbFunction` for callback functions.
+
 ## Version 0.0.28 (from 2024/11/26)
 
 * Updated docs.
