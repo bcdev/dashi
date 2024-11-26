@@ -37,7 +37,6 @@ jobs:
         
     - name: Test with pytest
       run: |
-        cd chartlets.py 
         pytest --cov=chartlets
         
     - name: Upload coverage reports to Codecov
@@ -93,18 +92,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: |
-            cd chartlets.js
-            npm ci
-      - run: |
-            cd chartlets.js
-            npm run lint
-      - run: | 
-            cd chartlets.js
-            npm run build
-      - run: |
-            cd chartlets.js
-            npm run test
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run test
   
   npm-Deploy:
     name: Publish TS-React Package to npmjs
@@ -122,14 +113,8 @@ jobs:
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: |
-            cd chartlets.js
-            npm ci
-      - run: |
-            cd chartlets.js
-            npm run build
-      - run: |
-            cd chartlets.js
-            npm publish --access public
+      - run: npm ci
+      - run: npm run build
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
