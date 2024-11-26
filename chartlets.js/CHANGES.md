@@ -1,3 +1,7 @@
+## Version 0.0.29 (from 2024/11/26)
+
+* Resolved warnings that appeared when using Vega charts.
+
 ## Version 0.0.28 (from 2024/11/26)
 
 * Updated docs.
