@@ -1,4 +1,4 @@
-# Contributor guide
+# Contributors guide
 
 As an application contributor you enhance an existing web application
 by UI contributions developed in Python. You implement a Python module 

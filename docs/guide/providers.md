@@ -130,8 +130,16 @@ using the `initializeFramework` function.
 import { initializeFramework } "charlets"
 ```
 
+_More coming soon._
+
 ### Implement derived application state
+
+_Coming soon._
 
 ### Render the contributions
 
+_Coming soon._
+
 ## Adding new components
+
+_Coming soon._
