@@ -12,7 +12,7 @@
       
       
       
-        <link rel="next" href="demo/">
+        <link rel="next" href="guide/providers/">
       
       
       <link rel="icon" href="assets/images/favicon.png">
@@ -320,9 +320,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#users" class="md-nav__link">
     <span class="md-ellipsis">
-      How it works
+      Users
     </span>
   </a>
   
@@ -343,11 +343,11 @@
   
   
     <li class="md-nav__item">
-      <a href="demo/" class="md-nav__link">
+      <a href="guide/providers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Demo
+    Providers Guide
   </span>
   
 
@@ -363,11 +363,11 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/" class="md-nav__link">
+      <a href="guide/contributors/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Usage
+    Contributors Guide
   </span>
   
 
@@ -509,6 +509,26 @@
   
   
     <li class="md-nav__item">
+      <a href="demo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="about/" class="md-nav__link">
         
   
@@ -555,26 +575,13 @@ and a
 <li>Uses <a href="https://mui.com/material-ui/">Material UI</a> components and 
   <a href="https://vega.github.io/vega-lite/">Vega-Lite</a> charts.</li>
 </ul>
-<h2 id="how-it-works">How it works</h2>
-<p>Users write the widgets in, e.g. Python, and a REST server implements three 
-endpoints to publish the widgets:</p>
-<ul>
-<li><code>GET /contributions</code>: Called once after application UI starts up.
-  Returns an object whose keys are contribution points (e.g., "panels") 
-  and whose values are arrays of contribution objects.</li>
-<li><code>POST /layout/{contribPoint}/{contribIndex}</code>:
-  Called once for every contribution when it becomes visible in the UI.
-  Returns the contribution's initial component tree.</li>
-<li><code>POST /callback</code>:
-  Called when users interact with the component tree or on application 
-  state changes. Returns an array of contribution changes where each 
-  contribution change contains an array of actions to be applied to the 
-  component tree.</li>
-</ul>
-<p>The following sequence diagram depicts how the library is supposed to 
-work. The top shows the JavaScript frontend that uses this library.
-The bottom shows the lifeline of the backend REST server.</p>
-<p><img alt="images/sequence.png" src="images/sequence.png" /></p>
+<h2 id="users">Users</h2>
+<p>The Chartlets framework has two types of target users:</p>
+<p><strong>Application contributors</strong> develop new contributions
+for a specific web application that is powered by Chartlets.</p>
+<p><strong>Application providers</strong> develop the web application
+and the service that allows for server-side UI contributions
+using Chartlets.</p>
 
 
 
