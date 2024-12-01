@@ -1,3 +1,7 @@
+## Version 0.0.30 (in development)
+
+* The `Plot` component now respects the current MUI theme mode `"dark"`. (#XX)
+
 ## Version 0.0.29 (from 2024/11/26)
 
 * Resolved warnings that appeared when using Vega charts.
