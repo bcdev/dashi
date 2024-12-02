@@ -1,3 +1,6 @@
+* The `Plot` component now respects a `theme` property. If not given,
+  it will respect the current MUI theme mode `"dark"`. 
+
 ## Version 0.0.29 (from 2024/11/26)
 
 * Fixed a bug that prevents using annotations of type `dict` or `dict[str, T]`.

@@ -11,6 +11,9 @@ class Plot(Component):
     """The plot component is a container for a
     [Vega Altair](https://altair-viz.github.io/) chart."""
 
+    theme: str | None = None
+    """A [Vega theme name](https://vega.github.io/vega-themes/)."""
+
     chart: alt.Chart | None = None
     """The Vega Altair 
     [chart object](https://altair-viz.github.io/user_guide/generated/toplevel/altair.Chart.html)."""

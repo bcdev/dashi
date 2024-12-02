@@ -1,6 +1,7 @@
 ## Version 0.0.30 (in development)
 
-* The `Plot` component now respects the current MUI theme mode `"dark"`. (#XX)
+* The `Plot` component now respects a `theme` property. If not given,
+  it will respect the current MUI theme mode `"dark"`. 
 
 ## Version 0.0.29 (from 2024/11/26)
 

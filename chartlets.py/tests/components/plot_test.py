@@ -26,8 +26,9 @@ class PlotTest(make_base(Plot)):
         )
 
         self.assert_is_json_serializable(
-            self.cls(id="plot", chart=self.chart),
+            self.cls(id="plot", theme="dark", chart=self.chart),
             {
+                "theme": "dark",
                 "chart": {
                     "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
                     "config": {
