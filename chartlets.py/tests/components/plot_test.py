@@ -1,6 +1,3 @@
-import json
-import unittest
-
 import pandas as pd
 import altair as alt
 
@@ -12,7 +9,7 @@ from tests.component_test import make_base
 
 class PlotTest(make_base(Plot)):
 
-    def test_is_json_serializable(self):
+    def test_with_chart(self):
         source = pd.DataFrame(
             {"x": ["A", "B", "C", "D", "E"], "a": [28, 55, 43, 91, 81]}
         )
@@ -28,6 +25,8 @@ class PlotTest(make_base(Plot)):
         self.assert_is_json_serializable(
             self.cls(id="plot", theme="dark", chart=self.chart),
             {
+                "type": "Plot",
+                "id": "plot",
                 "theme": "dark",
                 "chart": {
                     "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
@@ -50,7 +49,11 @@ class PlotTest(make_base(Plot)):
                     },
                     "mark": {"type": "bar"},
                 },
-                "id": "plot",
-                "type": "Plot",
             },
+        )
+
+    def test_without_chart(self):
+        self.assert_is_json_serializable(
+            self.cls(id="plot", style={"width": 100}),
+            {"type": "Plot", "id": "plot", "style": {"width": 100}},
         )

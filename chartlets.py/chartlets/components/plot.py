@@ -12,16 +12,13 @@ class Plot(Component):
     [Vega Altair](https://altair-viz.github.io/) chart."""
 
     theme: str | None = None
-    """A [Vega theme name](https://vega.github.io/vega-themes/)."""
+    """The name of a [Vega theme](https://vega.github.io/vega-themes/)."""
 
     chart: alt.Chart | None = None
-    """The Vega Altair 
-    [chart object](https://altair-viz.github.io/user_guide/generated/toplevel/altair.Chart.html)."""
+    """The [Vega Altair chart](https://altair-viz.github.io/gallery/index.html)."""
 
     def to_dict(self) -> dict[str, Any]:
         d = super().to_dict()
         if self.chart is not None:
             d.update(chart=self.chart.to_dict())
-        else:
-            d.update(chart=None)
         return d
