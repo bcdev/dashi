@@ -1,14 +1,21 @@
 ## Version 0.1.0 (not started)
 
+* Allow for different chart providers:
+  - Rename `Plot` into `VegaChart`. 
+  - Only define `VegaChart` if `vega-altair` is installed.
 * Reorganise Chartlets project
   - Create `chartlets` GH org. 
   - Split current `chartlets` repo and move to `chartlets` org:
-    - `chartlets.py` The Python core package, defines standard components
+    - `chartlets.py` The Python package, defines standard components
+    - `chartlets.js` The JS package, implements standard components 
+    - `chartlets-demo` Chartlets demo which uses the above  
+  - Allow for different component implementation bases, therefore
+    make corresponding dependencies optional and dynamically check at runtime
+    whether they are available. We may also think of going further by
+    using dedicated implementation packages:
     - `chartlets.py.vega` Defines the `VegaChart` component
-    - `chartlets.js` The JS library core package
-    - `chartlets.js.mui` Adds MUI impl. of the standard components  
-    - `chartlets.js.vega` Adds Vega React impl. of the `VegaChart` component   
-    - `chartlets-demo` Chartlets demo which uses all of the above  
+    - `chartlets.js.mui` Registers MUI impls. of the standard components
+    - `chartlets.js.vega` Registers Vega React impl. of the `VegaChart` component
 
 ## Version 0.0.30 (in development)
 
