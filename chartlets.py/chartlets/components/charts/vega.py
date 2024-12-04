@@ -1,20 +1,25 @@
 from dataclasses import dataclass
 from typing import Any
 
-import altair as alt
+try:
+    # noinspection PyUnresolvedReferences
+    import altair
+    AltairChart = altair.Chart
+except ImportError:
+    AltairChart = type(None)
 
 from chartlets import Component
 
 
 @dataclass(frozen=True)
-class Plot(Component):
-    """The plot component is a container for a
+class VegaChart(Component):
+    """A container for a
     [Vega Altair](https://altair-viz.github.io/) chart."""
 
     theme: str | None = None
     """The name of a [Vega theme](https://vega.github.io/vega-themes/)."""
 
-    chart: alt.Chart | None = None
+    chart: AltairChart | None = None
     """The [Vega Altair chart](https://altair-viz.github.io/gallery/index.html)."""
 
     def to_dict(self) -> dict[str, Any]:

@@ -1,8 +1,5 @@
 ## Version 0.1.0 (not started)
 
-* Allow for different chart providers:
-  - Rename `Plot` into `VegaChart`. 
-  - Only define `VegaChart` if `vega-altair` is installed.
 * Reorganise Chartlets project
   - Create `chartlets` GH org. 
   - Split current `chartlets` repo and move to `chartlets` org:
@@ -18,6 +15,10 @@
     - `chartlets.js.vega` Registers Vega React impl. of the `VegaChart` component
 
 ## Version 0.0.30 (in development)
+
+* Allow for different chart providers:
+  - Renamed `Plot` into `VegaChart`.
+  - `VegaChart` is defined only if `vega-altair` is installed.
 
 * The `Plot` component now respects a `theme` property. If not given,
   it will respect the current MUI theme mode `"dark"`. 

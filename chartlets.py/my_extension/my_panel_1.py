@@ -1,12 +1,9 @@
-import copy
-from types import NoneType
 from typing import Any
 
 import altair as alt
-import pandas as pd
 
 from chartlets import Component, Input, Output, State
-from chartlets.components import Plot, Box, Select
+from chartlets.components import VegaChart, Box, Select
 from chartlets.demo.contribs import Panel
 from chartlets.demo.context import Context
 
@@ -17,8 +14,8 @@ panel = Panel(__name__, title="Panel A")
 @panel.layout()
 def render_panel(ctx: Context) -> Component:
     selected_dataset: int = 0
-    plot = Plot(
-        id="plot", chart=make_figure(ctx, selected_dataset), style={"flexGrow": 1}
+    chart = VegaChart(
+        id="chart", chart=make_chart(ctx, selected_dataset), style={"flexGrow": 1}
     )
     select = Select(
         id="selected_dataset",
@@ -44,15 +41,15 @@ def render_panel(ctx: Context) -> Component:
             "width": "100%",
             "height": "100%",
         },
-        children=[plot, control_group],
+        children=[chart, control_group],
     )
 
 
 @panel.callback(
     Input("selected_dataset"),
-    Output("plot", "chart"),
+    Output("chart", "chart"),
 )
-def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
+def make_chart(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
     dataset_key = tuple(ctx.datasets.keys())[selected_dataset]
     dataset = ctx.datasets[dataset_key]
 
@@ -88,9 +85,9 @@ def make_figure(ctx: Context, selected_dataset: int = 0) -> alt.Chart:
 
 
 @panel.callback(
-    Input("plot", property="points"),
-    State("plot", "chart.encoding"),
-    Output("plot", "chart.encoding.color"),
+    Input("chart", property="points"),
+    State("chart", "chart.encoding"),
+    Output("chart", "chart.encoding.color"),
 )
 def get_click_event_points(
     ctx: Context, points: dict[str, Any], encoding: dict[str, Any]

@@ -1,3 +1,9 @@
+## Version 0.0.30 (in development)
+
+* Allow for different chart providers:
+  - Renamed `Plot` into `VegaChart`.
+  - `VegaChart` is defined only if `vega-altair` is installed.
+  
 * The `Plot` component now respects a `theme` property. If not given,
   it will respect the current MUI theme mode `"dark"`. 
 

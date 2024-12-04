@@ -14,9 +14,7 @@ keywords = [
 ]
 license = {text = "MIT"}
 requires-python = ">=3.10"
-dependencies = [
-  "altair",
-]
+dependencies = []
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
@@ -46,7 +44,11 @@ exclude = [
 ]
 
 [project.optional-dependencies]
+opt = [
+  "altair",
+]
 dev = [
+  "altair",
   "black",
   "flake8",
   "pytest",
@@ -63,6 +65,7 @@ doc = [
   "mkdocstrings-python"
 ]
 demo = [
+  "altair",
   "pyaml",
   "pandas",
   "tornado",

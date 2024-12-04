@@ -1,15 +1,15 @@
 import pandas as pd
 import altair as alt
 
-from chartlets.components import Plot
+from chartlets.components import VegaChart
 
 
 from tests.component_test import make_base
 
 
-class PlotTest(make_base(Plot)):
+class VegaChartTest(make_base(VegaChart)):
 
-    def test_with_chart(self):
+    def test_with_chart_prop(self):
         source = pd.DataFrame(
             {"x": ["A", "B", "C", "D", "E"], "a": [28, 55, 43, 91, 81]}
         )
@@ -25,7 +25,7 @@ class PlotTest(make_base(Plot)):
         self.assert_is_json_serializable(
             self.cls(id="plot", theme="dark", chart=self.chart),
             {
-                "type": "Plot",
+                "type": "VegaChart",
                 "id": "plot",
                 "theme": "dark",
                 "chart": {
@@ -52,8 +52,8 @@ class PlotTest(make_base(Plot)):
             },
         )
 
-    def test_without_chart(self):
+    def test_without_chart_prop(self):
         self.assert_is_json_serializable(
             self.cls(id="plot", style={"width": 100}),
-            {"type": "Plot", "id": "plot", "style": {"width": 100}},
+            {"type": "VegaChart", "id": "plot", "style": {"width": 100}},
         )

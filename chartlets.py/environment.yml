@@ -4,6 +4,7 @@ channels:
 dependencies:
   # Library Dependencies
   - python >=3.12,<3.13
+  # Optional Dependencies
   - altair
   # Demo Dependencies
   - pandas

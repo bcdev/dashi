@@ -2,7 +2,7 @@ import altair as alt
 import pandas as pd
 
 from chartlets import Component, Input, State, Output
-from chartlets.components import Plot, Box, Select
+from chartlets.components import VegaChart, Box, Select
 from chartlets.demo.contribs import Panel
 from chartlets.demo.context import Context
 
@@ -17,9 +17,9 @@ def render_panel(
 ) -> Component:
     dataset = ctx.datasets.get(selected_dataset_id)
     variable_names, var_name = get_variable_names(dataset)
-    plot = Plot(
-        id="plot",
-        chart=make_figure(ctx, selected_dataset_id, var_name),
+    chart = VegaChart(
+        id="chart",
+        chart=make_chart(ctx, selected_dataset_id, var_name),
         style={"flexGrow": 1},
     )
     select = Select(
@@ -46,16 +46,16 @@ def render_panel(
             "width": "100%",
             "height": "100%",
         },
-        children=[plot, control_group],
+        children=[chart, control_group],
     )
 
 
 @panel.callback(
     Input("@app", "selectedDatasetId"),
     Input("selected_variable_name"),
-    Output("plot", "chart"),
+    Output("chart", "chart"),
 )
-def make_figure(
+def make_chart(
     ctx: Context,
     selected_dataset_id: str | None = None,
     selected_variable_name: str | None = None,
