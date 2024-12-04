@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
-import { TopLevelSpec } from "vega-lite";
+import type { TopLevelSpec } from "vega-lite";
 
-import { ComponentChangeHandler } from "@/lib/types/state/event";
+import type { ComponentChangeHandler } from "@/lib/types/state/event";
 import { isObject } from "@/lib/utils/isObject";
 import { isString } from "@/lib/utils/isString";
 
@@ -28,7 +28,7 @@ export function useSignalListeners(
   type: string,
   id: string | undefined,
   onChange: ComponentChangeHandler,
-): { [key: string]: SignalHandler } {
+): Record<string, SignalHandler> {
   /*
    * Here, we create map of signals which will be then used to create the
    * map of signal-listeners because not all params are event-listeners, and we
@@ -36,17 +36,17 @@ export function useSignalListeners(
    * have so that we can create those listeners with the `name` specified in
    * the event-listener object.
    */
-  const signals = useMemo(() => {
-    if (!chart) {
-      return {};
+  const signalNames = useMemo((): Record<string, string> => {
+    const signalNames: Record<string, string> = {};
+    if (!chart || !chart.params) {
+      return signalNames;
     }
-    if (!chart.params) {
-      return {};
-    }
-    return chart.params.filter(isSelectionParameter).reduce((acc, param) => {
-      acc[param.select.on] = param.name;
-      return acc;
-    }, {});
+    return chart.params
+      .filter(isSelectionParameter)
+      .reduce((paramNames, param) => {
+        paramNames[param.select.on] = param.name;
+        return paramNames;
+      }, signalNames);
   }, [chart]);
 
   const handleClickSignal = useCallback(
@@ -64,25 +64,22 @@ export function useSignalListeners(
   );
 
   /*
-   * Currently, we only have click events support, but if more are required,
-   * they can be implemented and added in the map below.
-   */
-  const signalHandlerMap: { [key: string]: SignalHandler } = useMemo(
-    () => ({
-      click: handleClickSignal,
-    }),
-    [handleClickSignal],
-  );
-
-  /*
    * Creates the map of signal listeners based on
    * the `signals` map computed above.
    */
   return useMemo(() => {
-    const signalListeners = {};
-    Object.entries(signals).forEach(([event, signalName]) => {
-      if (signalHandlerMap[event]) {
-        signalListeners[signalName] = signalHandlerMap[event];
+    /*
+     * Currently, we only have click events support, but if more are required,
+     * they can be implemented and added in the map below.
+     */
+    const signalHandlers: Record<string, SignalHandler> = {
+      click: handleClickSignal,
+    };
+
+    const signalListeners: Record<string, SignalHandler> = {};
+    Object.entries(signalNames).forEach(([event, signalName]) => {
+      if (signalHandlers[event]) {
+        signalListeners[signalName] = signalHandlers[event];
       } else {
         console.warn(
           `The signal "${event}" is not yet supported in chartlets.js`,
@@ -90,5 +87,5 @@ export function useSignalListeners(
       }
     });
     return signalListeners;
-  }, [signals]);
+  }, [signalNames, handleClickSignal]);
 }

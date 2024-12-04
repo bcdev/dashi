@@ -1,16 +1,12 @@
 import type { StoreState } from "@/lib/types/state/store";
 import { store } from "@/lib/store";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import type { ContributionState } from "@/lib/types/state/contribution";
-import { type SignalHandler } from "@/lib/components/Plot/vega";
-import type { TopLevelSpec } from "vega-lite";
 import type {
   ComponentChangeEvent,
   ComponentChangeHandler,
 } from "@/lib/types/state/event";
 import { handleComponentChange } from "@/lib/actions/handleComponentChange";
-import { isString } from "@/lib/utils/isString";
-import { isObject } from "@/lib/utils/isObject";
 
 const selectConfiguration = (state: StoreState) => state.configuration;
 
