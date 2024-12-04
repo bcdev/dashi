@@ -2,22 +2,28 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 import { initializeContributions } from "@/lib";
+import mui from "@/lib/plugins/mui";
+import vega from "@/lib/plugins/vega";
+
+import { type AppState, appStore } from "@/demo/store";
 import ExtensionsInfo from "./components/ExtensionInfo";
-import ControlBar from "@/demo/components/ControlBar";
+import ControlBar from "./components/ControlBar";
 import PanelsControl from "./components/PanelsControl";
 import PanelsRow from "./components/PanelsRow";
-import { appStore } from "@/demo/store";
-import { getValue, setValue } from "@/lib/utils/objPath";
 
 initializeContributions({
+  plugins: [mui, vega],
   hostStore: {
     // Let Chartlets listen to changes in application state.
     subscribe: (listener: () => void) => appStore.subscribe(listener),
     // Compute a property value and return it. We simply use getValue() here.
-    get: (property: string): unknown => getValue(appStore.getState(), property),
+    get: (property: string): unknown => {
+      return appStore.getState()[property as keyof AppState];
+    },
     // Set a property value in the application state.
-    set: (property: string, value: unknown) =>
-      void appStore.setState(setValue(appStore.getState(), property, value)),
+    set: (property: string, value: unknown) => {
+      appStore.setState({ [property as keyof AppState]: value });
+    },
   },
   logging: { enabled: true },
 });

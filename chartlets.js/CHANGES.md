@@ -8,20 +8,27 @@
     - `chartlets-demo` Chartlets demo which uses the above  
   - Allow for different component implementation bases, therefore
     make corresponding dependencies optional and dynamically check at runtime
-    whether they are available. We may also think of going further by
-    using dedicated implementation packages:
-    - `chartlets.py.vega` Defines the `VegaChart` component
-    - `chartlets.js.mui` Registers MUI impls. of the standard components
-    - `chartlets.js.vega` Registers Vega React impl. of the `VegaChart` component
+    whether they are available.
 
 ## Version 0.0.30 (in development)
 
-* Allow for different chart providers:
-  - Renamed `Plot` into `VegaChart`.
-  - `VegaChart` is defined only if `vega-altair` is installed.
+* Chartlets now allows for different component providers.
+  Therefore, Vega-based `Plot` and MUI components have been made optional.
+  To activate, use the new `plugins: Plugin[]` option of `FrameworkOptions`.
+  ```TypeScript
+  import { initializeContributions } from "chartlets";
+  import mui from "chartlets/plugins/mui";
+  import vega from "chartlets/plugins/vega";
+  
+  initializeContributions({ plugins: [mui, vega], ... })   
+  ```
+  In addition:
+  - Renamed `Plot` into `VegaChart` and moved to `src/plugins/vega`.
+  - Moved other MUI components into `src/plugins/mui`.
 
-* The `Plot` component now respects a `theme` property. If not given,
-  it will respect the current MUI theme mode `"dark"`. 
+* The new `VegaChart` component respects a `theme` property. If not given,
+  it will respect the current theme mode `"dark"` otherwise fallback to the
+  Vega default theme. 
 
 ## Version 0.0.29 (from 2024/11/26)
 

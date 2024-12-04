@@ -34,7 +34,18 @@ export interface HostStore {
   set?: (property: string, value: unknown) => void;
 }
 
+/**
+ * A mutable host store implements the `set()` method.
+ */
 export interface MutableHostStore extends HostStore {
+  /**
+   * **UNSTABLE API**
+   *
+   * Set a property value in the host state.
+   *
+   * @param property The property name.
+   * @param value The new property value.
+   */
   set: (property: string, value: unknown) => void;
 }
 
@@ -45,14 +56,30 @@ export function isMutableHostStore(
 }
 
 /**
+ * A framework plugin.
+ * Plugins are no-arg functions that are called
+ * after the framework's initialisation.
+ * Most typically, a plugin registers new components
+ * using the component registry, i.e.,
+ * `import { componentRegistry } from "chartlets"` followed by
+ * `componentRegistry.register("MyComponent", MyComponent)`.
+ */
+export type Plugin = () => void;
+
+/**
  * Chartlets options to be provided
  * by the application that is using Chartlets.
  */
 export interface FrameworkOptions {
-  /** The host store. */
-  hostStore?: HostStore;
   /** API options to configure backend. */
   api?: ApiOptions;
+
+  /** Framework plugins. */
+  plugins?: Plugin[];
+
+  /** The host store. */
+  hostStore?: HostStore;
+
   /** Logging options. */
   logging?: LoggingOptions;
 }

@@ -13,4 +13,7 @@ export function configureFramework(options: FrameworkOptions) {
   store.setState({
     configuration: { ...options } as FrameworkOptions,
   });
+  if (options.plugins) {
+    options.plugins.forEach((plugin) => plugin());
+  }
 }
