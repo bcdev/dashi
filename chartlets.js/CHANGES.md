@@ -1,3 +1,15 @@
+## Version 0.1.0 (not started)
+
+* Reorganise Chartlets project
+  - Create `chartlets` GH org. 
+  - Split current `chartlets` repo and move to `chartlets` org:
+    - `chartlets.py` The Python core package, defines standard components
+    - `chartlets.py.vega` Defines the `VegaChart` component
+    - `chartlets.js` The JS library core package
+    - `chartlets.js.mui` Adds MUI impl. of the standard components  
+    - `chartlets.js.vega` Adds Vega React impl. of the `VegaChart` component   
+    - `chartlets-demo` Chartlets demo which uses all of the above  
+
 ## Version 0.0.30 (in development)
 
 * The `Plot` component now respects a `theme` property. If not given,

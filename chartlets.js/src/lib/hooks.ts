@@ -2,7 +2,7 @@ import type { StoreState } from "@/lib/types/state/store";
 import { store } from "@/lib/store";
 import { useCallback, useMemo } from "react";
 import type { ContributionState } from "@/lib/types/state/contribution";
-import { type SignalHandler } from "@/lib/types/state/vega";
+import { type SignalHandler } from "@/lib/components/Plot/vega";
 import type { TopLevelSpec } from "vega-lite";
 import type {
   ComponentChangeEvent,
@@ -40,102 +40,6 @@ export function makeContributionsHook<S extends object = object>(
       return (contributions || []) as ContributionState<S>[];
     }, [contributions]);
   };
-}
-
-export function useSignalListeners(
-  chart: TopLevelSpec | null | undefined,
-  type: string,
-  id: string | undefined,
-  onChange: ComponentChangeHandler,
-): { [key: string]: SignalHandler } {
-  /*
-       This is a partial representation of the parameter type from
-       SelectionParameter type from the `vega-lite` module. Since we are
-       only interested in extracting the handlers, the following
-       properties are required.
-     */
-  type SelectionParameter = { name: string; select: { on: string } };
-  /*
-     Here, we create map of signals which will be then used to create the
-     map of signal-listeners because not all params are event-listeners, and we
-     need to identify them. Later in the code, we then see which handlers do we
-     have so that we can create those listeners with the `name` specified in
-     the event-listener object.
-   */
-  const signals: { [key: string]: string } = useMemo(() => {
-    if (!chart) return {};
-    if (!chart.params) return {};
-    return chart.params
-      .filter(
-        (param): param is SelectionParameter =>
-          isObject(param) &&
-          param !== null &&
-          "name" in param &&
-          "select" in param &&
-          isObject(param.select) &&
-          param.select?.on != null &&
-          isString(param.select.on),
-      )
-      .reduce(
-        (acc, param) => {
-          acc[param.select.on] = param.name;
-          return acc;
-        },
-        {} as { [key: string]: string },
-      );
-  }, [chart]);
-
-  const handleClickSignal = useCallback(
-    (signalName: string, signalValue: unknown) => {
-      if (id) {
-        return onChange({
-          componentType: type,
-          id: id,
-          property: signalName,
-          value: signalValue,
-        });
-      }
-    },
-    [id, onChange, type],
-  );
-
-  /*
-     Currently, we only have click events support, but if more are required,
-     they can be implemented and added in the map below.
-     */
-  const signalHandlerMap: { [key: string]: SignalHandler } = useMemo(
-    () => ({
-      click: handleClickSignal,
-    }),
-    [handleClickSignal],
-  );
-
-  /*
-     This function creates the map of signal listeners based on the `signals`
-     map computed above.
-     */
-  const createSignalListeners = useCallback(
-    (signals: { [key: string]: string }) => {
-      const signalListeners: { [key: string]: SignalHandler } = {};
-      Object.entries(signals).forEach(([event, signalName]) => {
-        if (signalHandlerMap[event]) {
-          signalListeners[signalName] = signalHandlerMap[event];
-        } else {
-          console.warn(
-            "The signal " + event + " is not yet supported in chartlets.js",
-          );
-        }
-      });
-
-      return signalListeners;
-    },
-    [signalHandlerMap],
-  );
-
-  return useMemo(
-    () => createSignalListeners(signals),
-    [createSignalListeners, signals],
-  );
 }
 
 /**
