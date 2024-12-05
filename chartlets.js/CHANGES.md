@@ -1,26 +1,22 @@
 ## Version 0.1.0 (not started)
 
-* Reorganise Chartlets project
-  - Create `chartlets` GH org. 
-  - Split current `chartlets` repo and move to `chartlets` org:
-    - `chartlets.py` The Python package, defines standard components
-    - `chartlets.js` The JS package, implements standard components 
-    - `chartlets-demo` Chartlets demo which uses the above  
-  - Allow for different component implementation bases, therefore
-    make corresponding dependencies optional and dynamically check at runtime
-    whether they are available.
+* Reorganised Chartlets project to better separate demo from library code.
+  - Using monorepo layout for `chartlets.js` that contains separate 
+    packages for `chartlets` and `chartlets-demo`.
+  - Created separate package `demo` in `chartlets.py` that contains 
+    a demo server and example contributions.
 
-## Version 0.0.30 (in development)
-
-* Chartlets now allows for different component providers.
-  Therefore, Vega-based `Plot` and MUI components have been made optional.
-  To activate, use the new `plugins: Plugin[]` option of `FrameworkOptions`.
+* Chartlets now allows for plugins that can provide individual component 
+  implementations.
+  Therefore, the Vega-based chart and MUI components have been made optional.
+  To activate them, use the new `plugins: PluginLike[]` option 
+  of `FrameworkOptions`:
   ```TypeScript
-  import { initializeContributions } from "chartlets";
-  import mui from "chartlets/dist/plugins/mui";
-  import vega from "chartlets/dist/plugins/vega";
+  import { configureFramework } from "chartlets";
+  import mui from "chartlets/plugins/mui";
+  import vega from "chartlets/plugins/vega";
   
-  initializeContributions({ plugins: [mui, vega], ... })   
+  configureFramework({ plugins: [mui(), vega()], ... });   
   ```
   In addition:
   - Renamed `Plot` into `VegaChart` and moved to `src/plugins/vega`.
