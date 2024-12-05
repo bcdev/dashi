@@ -1,0 +1,8 @@
+src/
+node_modules/
+.env
+.vscode/
+.idea/
+tests/
+*.log
+*.tgz
