@@ -1,6 +1,6 @@
 import { componentRegistry as cr } from "@/lib";
 
-export default function initPlugin() {
+export default function initializePlugin() {
   import("./Box").then((m) => cr.register("Box", m.Box));
   import("./Button").then((m) => cr.register("Button", m.Button));
   import("./Checkbox").then((m) => cr.register("Checkbox", m.Checkbox));

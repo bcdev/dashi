@@ -14,6 +14,8 @@ export function configureFramework(options: FrameworkOptions) {
     configuration: { ...options } as FrameworkOptions,
   });
   if (options.plugins) {
-    options.plugins.forEach((plugin) => plugin());
+    options.plugins.forEach((initializePlugin) => {
+      initializePlugin();
+    });
   }
 }
