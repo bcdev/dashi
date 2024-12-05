@@ -36,12 +36,12 @@
       "require": "./dist/chartlets.cjs"
     },
     "./plugins/mui": {
-      "types": "./dist/mui-plugin.d.ts",
+      "types": "./dist/plugins/mui/index.d.ts",
       "module": "./dist/mui-plugin.js",
       "require": "./dist/mui-plugin.cjs"
     },
     "./plugins/vega": {
-      "types": "./dist/vega-plugin.d.ts",
+      "types": "./dist/plugins/vega/index.d.ts",
       "module": "./dist/vega-plugin.js",
       "require": "./dist/vega-plugin.cjs"
     }
