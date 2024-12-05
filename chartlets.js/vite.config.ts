@@ -44,19 +44,11 @@ export default defineConfig({
     },
     rollupOptions: {
       // externalize deps that shouldn't be bundled into the library
-      external: [
-        /^@emotion/,
-        /^@mui/,
-        /^react/,
-        ...externalModules,
-        ...externalFiles,
-      ],
+      external: [/^@mui/, /^react/, ...externalModules, ...externalFiles],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
         globals: {
-          "@emotion/styled": "emStyled",
-          "@emotion/react": "emReact",
           microdiff: "diff",
           react: "React",
           "react-dom": "ReactDOM",

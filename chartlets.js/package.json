@@ -28,18 +28,22 @@
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "module": "./dist/chartlets.js",
+  "main": "./dist/chartlets.cjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "module": "./dist/chartlets.js"
+      "module": "./dist/chartlets.js",
+      "require": "./dist/chartlets.cjs"
     },
     "./plugins/mui": {
       "types": "./dist/mui-plugin.d.ts",
-      "module": "./dist/mui-plugin.js"
+      "module": "./dist/mui-plugin.js",
+      "require": "./dist/mui-plugin.cjs"
     },
     "./plugins/vega": {
       "types": "./dist/vega-plugin.d.ts",
-      "module": "./dist/vega-plugin.js"
+      "module": "./dist/vega-plugin.js",
+      "require": "./dist/vega-plugin.cjs"
     }
   },
   "scripts": {
