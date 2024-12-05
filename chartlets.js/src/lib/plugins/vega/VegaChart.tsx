@@ -1,10 +1,9 @@
 import { VegaLite } from "react-vega";
 import type { TopLevelSpec } from "vega-lite";
 
-import type { ComponentState } from "@/lib/types/state/component";
-import type { ComponentProps } from "@/lib/component/Component";
+import type { ComponentState, ComponentProps } from "@/lib";
 import { useSignalListeners } from "./hooks/useSignalListeners";
-import { useTheme, type VegaTheme } from "@/lib/plugins/vega/hooks/useTheme";
+import { useTheme, type VegaTheme } from "./hooks/useTheme";
 
 interface PlotState extends ComponentState {
   theme?: VegaTheme | "default" | "system";

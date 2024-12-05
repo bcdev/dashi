@@ -28,12 +28,18 @@
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "module": "./dist/chartlets.js",
-  "main": "./dist/chartlets.umd.cjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "module": "./dist/chartlets.js",
-      "require": "./dist/chartlets.umd.cjs"
+      "module": "./dist/chartlets.js"
+    },
+    "./plugins/mui": {
+      "types": "./dist/mui-plugin.d.ts",
+      "module": "./dist/mui-plugin.js"
+    },
+    "./plugins/vega": {
+      "types": "./dist/vega-plugin.d.ts",
+      "module": "./dist/vega-plugin.js"
     }
   },
   "scripts": {
@@ -53,6 +59,7 @@
     "react": ">=18",
     "react-dom": ">=18",
     "react-vega": "^7.6.0",
+    "vega-themes": "^2.15.0",
     "zustand": "^5.0.0"
   },
   "peerDependencies": {

@@ -1,9 +1,8 @@
+import type { ElementType } from "react";
 import MuiBox from "@mui/material/Box";
 
-import type { ElementType } from "react";
-import type { ComponentState } from "@/lib/types/state/component";
-import type { ComponentProps } from "@/lib/component/Component";
-import { Children } from "@/lib/component/Children";
+import type { ComponentState, ComponentProps } from "@/lib";
+import { Children } from "@/lib";
 
 interface BoxState extends ComponentState {
   component?: ElementType<Element>;

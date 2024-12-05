@@ -38,14 +38,22 @@ export default defineConfig({
   build: {
     sourcemap: true,
     lib: {
-      entry: resolve(__dirname, "src/lib/index.ts"),
-      name: "Chartlets",
-      // the proper extensions will be added
-      fileName: "chartlets",
+      entry: {
+        chartlets: resolve(__dirname, "src/lib/index.ts"),
+        "mui-plugin": resolve(__dirname, "src/lib/plugins/mui/index.ts"),
+        "vega-plugin": resolve(__dirname, "src/lib/plugins/vega/index.ts"),
+      },
+      formats: ["es"],
     },
     rollupOptions: {
       // externalize deps that shouldn't be bundled into the library
-      external: [/^@emotion/, /^@mui/, ...externalModules, ...externalFiles],
+      external: [
+        /^@emotion/,
+        /^@mui/,
+        /^react/,
+        ...externalModules,
+        ...externalFiles,
+      ],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps

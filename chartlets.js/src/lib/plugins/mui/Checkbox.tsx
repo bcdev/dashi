@@ -3,8 +3,7 @@ import MuiCheckbox from "@mui/material/Checkbox";
 import MuiFormControl from "@mui/material/FormControl";
 import MuiFormControlLabel from "@mui/material/FormControlLabel";
 
-import { type ComponentState } from "@/lib/types/state/component";
-import type { ComponentProps } from "@/lib/component/Component";
+import type { ComponentState, ComponentProps } from "@/lib";
 
 interface CheckboxState extends ComponentState {
   label?: string;

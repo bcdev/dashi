@@ -1,9 +1,8 @@
 import MuiTypography from "@mui/material/Typography";
 import { type TypographyVariant } from "@mui/material";
 
-import type { ComponentState } from "@/lib/types/state/component";
-import type { ComponentProps } from "@/lib/component/Component";
-import { Children } from "@/lib/component/Children";
+import type { ComponentState, ComponentProps } from "@/lib";
+import { Children } from "@/lib";
 
 interface TypographyState extends ComponentState {
   align?: "right" | "left" | "center" | "inherit" | "justify";

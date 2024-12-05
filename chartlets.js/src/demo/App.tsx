@@ -12,7 +12,7 @@ import PanelsControl from "./components/PanelsControl";
 import PanelsRow from "./components/PanelsRow";
 
 initializeContributions({
-  plugins: [mui, vega],
+  plugins: [mui(), vega()],
   hostStore: {
     // Let Chartlets listen to changes in application state.
     subscribe: (listener: () => void) => appStore.subscribe(listener),

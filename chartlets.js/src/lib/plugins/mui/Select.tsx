@@ -3,9 +3,8 @@ import MuiInputLabel from "@mui/material/InputLabel";
 import MuiMenuItem from "@mui/material/MenuItem";
 import MuiSelect, { type SelectChangeEvent } from "@mui/material/Select";
 
-import { type ComponentState } from "@/lib/types/state/component";
-import type { ComponentProps } from "@/lib/component/Component";
-import { isString } from "@/lib/utils/isString";
+import type { ComponentState, ComponentProps } from "@/lib";
+import { isString } from "@/lib";
 
 export type SelectOption =
   | string

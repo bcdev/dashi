@@ -2,8 +2,7 @@ import { type MouseEvent } from "react";
 import MuiIconButton from "@mui/material/IconButton";
 import MuiIcon from "@mui/material/Icon";
 
-import { type ComponentState } from "@/lib/types/state/component";
-import type { ComponentProps } from "@/lib/component/Component";
+import type { ComponentState, ComponentProps } from "@/lib";
 
 interface IconButtonState extends ComponentState {
   icon?: string;

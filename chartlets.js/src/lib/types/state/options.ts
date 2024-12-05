@@ -1,5 +1,8 @@
+import type { ComponentType } from "react";
+
 import type { ApiOptions } from "@/lib/types/api";
 import type { LoggingOptions } from "@/lib/actions/helpers/configureLogging";
+import type { ComponentProps } from "@/lib/component/Component";
 
 /**
  * The host store represents an interface to the state of
@@ -59,12 +62,17 @@ export function isMutableHostStore(
  * A framework plugin.
  * Plugins are no-arg functions that are called
  * after the framework's initialisation.
- * Most typically, a plugin registers new components
- * using the component registry, i.e.,
- * `import { componentRegistry } from "chartlets"` followed by
- * `componentRegistry.register("MyComponent", MyComponent)`.
+ * Most typically, a plugin wants to return new components
+ * in the `components` array:
+ * `{ components: [["MyComponent", MyComponent]] }`.
  */
-export type Plugin = () => void;
+export interface Plugin {
+  components?: ComponentRegistration[];
+}
+
+export type ComponentRegistration = [string, ComponentType<ComponentProps>];
+
+export type PluginLike = Plugin | (() => Plugin) | Promise<PluginLike>;
 
 /**
  * Chartlets options to be provided
@@ -75,7 +83,7 @@ export interface FrameworkOptions {
   api?: ApiOptions;
 
   /** Framework plugins. */
-  plugins?: Plugin[];
+  plugins?: PluginLike[];
 
   /** The host store. */
   hostStore?: HostStore;

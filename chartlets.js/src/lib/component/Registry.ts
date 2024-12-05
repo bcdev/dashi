@@ -1,4 +1,5 @@
-import type { FC } from "react";
+import type { ComponentType } from "react";
+
 import type { ComponentProps } from "@/lib/component/Component";
 
 /**
@@ -22,14 +23,14 @@ export interface Registry {
    * @param type The Chartlets component's unique type name.
    * @param component A functional React component.
    */
-  register(type: string, component: FC<ComponentProps>): () => void;
+  register(type: string, component: ComponentType<ComponentProps>): () => void;
 
   /**
    * Lookup the component of the provided type.
    *
    * @param type The Chartlets component's type name.
    */
-  lookup(type: string): FC<ComponentProps> | undefined;
+  lookup(type: string): ComponentType<ComponentProps> | undefined;
 
   /**
    * Get the type names of all registered components.
@@ -39,9 +40,9 @@ export interface Registry {
 
 // export for testing only
 export class RegistryImpl implements Registry {
-  private components = new Map<string, FC<ComponentProps>>();
+  private components = new Map<string, ComponentType<ComponentProps>>();
 
-  register(type: string, component: FC<ComponentProps>): () => void {
+  register(type: string, component: ComponentType<ComponentProps>): () => void {
     const oldComponent = this.components.get(type);
     this.components.set(type, component);
     return () => {
@@ -53,7 +54,7 @@ export class RegistryImpl implements Registry {
     };
   }
 
-  lookup(type: string): FC<ComponentProps> | undefined {
+  lookup(type: string): ComponentType<ComponentProps> | undefined {
     return this.components.get(type);
   }
 
@@ -63,7 +64,7 @@ export class RegistryImpl implements Registry {
 }
 
 /**
- * The Chartly component registry.
+ * The Chartlets component registry.
  *
  * Use `registry.register("C", C)` to register your own component `C`.
  *

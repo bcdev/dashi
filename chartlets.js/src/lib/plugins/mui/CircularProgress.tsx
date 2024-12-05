@@ -1,7 +1,6 @@
 import MuiCircularProgress from "@mui/material/CircularProgress";
 
-import { type ComponentState } from "@/lib/types/state/component";
-import type { ComponentProps } from "@/lib/component/Component";
+import type { ComponentState, ComponentProps } from "@/lib";
 
 interface CircularProgressState extends ComponentState {
   size?: number | string;

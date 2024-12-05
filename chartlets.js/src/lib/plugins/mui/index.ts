@@ -1,13 +1,22 @@
-import { componentRegistry as cr } from "@/lib";
+import type { Plugin } from "@/lib";
+import { Box } from "./Box";
+import { Button } from "./Button";
+import { Checkbox } from "./Checkbox";
+import { CircularProgress } from "./CircularProgress";
+import { IconButton } from "./IconButton";
+import { Select } from "./Select";
+import { Typography } from "./Typography";
 
-export default function initializePlugin() {
-  import("./Box").then((m) => cr.register("Box", m.Box));
-  import("./Button").then((m) => cr.register("Button", m.Button));
-  import("./Checkbox").then((m) => cr.register("Checkbox", m.Checkbox));
-  import("./CircularProgress").then((m) =>
-    cr.register("CircularProgress.ts", m.CircularProgress),
-  );
-  import("./IconButton").then((m) => cr.register("IconButton", m.IconButton));
-  import("./Select").then((m) => cr.register("Select", m.Select));
-  import("./Typography").then((m) => cr.register("Typography", m.Typography));
+export default function mui(): Plugin {
+  return {
+    components: [
+      ["Box", Box],
+      ["Button", Button],
+      ["Checkbox", Checkbox],
+      ["CircularProgress", CircularProgress],
+      ["IconButton", IconButton],
+      ["Select", Select],
+      ["Typography", Typography],
+    ],
+  };
 }

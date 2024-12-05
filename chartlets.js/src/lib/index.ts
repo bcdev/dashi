@@ -14,12 +14,9 @@ export { initializeContributions } from "@/lib/actions/initializeContributions";
 export { handleComponentChange } from "@/lib/actions/handleComponentChange";
 export { updateContributionContainer } from "@/lib/actions/updateContributionContainer";
 // Component registry
-export {
-  type Registry,
-  registry as componentRegistry,
-} from "@/lib/component/Registry";
+export type { Registry } from "@/lib/component/Registry";
 // React components
-export { Component } from "@/lib/component/Component";
+export { Component, type ComponentProps } from "@/lib/component/Component";
 export { Children } from "@/lib/component/Children";
 // React hooks
 export {
@@ -37,4 +34,8 @@ export type {
   HostStore,
   MutableHostStore,
   Plugin,
+  PluginLike,
 } from "@/lib/types/state/options";
+// Some common utilities
+export { isObject } from "@/lib/utils/isObject";
+export { isString } from "@/lib/utils/isString";
