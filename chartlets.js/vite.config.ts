@@ -17,16 +17,13 @@ const externalModules = [
   ...Object.keys(manifest.dependencies || {}),
 ];
 
-const externalFiles = [
-  ...findFiles("src", "**/*.test.*"),
-  ...findFiles("src/demo", "**/*"),
-];
+const externalFiles = [...findFiles("src", "**/*.test.*")];
 
 export default defineConfig({
   plugins: [
     react(),
     dts({
-      include: ["src/lib/**/*.ts", "src/lib/**/*.tsx"],
+      include: ["src/**/*.ts", "src/**/*.tsx"],
     }),
   ],
   resolve: {
@@ -39,11 +36,11 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: {
-        chartlets: resolve(__dirname, "src/lib/index.ts"),
-        "mui-plugin": resolve(__dirname, "src/lib/plugins/mui/index.ts"),
-        "vega-plugin": resolve(__dirname, "src/lib/plugins/vega/index.ts"),
+        chartlets: resolve(__dirname, "src/index.ts"),
+        "mui-plugin": resolve(__dirname, "src/plugins/mui/index.ts"),
+        "vega-plugin": resolve(__dirname, "src/plugins/vega/index.ts"),
       },
-      formats: ["es"],
+      //formats: ["es"],
     },
     rollupOptions: {
       // externalize deps that shouldn't be bundled into the library

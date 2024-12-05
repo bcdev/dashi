@@ -51,20 +51,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
-    "@fontsource/roboto": "^5.1.0",
-    "@mui/material": "^6.1.5",
-    "microdiff": "^1.4.0",
-    "react": ">=18",
-    "react-dom": ">=18",
-    "react-vega": "^7.6.0",
-    "vega-themes": "^2.15.0",
-    "zustand": "^5.0.0"
+    "microdiff": "^1.4",
+    "zustand": "^5.0"
   },
   "peerDependencies": {
     "react": ">=18",
-    "react-dom": ">=18"
+    "react-dom": ">=18",
+    "@mui/material": ">=6",
+    "react-vega": ">=7",
+    "vega-themes": ">=2"
   },
   "peerDependenciesMeta": {
     "react": {
