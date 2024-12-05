@@ -8,7 +8,7 @@ dynamic = ["version", "readme"]
 authors = [
   {name = "chartlets Development Team"}
 ]
-description = "Backend for server-configured charts powered by Vega Altair."
+description = "Backend for server-configured UI contributions."
 keywords = [
   "dashboard", "charts", "vega", "altair", "plots"
 ]
@@ -39,8 +39,9 @@ readme = {file = "README.md", content-type = "text/markdown"}
 
 [tool.setuptools.packages.find]
 exclude = [
-  "test*",
-  "doc*"
+  "tests",
+  "demo",
+  "docs"
 ]
 
 [project.optional-dependencies]

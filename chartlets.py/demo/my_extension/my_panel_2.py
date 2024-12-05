@@ -1,10 +1,10 @@
 import altair as alt
 import pandas as pd
-
 from chartlets import Component, Input, State, Output
 from chartlets.components import VegaChart, Box, Select
-from chartlets.demo.contribs import Panel
-from chartlets.demo.context import Context
+
+from demo.server.contribs import Panel
+from demo.server.context import Context
 
 
 panel = Panel(__name__, title="Panel B")

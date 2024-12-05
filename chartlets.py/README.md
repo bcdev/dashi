@@ -14,8 +14,17 @@ For details refer to the [documentation](https://bcdev.github.io/chartlets/).
 
 ## Run demo server
 
+Create environment
+
 ``` bash
 mamba env create
 conda activate chartlets
-python -m chartlets.demo.server 
+pip install -ve . 
+```
+
+Run server
+
+``` bash
+cd demo
+python -m demo.server.main 
 ```

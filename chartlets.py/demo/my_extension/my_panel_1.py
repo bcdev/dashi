@@ -1,11 +1,10 @@
 from typing import Any
-
 import altair as alt
-
 from chartlets import Component, Input, Output, State
 from chartlets.components import VegaChart, Box, Select
-from chartlets.demo.contribs import Panel
-from chartlets.demo.context import Context
+
+from demo.server.contribs import Panel
+from demo.server.context import Context
 
 
 panel = Panel(__name__, title="Panel A")

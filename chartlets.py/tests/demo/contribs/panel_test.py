@@ -1,6 +1,6 @@
 import unittest
 
-from chartlets.demo.contribs import Panel
+from chartlets.demo import Panel
 from chartlets.callback import Input, Callback, Output
 
 

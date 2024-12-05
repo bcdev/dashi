@@ -15,9 +15,10 @@ from chartlets import Extension
 from chartlets.controllers import get_callback_results
 from chartlets.controllers import get_contributions
 from chartlets.controllers import get_layout
-from chartlets.demo.context import Context
-from chartlets.demo.contribs import Panel
-from chartlets.demo.utils import NumpyJSONEncoder
+
+from .context import Context
+from .contribs.panel import Panel
+from .utils.json_encoder import NumpyJSONEncoder
 
 
 # This would be done by a xcube server extension
@@ -27,7 +28,7 @@ Extension.add_contrib_point("panels", Panel)
 _CONTEXT_KEY = "chartlets.context"
 
 
-class DashiHandler(tornado.web.RequestHandler):
+class DemoHandler(tornado.web.RequestHandler):
     @property
     def ext_ctx(self) -> ExtensionContext:
         return self.settings[_CONTEXT_KEY]
@@ -57,21 +58,21 @@ class DashiHandler(tornado.web.RequestHandler):
             self.set_status(response.status, response.reason)
 
 
-class RootHandler(DashiHandler):
+class RootHandler(DemoHandler):
     # GET /
     def get(self):
         self.set_header("Content-Type", "text/plain")
-        self.write(f"chartlets-server {__version__}")
+        self.write(f"chartlets-demo-server {__version__}")
 
 
-class ContributionsHandler(DashiHandler):
+class ContributionsHandler(DemoHandler):
 
     # GET /chartlets/contributions
     def get(self):
         self.write_response(get_contributions(self.ext_ctx))
 
 
-class LayoutHandler(DashiHandler):
+class LayoutHandler(DemoHandler):
     # GET /chartlets/layout/{contrib_point_name}/{contrib_index}
     def get(self, contrib_point_name: str, contrib_index: str):
         self.write_response(
@@ -86,7 +87,7 @@ class LayoutHandler(DashiHandler):
         )
 
 
-class CallbackHandler(DashiHandler):
+class CallbackHandler(DemoHandler):
 
     # POST /chartlets/callback
     def post(self):
@@ -107,7 +108,7 @@ def print_usage(app, port):
 
 def make_app():
     # Read config
-    with open("my-config.yaml") as f:
+    with open("server-config.yaml") as f:
         server_config = yaml.load(f, yaml.SafeLoader)
 
     # Create app
@@ -127,7 +128,7 @@ def make_app():
     return app
 
 
-async def _main():
+async def run_app():
     tornado.log.enable_pretty_logging()
 
     port = 8888
@@ -138,11 +139,3 @@ async def _main():
 
     shutdown_event = asyncio.Event()
     await shutdown_event.wait()
-
-
-def main():
-    asyncio.run(_main())
-
-
-if __name__ == "__main__":
-    main()
