@@ -1,4 +1,4 @@
-# chartlets 
+# Chartlets 
 
 [![Backend CI workflow](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml)
 [![PyPI Version](https://img.shields.io/pypi/v/chartlets)](https://pypi.org/project/chartlets/)

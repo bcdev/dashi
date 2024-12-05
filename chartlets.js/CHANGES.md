@@ -1,10 +1,8 @@
-## Version 0.1.0 (not started)
+## Version 0.1.0 (in development)
 
 * Reorganised Chartlets project to better separate demo from library code.
-  - Using monorepo layout for `chartlets.js` that contains separate 
-    packages for `chartlets` and `chartlets-demo`.
-  - Created separate package `demo` in `chartlets.py` that contains 
-    a demo server and example contributions.
+  Using monorepo layout for `chartlets.js` that contains separate 
+  packages for `chartlets` and `chartlets-demo`.
 
 * Chartlets now allows for plugins that can provide individual component 
   implementations.
