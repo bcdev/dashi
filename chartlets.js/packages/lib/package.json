@@ -1,12 +1,12 @@
 {
   "name": "chartlets",
-  "version": "0.0.30",
+  "version": "0.1.0-dev.0",
   "description": "An experimental library for integrating interactive charts into existing JavaScript applications.",
   "type": "module",
   "files": [
     "dist",
-    "README.md",
-    "LICENSE"
+    "../../README.md",
+    "../../LICENSE"
   ],
   "keywords": [
     "typescript",

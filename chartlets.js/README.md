@@ -1,4 +1,4 @@
-# chartlets 
+# Chartlets 
 
 [![Frontend CI workflow](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml)
 [![NPM Version](https://badge.fury.io/js/chartlets.svg)](https://npmjs.org/package/chartlets)

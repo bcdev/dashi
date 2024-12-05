@@ -17,8 +17,8 @@
   To activate, use the new `plugins: Plugin[]` option of `FrameworkOptions`.
   ```TypeScript
   import { initializeContributions } from "chartlets";
-  import mui from "chartlets/plugins/mui";
-  import vega from "chartlets/plugins/vega";
+  import mui from "chartlets/dist/plugins/mui";
+  import vega from "chartlets/dist/plugins/vega";
   
   initializeContributions({ plugins: [mui, vega], ... })   
   ```

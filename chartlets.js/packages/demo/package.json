@@ -1,12 +1,12 @@
 {
   "name": "chartlets-demo",
-  "version": "0.0.27",
+  "version": "0.1.0-dev.0",
   "description": "Demonstrator for the Chartlets framework.",
   "type": "module",
   "files": [
     "dist",
-    "README.md",
-    "LICENSE"
+    "../../README.md",
+    "../../LICENSE"
   ],
   "keywords": [
     "typescript",
@@ -16,14 +16,6 @@
     "plotting",
     "charting"
   ],
-  "homepage": "https://bcdev.github.io/chartlets-demo",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bcdev/chartlets-demo.git"
-  },
-  "bugs": {
-    "url": "https://github.com/bcdev/chartlets-demo/issues"
-  },
   "author": "Brockmann Consult GmbH",
   "license": "MIT",
   "scripts": {
@@ -39,7 +31,7 @@
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.1.0",
     "@mui/material": "^6.1.5",
-    "chartlets": "file:../lib*",
+    "chartlets": "file:../lib",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-vega": "^7.6.0",
