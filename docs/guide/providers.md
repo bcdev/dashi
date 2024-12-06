@@ -5,8 +5,10 @@ server-side UI-contributions provided by an application contributor.
 
 ## How Chartlets works
 
-Users write the widgets in, e.g. Python, and a REST server implements three
-endpoints to publish the widgets:
+The basic idea is that application contributors develop the 
+UI-contributions in Python and a REST server developed by you, the
+application provider, implements three endpoints to publish the 
+UI-contributions to a frontend application:
 
 - `GET /contributions`: Called once after application UI starts up.
   Returns an object whose keys are contribution points (e.g., "panels")
@@ -15,18 +17,19 @@ endpoints to publish the widgets:
   Called once for every contribution when it becomes visible in the UI.
   Returns the contribution's initial component tree.
 - `POST /callback`:
-  Called when users interact with the component tree or on application
-  state changes. Returns an array of contribution changes where each
-  contribution change contains an array of actions to be applied to the
+  Called when application users interact with the component tree or on 
+  application state changes. Returns an array of contribution changes where 
+  each contribution change contains an array of actions to be applied to the
   component tree.
 
-The following sequence diagram depicts how the library is supposed to
-work. The top shows the JavaScript frontend that uses this library.
-The bottom shows the lifeline of the backend REST server.
+The following sequence diagram depicts the framework in action. 
+The top shows the frontend application that uses the Chartlets JavaScript
+library. The bottom shows the lifeline of the backend REST server that uses
+the Chartlets Python library.
 
 ![sequence.png](../images/sequence.png)
 
-## Backend integration
+## REST server integration
 
 The Chartlets backend implementation is provided by the module 
 `chartlets.controllers` of the Python package `chartlets`.
@@ -99,7 +102,7 @@ the controller implementations in `chartlets.controllers`.
 
 As an example, see [`app.py` of the demo server](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py).
 
-## Frontend integration
+## Application UI integration
 
 The JavaScript package `chartlets` provides the types, actions, and hooks
 to allow for supporting server-side UI contributions in your React 
@@ -150,6 +153,6 @@ _Coming soon._
 
 _Coming soon._
 
-## Extend the framework
+## Extending the framework
 
 _Coming soon._

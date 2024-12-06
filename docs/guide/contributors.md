@@ -3,7 +3,8 @@
 As an application contributor you enhance an existing web application
 by UI contributions developed in Python. You implement a Python module 
 that is consumed by (one of) the application's backend servers that 
-implements expected Chartlets REST API as outlined above.
+implement the Chartlets REST API as described in the 
+[Contributors Guide](./contributors.md).
 
 Your module is supposed to export one or more instances of the
 `chartlets.Extension` class. An extension object is a container for your
