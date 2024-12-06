@@ -1,6 +1,6 @@
 import asyncio
 
-from demo.server.app import run_app
+from server.app import run_app
 
 
 def main():

@@ -71,7 +71,7 @@ class Panel(Contribution):
 
 Define the possible contribution points in your application.
 
-As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/server.py):
+As an example, see [`app.py` of the demo server](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py):
 
 ```python
 from chartlets import Extension
@@ -84,7 +84,7 @@ Extension.add_contrib_point("panels", Panel)
 
 Load the extensions that augment your application.
 
-As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/server.py):
+As an example, see [`app.py` of the demo server](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py):
 
 ```python
 from chartlets import ExtensionContext
@@ -97,7 +97,7 @@ ext_ctx = ExtensionContext.load(app_ctx, extension_refs)
 Implement the Chartlets API in your application-specific webserver using
 the controller implementations in `chartlets.controllers`. 
 
-As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/server.py).
+As an example, see [`app.py` of the demo server](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py).
 
 ## Frontend integration
 

@@ -1,8 +1,8 @@
 from chartlets import Component, Input, State, Output
 from chartlets.components import Box, Select, Checkbox, Typography
 
-from demo.server.contribs import Panel
-from demo.server.context import Context
+from server.contribs import Panel
+from server.context import Context
 
 
 panel = Panel(__name__, title="Panel C")
