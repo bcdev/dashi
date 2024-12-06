@@ -41,7 +41,7 @@ UI-contributions:
 
 1. Update project dependencies 
 2. Implement the possible contributions
-3. Define the contributions points
+3. Define the contribution points
 4. Load the extensions
 5. Publish the extensions 
 
@@ -70,7 +70,7 @@ class Panel(Contribution):
         super().__init__(name, title=title)
 ```
 
-### Define the contributions points
+### Define the contribution points
 
 Define the possible contribution points in your application.
 
