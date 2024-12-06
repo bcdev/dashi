@@ -33,7 +33,7 @@ the Chartlets Python library.
 
 The Chartlets backend implementation is provided by the module 
 `chartlets.controllers` of the Python package `chartlets`.
-It makes it easy to integrate the Chartlet endpoints in your preferred
+It makes it easy to integrate the Chartlets endpoints in your preferred
 webserver framework, such as Flask, FastAPI, or Tornado.
 
 The following steps are required to enable your web server to support
