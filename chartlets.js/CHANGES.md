@@ -19,11 +19,14 @@
   configureFramework({ plugins: [mui(), vega()], ... });   
   ```
 
-* Renamed `Plot` into `VegaChart` and moved to `src/plugins/vega`.
+* Renamed `Plot` component into `VegaChart`.
 
 * The new `VegaChart` component respects a `theme` property. If not given,
   it will respect the current theme mode `"dark"` otherwise fallback to the
   Vega default theme. 
+
+* The demo application now allows for switching the theme mode between
+  dark, light, and system mode.
 
 ## Version 0.0.29 (from 2024/11/26)
 
