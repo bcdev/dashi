@@ -9,7 +9,7 @@ Your module is supposed to export one or more instances of the
 `chartlets.Extension` class. An extension object is a container for your
 UI contributions. It groups contributions that logically belong together.
 
-As an example, see [`my_extension` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/my_extension).
+As an example, see [`my_extension` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/my_extension).
 
 To develop an extension, follow these steps:
 
@@ -35,11 +35,12 @@ ext = Extension("my_dashboard")
 ## Create the contribution object
 
 In a submodule you create a contribution object from an application specific
-contribution, e.g., a `Panel`. Application-specific contribution classes 
-are always derived from `chartlets.Contribution`.
+contribution, e.g., a `Panel` from the Chartlets demo server. 
+Application-specific contribution classes are always derived from
+`chartlets.Contribution`.
 
 ```python
-from chartlets.demo import Panel
+from server.contribs import Panel
 
 panel = Panel(title="Click Statistics")
 ```

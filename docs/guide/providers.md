@@ -54,7 +54,7 @@ Currently, Chartlets is available from PyPI only.
 Implement the application-specific contributions that users 
 can add to their extensions.
 
-As an example, see [`panel.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/contribs/panel.py):
+As an example, see [`panel.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/contribs/panel.py):
 
 ```python
 from chartlets import Contribution
@@ -71,11 +71,11 @@ class Panel(Contribution):
 
 Define the possible contribution points in your application.
 
-As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py):
+As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/server.py):
 
 ```python
 from chartlets import Extension
-from chartlets.demo.contribs import Panel
+from .contribs import Panel
 
 Extension.add_contrib_point("panels", Panel)
 ```
@@ -84,7 +84,7 @@ Extension.add_contrib_point("panels", Panel)
 
 Load the extensions that augment your application.
 
-As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py):
+As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/server.py):
 
 ```python
 from chartlets import ExtensionContext
@@ -97,7 +97,7 @@ ext_ctx = ExtensionContext.load(app_ctx, extension_refs)
 Implement the Chartlets API in your application-specific webserver using
 the controller implementations in `chartlets.controllers`. 
 
-As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py).
+As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/server.py).
 
 ## Frontend integration
 
@@ -105,7 +105,7 @@ The JavaScript package `chartlets` provides the types, actions, and hooks
 to allow for supporting server-side UI contributions in your React 
 application. 
 
-As an example, see [the demo application](https://github.com/bcdev/chartlets/tree/main/chartlets.js/src/demo).
+As an example, see [the demo application](https://github.com/bcdev/chartlets/tree/main/chartlets.js/packages/demo/src).
 
 As an application provider you will need to perform the 
 following steps:
