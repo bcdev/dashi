@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
-
+import warnings
 
 # Respect that "altair" is an optional dependency.
 try:
@@ -9,6 +9,7 @@ try:
 
     AltairChart = altair.Chart
 except ImportError:
+    warnings.warn("you must install 'altair' to use the VegaChart component")
     AltairChart = type(None)
 
 from chartlets import Component

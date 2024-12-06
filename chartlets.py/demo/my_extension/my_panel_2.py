@@ -4,7 +4,7 @@ from chartlets import Component, Input, State, Output
 from chartlets.components import VegaChart, Box, Select
 
 from server.context import Context
-from server.panel import (Panel)
+from server.panel import Panel
 
 
 panel = Panel(__name__, title="Panel B")
