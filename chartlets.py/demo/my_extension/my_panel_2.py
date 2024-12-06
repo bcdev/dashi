@@ -3,8 +3,8 @@ import pandas as pd
 from chartlets import Component, Input, State, Output
 from chartlets.components import VegaChart, Box, Select
 
-from server.contribs import (Panel)
 from server.context import Context
+from server.panel import (Panel)
 
 
 panel = Panel(__name__, title="Panel B")

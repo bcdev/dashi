@@ -17,8 +17,7 @@ from chartlets.controllers import get_contributions
 from chartlets.controllers import get_layout
 
 from .context import Context
-from .contribs.panel import Panel
-from .utils.json_encoder import NumpyJSONEncoder
+from .panel import Panel
 
 
 # This would be done by a xcube server extension
@@ -52,8 +51,7 @@ class DemoHandler(tornado.web.RequestHandler):
 
     def write_response(self, response: Response):
         if response.ok:
-            self.set_header("Content-Type", "text/json")
-            self.write(json.dumps({"result": response.data}, cls=NumpyJSONEncoder))
+            self.write({"result": response.data})
         else:
             self.set_status(response.status, response.reason)
 
