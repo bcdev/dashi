@@ -18,12 +18,15 @@ const selectContributionsResult = (state: StoreState) =>
 const selectContributionsRecord = (state: StoreState) =>
   state.contributionsRecord;
 
+const selectThemeMode = (state: StoreState) => state.themeMode;
+
 const useStore = store;
 
 export const useConfiguration = () => useStore(selectConfiguration);
 export const useExtensions = () => useStore(selectExtensions);
 export const useContributionsResult = () => useStore(selectContributionsResult);
 export const useContributionsRecord = () => useStore(selectContributionsRecord);
+export const useThemeMode = () => useStore(selectThemeMode);
 
 export function makeContributionsHook<S extends object = object>(
   contribPoint: string,

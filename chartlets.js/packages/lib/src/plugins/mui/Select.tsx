@@ -4,7 +4,7 @@ import MuiMenuItem from "@mui/material/MenuItem";
 import MuiSelect, { type SelectChangeEvent } from "@mui/material/Select";
 
 import type { ComponentState, ComponentProps } from "@/index";
-import { isString } from "@/index";
+import { isString } from "@/utils/isString";
 
 export type SelectOption =
   | string

@@ -6,15 +6,20 @@ export type {
   ComponentChangeEvent,
   ComponentChangeHandler,
 } from "@/types/state/event";
+export type { ThemeMode } from "@/types/state/store";
+
 // Actions (store changes)
 export { initializeContributions } from "@/actions/initializeContributions";
 export { handleComponentChange } from "@/actions/handleComponentChange";
 export { updateContributionContainer } from "@/actions/updateContributionContainer";
+
 // Component registry
 export type { Registry } from "@/component/Registry";
+
 // React components
 export { Component, type ComponentProps } from "@/component/Component";
 export { Children } from "@/component/Children";
+
 // React hooks
 export {
   useConfiguration,
@@ -24,7 +29,9 @@ export {
   useContributions,
   useComponentChangeHandlers,
   makeContributionsHook,
+  useThemeMode,
 } from "@/hooks";
+
 // Application interface
 export type {
   FrameworkOptions,
@@ -33,6 +40,3 @@ export type {
   Plugin,
   PluginLike,
 } from "@/types/state/options";
-// Some common utilities
-export { isObject } from "@/utils/isObject";
-export { isString } from "@/utils/isString";

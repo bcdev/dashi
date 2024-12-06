@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   CssBaseline,
   ThemeProvider,
@@ -10,12 +10,12 @@ import { initializeContributions } from "chartlets";
 import mui from "chartlets/plugins/mui";
 import vega from "chartlets/plugins/vega";
 
-import { type AppState, appStore } from "@/store";
-import ExtensionsInfo from "./components/ExtensionInfo";
+import { type AppState, appStore, useAppStore } from "@/store";
 import ControlBar from "./components/ControlBar";
+import ExtensionsInfo from "./components/ExtensionInfo";
+import Header from "./components/Header";
 import PanelsControl from "./components/PanelsControl";
 import PanelsRow from "./components/PanelsRow";
-import Header, { type Mode } from "./components/Header";
 
 initializeContributions({
   plugins: [mui(), vega()],
@@ -39,13 +39,14 @@ const fontFamily = "Roboto, Arial, sans-serif";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const systemMode = prefersDarkMode ? "dark" : "light";
-  const [mode, setMode] = useState<Mode>(systemMode);
+  const systemThemeMode = prefersDarkMode ? "dark" : "light";
+  const themeMode = useAppStore((state) => state.themeMode);
+
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
-          mode: mode === "system" ? systemMode : mode,
+          mode: themeMode === "system" ? systemThemeMode : themeMode,
         },
         typography: { fontFamily },
         components: {
@@ -56,13 +57,13 @@ function App() {
           },
         },
       }),
-    [mode, systemMode],
+    [themeMode, systemThemeMode],
   );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Header mode={mode} setMode={setMode} />
+      <Header />
       <ExtensionsInfo />
       <ControlBar />
       <PanelsControl />

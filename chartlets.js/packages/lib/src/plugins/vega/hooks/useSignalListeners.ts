@@ -1,7 +1,9 @@
 import { useCallback, useMemo } from "react";
 import type { TopLevelSpec } from "vega-lite";
 
-import { type ComponentChangeHandler, isObject, isString } from "@/index";
+import { type ComponentChangeHandler } from "@/index";
+import { isString } from "@/utils/isString";
+import { isObject } from "@/utils/isObject";
 
 type SignalHandler = (signalName: string, signalValue: unknown) => void;
 

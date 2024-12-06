@@ -2,15 +2,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-export type Mode = "dark" | "light" | "system";
-const modes: Mode[] = ["dark", "light", "system"];
+import { type ThemeMode, themeModes, useAppStore } from "@/store";
 
-interface HeaderProps {
-  mode: Mode;
-  setMode: (mode: Mode) => void;
-}
-
-function Header({ mode, setMode }: HeaderProps) {
+function Header() {
+  const { themeMode, setThemeMode } = useAppStore();
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
       <Typography fontSize="3em" fontWeight="bold">
@@ -18,16 +13,21 @@ function Header({ mode, setMode }: HeaderProps) {
       </Typography>
       <Button
         onClick={() => {
-          const nextMode = modes[(modes.findIndex((m) => m === mode) + 1) % 3];
-          setMode(nextMode);
+          setThemeMode(getNextThemeMode(themeMode));
         }}
         variant="contained"
         size="small"
       >
-        {mode}
+        {themeMode}
       </Button>
     </Box>
   );
 }
 
 export default Header;
+
+const getNextThemeMode = (themeMode: ThemeMode) => {
+  return themeModes[
+    (themeModes.findIndex((m) => m === themeMode) + 1) % themeModes.length
+  ];
+};

@@ -28,6 +28,7 @@ export function handleHostStoreChange() {
     // there are no extensions (yet)
     return;
   }
+  synchronizeThemeMode(hostStore);
   const propertyRefs = getHostStorePropertyRefs();
   if (!propertyRefs || propertyRefs.length === 0) {
     // Exit if there are is nothing to be changed
@@ -94,4 +95,17 @@ function getHostStorePropertyRefs(): PropertyRef[] {
     });
   });
   return propertyRefs;
+}
+
+function synchronizeThemeMode(hostStore: HostStore) {
+  const newThemeMode = hostStore.get("themeMode");
+  const oldThemeMode = store.getState().themeMode;
+  if (
+    (newThemeMode === "dark" ||
+      newThemeMode === "light" ||
+      newThemeMode === "system") &&
+    newThemeMode !== oldThemeMode
+  ) {
+    store.setState({ themeMode: newThemeMode });
+  }
 }

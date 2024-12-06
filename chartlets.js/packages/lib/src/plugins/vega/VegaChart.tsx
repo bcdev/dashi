@@ -3,16 +3,16 @@ import type { TopLevelSpec } from "vega-lite";
 
 import type { ComponentState, ComponentProps } from "@/index";
 import { useSignalListeners } from "./hooks/useSignalListeners";
-import { useTheme, type VegaTheme } from "./hooks/useTheme";
+import { useVegaTheme, type VegaTheme } from "./hooks/useVegaTheme";
 
-interface PlotState extends ComponentState {
+interface VegaChartState extends ComponentState {
   theme?: VegaTheme | "default" | "system";
   chart?:
     | TopLevelSpec // This is the vega-lite specification type
     | null;
 }
 
-interface PlotProps extends ComponentProps, PlotState {}
+interface VegaChartProps extends ComponentProps, VegaChartState {}
 
 export function VegaChart({
   type,
@@ -21,9 +21,10 @@ export function VegaChart({
   theme,
   chart,
   onChange,
-}: PlotProps) {
+}: VegaChartProps) {
   const signalListeners = useSignalListeners(chart, type, id, onChange);
-  const vegaTheme = useTheme(theme);
+  const vegaTheme = useVegaTheme(theme);
+  console.info("---> vegaTheme:", vegaTheme);
   if (chart) {
     return (
       <VegaLite
