@@ -1,14 +1,14 @@
 ## Version 0.1.0 (in development)
 
 * Reorganised Chartlets project to better separate demo from library code.
-  Created separate package `demo` in `chartlets.py` that contains 
-  a demo server and example contributions.
+  Created separate folder `demo` in `chartlets.py` that contains 
+  a `server` package and example configuration.
 
-* Allow for different chart providers. `VegaChart` is defined 
-  only if `vega-altair` is installed.
+* Allow for different chart providers. `VegaChart` is defined only if 
+  `vega-altair` is installed.
   
-* Renamed `Plot` into `VegaChart`, which now also respects 
-  a `theme` property. 
+* Renamed `Plot` into `VegaChart`, which now also respects a `theme` property. 
+
 
 ## Version 0.0.29 (from 2024/11/26)
 
