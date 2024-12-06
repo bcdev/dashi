@@ -4,13 +4,16 @@ import { Component } from "chartlets";
 import type { ComponentState, ComponentChangeHandler } from "chartlets";
 
 import type { PanelState } from "@/types";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const panelContainerStyle: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   width: 400,
-  height: 400,
-  border: "1px gray solid",
+  // height: 400,
+  border: 1,
+  borderStyle: "solid",
 };
 
 const panelHeaderStyle: CSSProperties = {
@@ -19,14 +22,13 @@ const panelHeaderStyle: CSSProperties = {
   flexDirection: "row",
   width: "100%",
   textAlign: "center",
-  background: "lightgray",
   padding: "2px 4px 2px 4px",
 };
 
 const panelContentStyle: CSSProperties = {
   width: "100%",
   flexGrow: 1,
-  padding: 2,
+  padding: 1,
 };
 
 interface PanelProps extends PanelState {
@@ -64,10 +66,24 @@ function Panel({
     );
   }
   return (
-    <div style={panelContainerStyle}>
-      <div style={panelHeaderStyle}>{title}</div>
-      <div style={panelContentStyle}>{panelElement}</div>
-    </div>
+    <Box
+      sx={(theme) => ({
+        ...panelContainerStyle,
+        borderColor:
+          theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
+      })}
+    >
+      <Box
+        sx={(theme) => ({
+          ...panelHeaderStyle,
+          background:
+            theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
+        })}
+      >
+        <Typography variant="button">{title}</Typography>
+      </Box>
+      <Box sx={panelContentStyle}>{panelElement}</Box>
+    </Box>
   );
 }
 
