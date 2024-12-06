@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
+
+# Respect that "altair" is an optional dependency.
 try:
     # noinspection PyUnresolvedReferences
     import altair
@@ -15,7 +17,11 @@ from chartlets import Component
 @dataclass(frozen=True)
 class VegaChart(Component):
     """A container for a
-    [Vega Altair](https://altair-viz.github.io/) chart."""
+    [Vega Altair](https://altair-viz.github.io/) chart.
+
+    Note: to use this component the `altair` package
+    must be available in your python environment.
+    """
 
     theme: str | None = None
     """The name of a [Vega theme](https://vega.github.io/vega-themes/)."""
