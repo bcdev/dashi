@@ -1,8 +1,5 @@
 import { type ComponentChangeHandler } from "@/types/state/event";
-import {
-  type ComponentNode,
-  isComponentState,
-} from "@/types/state/component";
+import { type ComponentNode, isComponentState } from "@/types/state/component";
 import { Component } from "./Component";
 
 export interface ChildrenProps {
