@@ -14,17 +14,41 @@ For details refer to the [documentation](https://bcdev.github.io/chartlets/).
 
 ## Run demo server
 
-Create environment
+Create environment and install library
 
 ``` bash
+cd ${project}/chartlets.py
 mamba env create
 conda activate chartlets
 pip install -ve . 
 ```
 
-Run server
+Run demo server
 
 ``` bash
-cd demo
-python -m demo.server.main 
+cd ${project}/chartlets.py/demo
+python -m server.main 
+```
+
+## Run demo UI
+
+Install common dependencies
+
+``` bash
+cd ${project}/chartlets.js
+npm install
+```
+
+Build the library
+
+``` bash
+cd ${project}/chartlets.js/packages/lib
+npm run build
+```
+
+Run the demo UI
+
+``` bash
+cd ${project}/chartlets.js/packages/demo
+npm run dev
 ```
