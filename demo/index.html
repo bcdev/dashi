@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#run-the-server" class="md-skip">
+        <a href="#get-sources-from-repo" class="md-skip">
           Skip to content
         </a>
       
@@ -495,18 +495,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#run-the-server" class="md-nav__link">
+  <a href="#get-sources-from-repo" class="md-nav__link">
     <span class="md-ellipsis">
-      Run the server
+      Get sources from repo
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-the-ui" class="md-nav__link">
+  <a href="#run-demo-server" class="md-nav__link">
     <span class="md-ellipsis">
-      Run the UI
+      Run demo server
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-demo-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run demo UI
     </span>
   </a>
   
@@ -562,18 +571,40 @@
 
 <p>Chartlets provides a simple demo that serves as a
 reference for the framework usage and testbed for its features.</p>
+<p>The following steps assume the latest versions of the following 
+development tools are installed:</p>
+<ul>
+<li><code>git</code></li>
+<li><code>conda</code> or <code>mamba</code></li>
+<li><code>npm</code> from <code>node.js</code> </li>
+</ul>
+<h2 id="get-sources-from-repo">Get sources from repo</h2>
 <pre><code class="language-bash">git clone https://github.com/bcdev/chartlets.git
 </code></pre>
-<h3 id="run-the-server">Run the server</h3>
-<pre><code class="language-bash">cd chartlets/chartlets.py
+<p>This will create the folder <code>chartlets</code> which is referred to as
+<code>${project}</code> in the following.</p>
+<h2 id="run-demo-server">Run demo server</h2>
+<p>Create environment and install library</p>
+<pre><code class="language-bash">cd ${project}/chartlets.py
 conda env create
 conda activate chartlets
 pip install -ve . 
-python -m chartlets.demo.server
 </code></pre>
-<h3 id="run-the-ui">Run the UI</h3>
-<pre><code class="language-bash">cd ../chartlets.js
+<p>Run demo server</p>
+<pre><code class="language-bash">cd ${project}/chartlets.py/demo
+python -m server.main 
+</code></pre>
+<h2 id="run-demo-ui">Run demo UI</h2>
+<p>Install common dependencies</p>
+<pre><code class="language-bash">cd ${project}/chartlets.js
 npm install
+</code></pre>
+<p>Build the library</p>
+<pre><code class="language-bash">cd ${project}/chartlets.js/packages/lib
+npm run build
+</code></pre>
+<p>Run the demo UI</p>
+<pre><code class="language-bash">cd ${project}/chartlets.js/packages/demo
 npm run dev
 </code></pre>
 
@@ -626,10 +657,10 @@ npm run dev
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["toc.integrate"], "search": "../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["toc.integrate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>

@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -342,13 +342,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backend-integration" class="md-nav__link">
+  <a href="#rest-server-integration" class="md-nav__link">
     <span class="md-ellipsis">
-      Backend integration
+      REST server integration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Backend integration">
+    <nav class="md-nav" aria-label="REST server integration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -370,9 +370,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#define-the-contributions-points" class="md-nav__link">
+  <a href="#define-the-contribution-points" class="md-nav__link">
     <span class="md-ellipsis">
-      Define the contributions points
+      Define the contribution points
     </span>
   </a>
   
@@ -402,13 +402,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#frontend-integration" class="md-nav__link">
+  <a href="#application-ui-integration" class="md-nav__link">
     <span class="md-ellipsis">
-      Frontend integration
+      Application UI integration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Frontend integration">
+    <nav class="md-nav" aria-label="Application UI integration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -453,9 +453,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-new-components" class="md-nav__link">
+  <a href="#extending-the-framework" class="md-nav__link">
     <span class="md-ellipsis">
-      Adding new components
+      Extending the framework
     </span>
   </a>
   
@@ -677,8 +677,10 @@
 <p>As an application provider you allow for enhancing your web application by
 server-side UI-contributions provided by an application contributor.</p>
 <h2 id="how-chartlets-works">How Chartlets works</h2>
-<p>Users write the widgets in, e.g. Python, and a REST server implements three
-endpoints to publish the widgets:</p>
+<p>The basic idea is that application contributors develop the 
+UI-contributions in Python and a REST server developed by you, the
+application provider, implements three endpoints to publish the 
+UI-contributions to a frontend application:</p>
 <ul>
 <li><code>GET /contributions</code>: Called once after application UI starts up.
   Returns an object whose keys are contribution points (e.g., "panels")
@@ -687,26 +689,27 @@ endpoints to publish the widgets:</p>
   Called once for every contribution when it becomes visible in the UI.
   Returns the contribution's initial component tree.</li>
 <li><code>POST /callback</code>:
-  Called when users interact with the component tree or on application
-  state changes. Returns an array of contribution changes where each
-  contribution change contains an array of actions to be applied to the
+  Called when application users interact with the component tree or on 
+  application state changes. Returns an array of contribution changes where 
+  each contribution change contains an array of actions to be applied to the
   component tree.</li>
 </ul>
-<p>The following sequence diagram depicts how the library is supposed to
-work. The top shows the JavaScript frontend that uses this library.
-The bottom shows the lifeline of the backend REST server.</p>
+<p>The following sequence diagram depicts the framework in action. 
+The top shows the frontend application that uses the Chartlets JavaScript
+library. The bottom shows the lifeline of the backend REST server that uses
+the Chartlets Python library.</p>
 <p><img alt="sequence.png" src="../../images/sequence.png" /></p>
-<h2 id="backend-integration">Backend integration</h2>
+<h2 id="rest-server-integration">REST server integration</h2>
 <p>The Chartlets backend implementation is provided by the module 
 <code>chartlets.controllers</code> of the Python package <code>chartlets</code>.
-It makes it easy to integrate the Chartlet endpoints in your preferred
+It makes it easy to integrate the Chartlets endpoints in your preferred
 webserver framework, such as Flask, FastAPI, or Tornado.</p>
 <p>The following steps are required to enable your web server to support
 UI-contributions:</p>
 <ol>
 <li>Update project dependencies </li>
 <li>Implement the possible contributions</li>
-<li>Define the contributions points</li>
+<li>Define the contribution points</li>
 <li>Load the extensions</li>
 <li>Publish the extensions </li>
 </ol>
@@ -717,7 +720,7 @@ Currently, Chartlets is available from PyPI only.</p>
 <h3 id="implement-the-possible-contributions">Implement the possible contributions</h3>
 <p>Implement the application-specific contributions that users 
 can add to their extensions.</p>
-<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/contribs/panel.py"><code>panel.py</code> of the demo</a>:</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/contribs/panel.py"><code>panel.py</code> of the demo</a>:</p>
 <pre><code class="language-python">from chartlets import Contribution
 
 
@@ -727,17 +730,17 @@ class Panel(Contribution):
     def __init__(self, name: str, title: str | None = None):
         super().__init__(name, title=title)
 </code></pre>
-<h3 id="define-the-contributions-points">Define the contributions points</h3>
+<h3 id="define-the-contribution-points">Define the contribution points</h3>
 <p>Define the possible contribution points in your application.</p>
-<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py"><code>server.py</code> of the demo</a>:</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py"><code>app.py</code> of the demo server</a>:</p>
 <pre><code class="language-python">from chartlets import Extension
-from chartlets.demo.contribs import Panel
+from .contribs import Panel
 
 Extension.add_contrib_point(&quot;panels&quot;, Panel)
 </code></pre>
 <h3 id="load-the-extensions">Load the extensions</h3>
 <p>Load the extensions that augment your application.</p>
-<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py"><code>server.py</code> of the demo</a>:</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py"><code>app.py</code> of the demo server</a>:</p>
 <pre><code class="language-python">from chartlets import ExtensionContext
 
 ext_ctx = ExtensionContext.load(app_ctx, extension_refs)
@@ -745,12 +748,12 @@ ext_ctx = ExtensionContext.load(app_ctx, extension_refs)
 <h3 id="publish-the-extensions">Publish the extensions</h3>
 <p>Implement the Chartlets API in your application-specific webserver using
 the controller implementations in <code>chartlets.controllers</code>. </p>
-<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py"><code>server.py</code> of the demo</a>.</p>
-<h2 id="frontend-integration">Frontend integration</h2>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py"><code>app.py</code> of the demo server</a>.</p>
+<h2 id="application-ui-integration">Application UI integration</h2>
 <p>The JavaScript package <code>chartlets</code> provides the types, actions, and hooks
 to allow for supporting server-side UI contributions in your React 
 application. </p>
-<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.js/src/demo">the demo application</a>.</p>
+<p>As an example, see <a href="https://github.com/bcdev/chartlets/tree/main/chartlets.js/packages/demo/src">the demo application</a>.</p>
 <p>As an application provider you will need to perform the 
 following steps:</p>
 <ol>
@@ -764,16 +767,26 @@ following steps:</p>
 The package provides also TypeScript type definitions.
 There is nothing more to be considered.</p>
 <h3 id="configure-the-framework">Configure the framework</h3>
-<p>Before the framework can be used it must configured 
-using the <code>initializeFramework</code> function. </p>
-<pre><code class="language-TypeScript">import { initializeFramework } &quot;charlets&quot;
+<p>To configure the framework and fetch the initial contributions from the
+server the <code>initializeContributions</code> function must be called once in your
+application. In the following example, the default plugins are used. </p>
+<pre><code class="language-TypeScript">import { initializeContributions } from &quot;chartlets&quot;;
+import mui from &quot;chartlets/plugins/mui&quot;;
+import vega from &quot;chartlets/plugins/vega&quot;;
+
+initializeContributions({
+  plugins: [mui(), vega()],
+  ...
+});
 </code></pre>
-<p><em>More coming soon.</em></p>
+<p>If you need to separate configuration and fetching configurations you can also
+pass the options to the <code>configureFramework</code> function and call 
+<code>initializeContributions</code> without options.</p>
 <h3 id="implement-derived-application-state">Implement derived application state</h3>
 <p><em>Coming soon.</em></p>
 <h3 id="render-the-contributions">Render the contributions</h3>
 <p><em>Coming soon.</em></p>
-<h2 id="adding-new-components">Adding new components</h2>
+<h2 id="extending-the-framework">Extending the framework</h2>
 <p><em>Coming soon.</em></p>
 
 
@@ -825,10 +838,10 @@ using the <code>initializeFramework</code> function. </p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "search": "../../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>
