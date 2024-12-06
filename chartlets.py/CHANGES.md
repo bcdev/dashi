@@ -1,3 +1,19 @@
+## Version 0.1.0 (in development)
+
+
+* Reorganised Chartlets project to better separate demo from library code.
+  Created separate folder `demo` in `chartlets.py` that contains 
+  a demo `server` package and example configuration.
+  Also simplified demo server code:
+  - Moved `panel` module one level up
+  - Removed `util` module which was no longer required 
+
+* Allow for different chart providers. `VegaChart` can be configured only if 
+  `altair` package is installed.
+  
+* Renamed `Plot` into `VegaChart`, which now also respects a `theme` property. 
+
+
 ## Version 0.0.29 (from 2024/11/26)
 
 * Fixed a bug that prevents using annotations of type `dict` or `dict[str, T]`.

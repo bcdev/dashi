@@ -1,3 +1,33 @@
+## Version 0.1.0 (in development)
+
+* Reorganised Chartlets project to better separate demo from library code.
+  Using monorepo layout for `chartlets.js` with workspaces `lib` and `demo`
+  that host the packages for `chartlets` and `chartlets-demo`.
+
+* Chartlets now allows for plugins that can provide individual component 
+  implementations.
+  The Vega-based chart and MUI components are now optional and have been 
+  moved into respective plugin modules `chartlets/plugins/vega` and
+  `chartlets/plugins/mui`.
+  To activate them, use the new `plugins: PluginLike[]` option 
+  of `FrameworkOptions`:
+  ```TypeScript
+  import { configureFramework } from "chartlets";
+  import mui from "chartlets/plugins/mui";
+  import vega from "chartlets/plugins/vega";
+  
+  configureFramework({ plugins: [mui(), vega()], ... });   
+  ```
+
+* Renamed `Plot` component into `VegaChart`.
+
+* The new `VegaChart` component respects a `theme` property. If not given,
+  it will respect the current theme mode `"dark"` otherwise fallback to the
+  Vega default theme. 
+
+* The demo application now allows for switching the theme mode between
+  dark, light, and system mode.
+
 ## Version 0.0.29 (from 2024/11/26)
 
 * Resolved warnings that appeared when using Vega charts.

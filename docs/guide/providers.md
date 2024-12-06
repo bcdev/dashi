@@ -5,8 +5,10 @@ server-side UI-contributions provided by an application contributor.
 
 ## How Chartlets works
 
-Users write the widgets in, e.g. Python, and a REST server implements three
-endpoints to publish the widgets:
+The basic idea is that application contributors develop the 
+UI-contributions in Python and a REST server developed by you, the
+application provider, implements three endpoints to publish the 
+UI-contributions to a frontend application:
 
 - `GET /contributions`: Called once after application UI starts up.
   Returns an object whose keys are contribution points (e.g., "panels")
@@ -15,22 +17,23 @@ endpoints to publish the widgets:
   Called once for every contribution when it becomes visible in the UI.
   Returns the contribution's initial component tree.
 - `POST /callback`:
-  Called when users interact with the component tree or on application
-  state changes. Returns an array of contribution changes where each
-  contribution change contains an array of actions to be applied to the
+  Called when application users interact with the component tree or on 
+  application state changes. Returns an array of contribution changes where 
+  each contribution change contains an array of actions to be applied to the
   component tree.
 
-The following sequence diagram depicts how the library is supposed to
-work. The top shows the JavaScript frontend that uses this library.
-The bottom shows the lifeline of the backend REST server.
+The following sequence diagram depicts the framework in action. 
+The top shows the frontend application that uses the Chartlets JavaScript
+library. The bottom shows the lifeline of the backend REST server that uses
+the Chartlets Python library.
 
 ![sequence.png](../images/sequence.png)
 
-## Backend integration
+## REST server integration
 
 The Chartlets backend implementation is provided by the module 
 `chartlets.controllers` of the Python package `chartlets`.
-It makes it easy to integrate the Chartlet endpoints in your preferred
+It makes it easy to integrate the Chartlets endpoints in your preferred
 webserver framework, such as Flask, FastAPI, or Tornado.
 
 The following steps are required to enable your web server to support
@@ -38,7 +41,7 @@ UI-contributions:
 
 1. Update project dependencies 
 2. Implement the possible contributions
-3. Define the contributions points
+3. Define the contribution points
 4. Load the extensions
 5. Publish the extensions 
 
@@ -54,7 +57,7 @@ Currently, Chartlets is available from PyPI only.
 Implement the application-specific contributions that users 
 can add to their extensions.
 
-As an example, see [`panel.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/contribs/panel.py):
+As an example, see [`panel.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/contribs/panel.py):
 
 ```python
 from chartlets import Contribution
@@ -67,15 +70,15 @@ class Panel(Contribution):
         super().__init__(name, title=title)
 ```
 
-### Define the contributions points
+### Define the contribution points
 
 Define the possible contribution points in your application.
 
-As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py):
+As an example, see [`app.py` of the demo server](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py):
 
 ```python
 from chartlets import Extension
-from chartlets.demo.contribs import Panel
+from .contribs import Panel
 
 Extension.add_contrib_point("panels", Panel)
 ```
@@ -84,7 +87,7 @@ Extension.add_contrib_point("panels", Panel)
 
 Load the extensions that augment your application.
 
-As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py):
+As an example, see [`app.py` of the demo server](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py):
 
 ```python
 from chartlets import ExtensionContext
@@ -97,15 +100,15 @@ ext_ctx = ExtensionContext.load(app_ctx, extension_refs)
 Implement the Chartlets API in your application-specific webserver using
 the controller implementations in `chartlets.controllers`. 
 
-As an example, see [`server.py` of the demo](https://github.com/bcdev/chartlets/tree/main/chartlets.py/chartlets/demo/server.py).
+As an example, see [`app.py` of the demo server](https://github.com/bcdev/chartlets/tree/main/chartlets.py/demo/server/app.py).
 
-## Frontend integration
+## Application UI integration
 
 The JavaScript package `chartlets` provides the types, actions, and hooks
 to allow for supporting server-side UI contributions in your React 
 application. 
 
-As an example, see [the demo application](https://github.com/bcdev/chartlets/tree/main/chartlets.js/src/demo).
+As an example, see [the demo application](https://github.com/bcdev/chartlets/tree/main/chartlets.js/packages/demo/src).
 
 As an application provider you will need to perform the 
 following steps:
@@ -123,14 +126,24 @@ There is nothing more to be considered.
 
 ### Configure the framework
 
-Before the framework can be used it must configured 
-using the `initializeFramework` function. 
+To configure the framework and fetch the initial contributions from the
+server the `initializeContributions` function must be called once in your
+application. In the following example, the default plugins are used. 
 
 ```TypeScript
-import { initializeFramework } "charlets"
+import { initializeContributions } from "chartlets";
+import mui from "chartlets/plugins/mui";
+import vega from "chartlets/plugins/vega";
+
+initializeContributions({
+  plugins: [mui(), vega()],
+  ...
+});
 ```
 
-_More coming soon._
+If you need to separate configuration and fetching configurations you can also
+pass the options to the `configureFramework` function and call 
+`initializeContributions` without options.
 
 ### Implement derived application state
 
@@ -140,6 +153,6 @@ _Coming soon._
 
 _Coming soon._
 
-## Adding new components
+## Extending the framework
 
 _Coming soon._

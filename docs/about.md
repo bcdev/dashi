@@ -56,8 +56,8 @@ Chartlets' TypeScript code is formatted by
 [prettier](https://prettier.io/).
 
 ```bash
-cd chartlets.js
-prettier .
+cd chartlets.js/packages/lib
+prettier -w .
 ```
 
 ### Documentation
