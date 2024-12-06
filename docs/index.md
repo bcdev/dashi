@@ -11,10 +11,11 @@ and a
 
 ## Features
 
-- Enhance your React web application by UI-contributions programmed in Python
-- Enhance your (Python) web API to serve server-side UI-contributions.
-- Uses [Material UI](https://mui.com/material-ui/) components and 
-  [Vega-Lite](https://vega.github.io/vega-lite/) charts.
+- Enhance your React web application by UI-contributions programmed in Python.
+- Enhance your Python REST server to publish server-side UI-contributions.
+- Support your favorite charting library or UI component library by plugins. 
+- Use provided plugins for [Vega-Lite](https://vega.github.io/vega-lite/) charts and [Material UI](https://mui.com/material-ui/) 
+  components.
 
 ## Users
 

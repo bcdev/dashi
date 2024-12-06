@@ -123,14 +123,24 @@ There is nothing more to be considered.
 
 ### Configure the framework
 
-Before the framework can be used it must configured 
-using the `initializeFramework` function. 
+To configure the framework and fetch the initial contributions from the
+server the `initializeContributions` function must be called once in your
+application. In the following example, the default plugins are used. 
 
 ```TypeScript
-import { initializeFramework } "charlets"
+import { initializeContributions } from "chartlets";
+import mui from "chartlets/plugins/mui";
+import vega from "chartlets/plugins/vega";
+
+initializeContributions({
+  plugins: [mui(), vega()],
+  ...
+});
 ```
 
-_More coming soon._
+If you need to separate configuration and fetching configurations you can also
+pass the options to the `configureFramework` function and call 
+`initializeContributions` without options.
 
 ### Implement derived application state
 
@@ -140,6 +150,6 @@ _Coming soon._
 
 _Coming soon._
 
-## Adding new components
+## Extend the framework
 
 _Coming soon._
