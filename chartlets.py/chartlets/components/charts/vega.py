@@ -4,6 +4,7 @@ from typing import Any
 try:
     # noinspection PyUnresolvedReferences
     import altair
+
     AltairChart = altair.Chart
 except ImportError:
     AltairChart = type(None)
