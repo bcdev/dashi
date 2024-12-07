@@ -9,8 +9,11 @@ and providers:
 - Application providers use the abstract base classes `Component` and 
   `Container` to implement new specific components.
 
+## Chart Components
 
-## Specific Components
+::: chartlets.components.VegaChart
+
+## Widget Components
 
 ::: chartlets.components.Box
 
@@ -19,8 +22,6 @@ and providers:
 ::: chartlets.components.Checkbox
 
 ::: chartlets.components.IconButton
-
-::: chartlets.components.Plot
 
 ::: chartlets.components.Select
 

@@ -6,6 +6,6 @@ from .progress import CircularProgress
 from .progress import CircularProgressWithLabel
 from .progress import LinearProgress
 from .progress import LinearProgressWithLabel
-from .plot import Plot
+from .charts.vega import VegaChart
 from .select import Select
 from .typography import Typography

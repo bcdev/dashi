@@ -123,7 +123,11 @@ jobs:
           cache-dependency-path: chartlets.js/package-lock.json
           
       - run: npm ci
-      - run: npm run build
-      - run: npm publish --access public
+      - run: |
+          cd packages/lib
+          npm run build
+      - run: |
+          cd packages/lib
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

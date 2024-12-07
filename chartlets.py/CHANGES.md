@@ -1,8 +1,26 @@
-## Version 0.0.x (in development)
+## Version 0.1.0 (in development)
 
-* Fixed a bug that prevent using annotations of type `dict` or `dict[str, T]`.
-  in callback functions.
+
+* Reorganised Chartlets project to better separate demo from library code.
+  Created separate folder `demo` in `chartlets.py` that contains 
+  a demo `server` package and example configuration.
+  Also simplified demo server code:
+  - Moved `panel` module one level up
+  - Removed `util` module which was no longer required 
+
+* Allow for different chart providers. `VegaChart` can be configured only if 
+  `altair` package is installed.
+  
+* Renamed `Plot` into `VegaChart`, which now also respects a `theme` property. 
+
 * Changed schema of the yet unused descriptor for callback functions.
+
+## Version 0.0.29 (from 2024/11/26)
+
+* Fixed a bug that prevents using annotations of type `dict` or `dict[str, T]`.
+  in callback functions.
+* Introduced a callback function in `my_panel.py` to handle click events. 
+  Demonstrates how to dynamically change the color of a clicked bar.
 
 
 ## Version 0.0.28 (from 2024/11/26)
