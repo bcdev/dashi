@@ -28,6 +28,8 @@
 * The demo application now allows for switching the theme mode between
   dark, light, and system mode.
 
+* Changed the yet unused descriptor type `CbFunction` for callback functions.
+
 ## Version 0.0.29 (from 2024/11/26)
 
 * Resolved warnings that appeared when using Vega charts.

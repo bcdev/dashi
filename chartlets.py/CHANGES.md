@@ -13,6 +13,7 @@
   
 * Renamed `Plot` into `VegaChart`, which now also respects a `theme` property. 
 
+* Changed schema of the yet unused descriptor for callback functions.
 
 ## Version 0.0.29 (from 2024/11/26)
 

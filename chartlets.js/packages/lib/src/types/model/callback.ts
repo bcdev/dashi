@@ -23,13 +23,17 @@ export interface JsonSchema {
 export interface CbFunction {
   name: string;
   parameters: CbParameter[];
-  returnType: JsonSchema;
+  return: CbReturn;
 }
 
 export interface CbParameter {
   name: string;
-  type?: JsonSchema;
+  schema?: JsonSchema;
   default?: unknown;
+}
+
+export interface CbReturn {
+  schema?: JsonSchema;
 }
 
 /**

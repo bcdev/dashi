@@ -15,9 +15,9 @@ def my_callback(
     b: str | int = "",
     c: bool | None = False,
     d: list[str] = (),
-    e: dict[str, Any] = (),
+    e: dict[str, Any] | None = None,
 ) -> str:
-    return f"{a}-{b}-{c}-{d}"
+    return f"{a}-{b}-{c}-{d}-{e}"
 
 
 def my_callback_2(ctx, n: int) -> tuple[list[str], str | None]:
@@ -45,29 +45,29 @@ class CallbackTest(unittest.TestCase):
                 "function": {
                     "name": "my_callback",
                     "parameters": [
-                        {"name": "a", "type": {"type": "integer"}},
+                        {"name": "a", "schema": {"type": "integer"}},
                         {
-                            "default": "",
                             "name": "b",
-                            "type": {"type": ["string", "integer"]},
+                            "schema": {"type": ["string", "integer"]},
+                            "default": "",
                         },
                         {
-                            "default": False,
                             "name": "c",
-                            "type": {"type": ["boolean", "null"]},
+                            "schema": {"type": ["boolean", "null"]},
+                            "default": False,
                         },
                         {
-                            "default": (),
                             "name": "d",
-                            "type": {"items": {"type": "string"}, "type": "array"},
+                            "schema": {"items": {"type": "string"}, "type": "array"},
+                            "default": (),
                         },
                         {
-                            "default": (),
                             "name": "e",
-                            "type": {"additionalProperties": {}, "type": "object"},
+                            "schema": {'type': ['object', 'null']},
+                            "default": None,
                         },
                     ],
-                    "returnType": {"type": "string"},
+                    "return": {"schema": {"type": "string"}},
                 },
                 "inputs": [
                     {"id": "a", "property": "value"},
@@ -95,14 +95,14 @@ class CallbackTest(unittest.TestCase):
             {
                 "function": {
                     "name": "my_callback_2",
-                    "parameters": [{"name": "n", "type": {"type": "integer"}}],
-                    "returnType": {
+                    "parameters": [{"name": "n", "schema": {"type": "integer"}}],
+                    "return": {"schema":{
                         "items": [
                             {"items": {"type": "string"}, "type": "array"},
                             {"type": ["string", "null"]},
                         ],
                         "type": "array",
-                    },
+                    }},
                 },
                 "inputs": [{"id": "n", "property": "value"}],
                 "outputs": [
