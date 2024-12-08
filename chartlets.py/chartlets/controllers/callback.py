@@ -3,19 +3,16 @@ from typing import Any
 from chartlets.extensioncontext import ExtensionContext
 from chartlets.response import Response
 from chartlets.util.assertions import assert_is_instance_of
-from chartlets.util.assertions import assert_is_not_none
 from ._helpers import get_contribution
 
 
-# POST /chartlets/callback
 def get_callback_results(
-    ext_ctx: ExtensionContext | None, data: dict[str, Any]
+    ext_ctx: ExtensionContext, data: dict[str, Any]
 ) -> Response:
     """Generate the response for the endpoint `POST /chartlets/callback`.
 
     Args:
-        ext_ctx: Extension context. If `None`,
-            the function returns a 404 error response.
+        ext_ctx: Extension context.
         data: A dictionary deserialized from a request JSON body
             that should contain a key `callbackRequests` of type `list`.
     Returns:
@@ -23,13 +20,12 @@ def get_callback_results(
         On success, the response is a list of state-change requests
         grouped by contributions.
     """
-    assert_is_not_none("ext_ctx", ext_ctx)
+    assert_is_instance_of("ext_ctx", ext_ctx, ExtensionContext)
     assert_is_instance_of("data", data, dict)
 
     # TODO: validate data
     callback_requests: list[dict] = data.get("callbackRequests") or []
 
-    # TODO: assert correctness, set status code on error
     state_change_requests: list[dict[str, Any]] = []
     for callback_request in callback_requests:
         contrib_point_name: str = callback_request["contribPoint"]
@@ -80,6 +76,7 @@ def get_callback_results(
                 }
             )
 
+        # find an existing state change request
         existing_scr: dict[str, Any] | None = None
         for scr in state_change_requests:
             if (
@@ -88,9 +85,12 @@ def get_callback_results(
             ):
                 existing_scr = scr
                 break
+
         if existing_scr is not None:
+            # merge with existing state change request
             existing_scr["stateChanges"].extend(state_changes)
         else:
+            # append new state change request
             state_change_requests.append(
                 {
                     "contribPoint": contrib_point_name,

@@ -7,7 +7,7 @@ from ._helpers import get_contribution
 
 
 def get_layout(
-    ext_ctx: ExtensionContext | None,
+    ext_ctx: ExtensionContext,
     contrib_point_name: str,
     contrib_index: int,
     data: dict[str, Any],
@@ -16,8 +16,7 @@ def get_layout(
     `POST /chartlets/layout/{contrib_point_name}/{contrib_index}`.
 
     Args:
-        ext_ctx: Extension context. If `None`,
-            the function returns a 404 error response.
+        ext_ctx: Extension context.
         contrib_point_name: Contribution point name.
         contrib_index: Contribution index.
         data: A dictionary deserialized from a request JSON body
@@ -27,6 +26,7 @@ def get_layout(
         On success, the response is a dictionary that represents
         a JSON-serialized component tree.
     """
+    assert_is_instance_of("ext_ctx", ext_ctx, ExtensionContext)
     assert_is_instance_of("data", data, dict)
 
     # TODO: validate data
