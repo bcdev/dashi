@@ -75,3 +75,8 @@ class AssertIsInstanceOfTest(unittest.TestCase):
             TypeError, match="value of 'x' must be of type int or str, but was object"
         ):
             assert_is_instance_of("x", object(), (int, str))
+
+        with pytest.raises(
+            TypeError, match="value of 'x' must be of type str, but was None"
+        ):
+            assert_is_instance_of("x", None, str)

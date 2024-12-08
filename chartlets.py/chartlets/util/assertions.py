@@ -30,5 +30,6 @@ def assert_is_instance_of(name: str, value: Any, type_set: Type | tuple[Type, ..
             type_set = (type_set,)
         raise TypeError(
             f"value of {name!r} must be of type"
-            f" {" or ".join(map(lambda t: t.__name__, type_set))}, but was {type(value).__name__}"
+            f" {" or ".join(map(lambda t: t.__name__, type_set))},"
+            f" but was {'None' if value is None else type(value).__name__}"
         )

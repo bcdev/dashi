@@ -10,14 +10,17 @@ def test_no_altair(monkeypatch: pytest.MonkeyPatch):
     of "altair" gracefully.
     """
     project_root = pathlib.Path(__file__).absolute().parent
-    while project_root.parent != project_root and not (project_root / "chartlets" / "__init__.py").exists():
+    while (
+        project_root.parent != project_root
+        and not (project_root / "chartlets" / "__init__.py").exists()
+    ):
         project_root = project_root.parent
 
     # Simulate the absence of the 'altair' module
     print("project_root:", project_root)
     monkeypatch.setattr(sys, "path", [f"{project_root}"])
     if "altair" in sys.modules:
-        monkeypatch.delitem(sys.modules,"altair")
+        monkeypatch.delitem(sys.modules, "altair")
 
     # Import the code that handles the missing "altair" package
     importlib.invalidate_caches()
