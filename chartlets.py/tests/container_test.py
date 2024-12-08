@@ -42,3 +42,18 @@ class ContainerTest(unittest.TestCase):
             },
             group.to_dict(),
         )
+
+    def test_add(self):
+        g = ItemGroup("g")
+        a = Item("a")
+        b = Item("b")
+        g.add(a)
+        g.add(b)
+        self.assertEqual(
+            {
+                "type": "ItemGroup",
+                "id": "g",
+                "children": [{"type": "Item", "id": "a"}, {"type": "Item", "id": "b"}],
+            },
+            g.to_dict(),
+        )

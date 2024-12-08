@@ -3,8 +3,9 @@ from typing import Any
 
 import pytest
 
+from chartlets.callback import Callback, annotation_to_json_schema
 from chartlets.channel import Input, State, Output
-from chartlets.callback import Callback
+from chartlets.components import VegaChart, Checkbox, Button
 
 
 # noinspection PyUnusedLocal
@@ -24,13 +25,15 @@ def my_callback_2(ctx, n: int) -> tuple[list[str], str | None]:
     return list(map(str, range(1, n + 1))), str(1)
 
 
-class CallbackTest(unittest.TestCase):
-    def test_make_function_args(self):
-        callback = Callback(my_callback, [Input("a"), Input("b"), Input("c")], [])
-        ctx = object()
-        args, kwargs = callback.make_function_args(ctx, [13, "Wow", True])
-        self.assertEqual((ctx, 13), args)
-        self.assertEqual({"b": "Wow", "c": True}, kwargs)
+def no_args_callback():
+    pass
+
+
+def no_annotations_callback(ctx, a, b):
+    pass
+
+
+class CallbackToDictTest(unittest.TestCase):
 
     def test_to_dict_with_no_outputs(self):
         callback = Callback(
@@ -63,7 +66,7 @@ class CallbackTest(unittest.TestCase):
                         },
                         {
                             "name": "e",
-                            "schema": {'type': ['object', 'null']},
+                            "schema": {"type": ["object", "null"]},
                             "default": None,
                         },
                     ],
@@ -96,13 +99,15 @@ class CallbackTest(unittest.TestCase):
                 "function": {
                     "name": "my_callback_2",
                     "parameters": [{"name": "n", "schema": {"type": "integer"}}],
-                    "return": {"schema":{
-                        "items": [
-                            {"items": {"type": "string"}, "type": "array"},
-                            {"type": ["string", "null"]},
-                        ],
-                        "type": "array",
-                    }},
+                    "return": {
+                        "schema": {
+                            "items": [
+                                {"items": {"type": "string"}, "type": "array"},
+                                {"type": ["string", "null"]},
+                            ],
+                            "type": "array",
+                        }
+                    },
                 },
                 "inputs": [{"id": "n", "property": "value"}],
                 "outputs": [
@@ -115,21 +120,74 @@ class CallbackTest(unittest.TestCase):
 
 
 # noinspection PyMethodMayBeStatic
+class CallbackInvokeTest(unittest.TestCase):
+    def test_works(self):
+        callback = Callback(my_callback, [Input(c) for c in "abcde"], [Output("x")])
+        ctx = object()
+        result = callback.invoke(ctx, [12, "Wow", True, list("abc"), dict(x=14)])
+        self.assertEqual("12-Wow-True-['a', 'b', 'c']-{'x': 14}", result)
+
+    def test_too_few_input_values(self):
+        callback = Callback(my_callback, [Input(c) for c in "abcde"], [Output("x")])
+        ctx = object()
+        result = callback.invoke(ctx, [12, "Wow", True])
+        self.assertEqual("12-Wow-True-None-None", result)
+
+    def test_too_many_input_values(self):
+        callback = Callback(my_callback, [Input(c) for c in "abcde"], [Output("x")])
+        ctx = object()
+        with pytest.raises(
+            TypeError,
+            match=(
+                "too many input values given for function"
+                " 'my_callback': expected 5, but got 6"
+            ),
+        ):
+            callback.make_function_args(
+                ctx, [11, "Wow", False, list("xyz"), dict(x=17), None]
+            )
+
+
+# noinspection PyMethodMayBeStatic
 class FromDecoratorTest(unittest.TestCase):
+
+    def test_ok(self):
+        cb = Callback.from_decorator(
+            "test", [Input(c) for c in "abcde"] + [Output("x")], my_callback
+        )
+        self.assertIsInstance(cb, Callback)
+
+    def test_no_args(self):
+        with pytest.raises(
+            TypeError,
+            match=(
+                "function 'no_args_callback' decorated with"
+                " 'test' must have at least one context parameter"
+            ),
+        ):
+            Callback.from_decorator(
+                "test",
+                (),
+                no_args_callback,
+            )
 
     def test_too_few_inputs(self):
         with pytest.raises(
             TypeError,
-            match="too few inputs in decorator 'test' for function"
-            " 'my_callback': expected 5, but got 0",
+            match=(
+                "too few inputs in decorator 'test' for function"
+                " 'my_callback': expected 5, but got 0"
+            ),
         ):
             Callback.from_decorator("test", (), my_callback)
 
     def test_too_many_inputs(self):
         with pytest.raises(
             TypeError,
-            match="too many inputs in decorator 'test' for function"
-            " 'my_callback': expected 5, but got 7",
+            match=(
+                "too many inputs in decorator 'test' for function"
+                " 'my_callback': expected 5, but got 7"
+            ),
         ):
             Callback.from_decorator(
                 "test", tuple(Input(c) for c in "abcdefg"), my_callback
@@ -160,3 +218,105 @@ class FromDecoratorTest(unittest.TestCase):
             ),
         ):
             Callback.from_decorator("test", (13,), my_callback, states_only=True)
+
+    def test_no_annotation(self):
+        cb = Callback.from_decorator(
+            "test", (Input("x"), Input("y"), Output("z")), no_annotations_callback
+        )
+
+
+# noinspection PyMethodMayBeStatic
+class AnnotationToJsonSchemaTest(unittest.TestCase):
+    def test_any_type(self):
+        self.assertEqual({}, annotation_to_json_schema(Any))
+
+    def test_simple_types(self):
+        self.assertEqual({"type": "null"}, annotation_to_json_schema(None))
+        self.assertEqual({"type": "null"}, annotation_to_json_schema(type(None)))
+        self.assertEqual({"type": "boolean"}, annotation_to_json_schema(bool))
+        self.assertEqual({"type": "integer"}, annotation_to_json_schema(int))
+        self.assertEqual({"type": "number"}, annotation_to_json_schema(float))
+        self.assertEqual({"type": "string"}, annotation_to_json_schema(str))
+        self.assertEqual({"type": "array"}, annotation_to_json_schema(list))
+        self.assertEqual({"type": "array"}, annotation_to_json_schema(tuple))
+        self.assertEqual({"type": "object"}, annotation_to_json_schema(dict))
+
+    def test_generic_alias(self):
+        self.assertEqual(
+            {"type": "array"},
+            annotation_to_json_schema(list[Any]),
+        )
+        self.assertEqual(
+            {"type": "array", "items": {"type": "integer"}},
+            annotation_to_json_schema(list[int]),
+        )
+        self.assertEqual(
+            {"type": "array", "items": [{"type": "array"}]},
+            annotation_to_json_schema(tuple[list]),
+        )
+        self.assertEqual(
+            {"type": "array", "items": [{"type": "string"}, {"type": "integer"}]},
+            annotation_to_json_schema(tuple[str, int]),
+        )
+        self.assertEqual(
+            {"type": "object"},
+            annotation_to_json_schema(dict[str, Any]),
+        )
+        self.assertEqual(
+            {
+                "type": "object",
+                "additionalProperties": {"type": "boolean"},
+            },
+            annotation_to_json_schema(dict[str, bool]),
+        )
+
+    def test_union_type(self):
+        self.assertEqual(
+            {"type": ["string", "null"]}, annotation_to_json_schema(str | None)
+        )
+        self.assertEqual(
+            {"type": ["string", "null"]}, annotation_to_json_schema(str | None)
+        )
+        self.assertEqual(
+            {
+                "oneOf": [
+                    {"type": "boolean"},
+                    {
+                        "type": "array",
+                        "items": [{"type": "string"}, {"type": "boolean"}],
+                    },
+                    {"type": "null"},
+                ]
+            },
+            annotation_to_json_schema(bool | tuple[str, bool] | None),
+        )
+
+    def test_component_type(self):
+        self.assertEqual(
+            {"type": "object", "class": "VegaChart"},
+            annotation_to_json_schema(VegaChart),
+        )
+        self.assertEqual(
+            {"type": "object", "class": "Button"}, annotation_to_json_schema(Button)
+        )
+
+    def test_not_supported(self):
+        with pytest.raises(
+            TypeError, match="unsupported type annotation: <class 'object'>"
+        ):
+            annotation_to_json_schema(object)
+
+        with pytest.raises(
+            TypeError, match="unsupported type annotation: <class 'set'>"
+        ):
+            annotation_to_json_schema(set)
+
+        with pytest.raises(
+            TypeError, match="unsupported type annotation: set\\[str\\]"
+        ):
+            annotation_to_json_schema(set[str])
+
+        with pytest.raises(
+            TypeError, match="unsupported type annotation: dict\\[int, str\\]"
+        ):
+            annotation_to_json_schema(dict[int, str])

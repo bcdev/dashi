@@ -1,6 +1,5 @@
 ## Version 0.1.0 (in development)
 
-
 * Reorganised Chartlets project to better separate demo from library code.
   Created separate folder `demo` in `chartlets.py` that contains 
   a demo `server` package and example configuration.
@@ -14,6 +13,9 @@
 * Renamed `Plot` into `VegaChart`, which now also respects a `theme` property. 
 
 * Changed schema of the yet unused descriptor for callback functions.
+  - using `schema` instead of `type` property for callback arguments
+  - using `return` object with `schema` property for callback return values
+
 
 ## Version 0.0.29 (from 2024/11/26)
 

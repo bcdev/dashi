@@ -1,8 +1,6 @@
 import importlib
 from typing import Any
 
-import sys
-
 from chartlets import Extension, Contribution
 
 
@@ -15,7 +13,7 @@ class ExtensionContext:
             # noinspection PyTypeChecker
             contributions: list[Contribution] = []
             for extension in extensions:
-                contributions.extend(getattr(extension, contrib_point_name))
+                contributions.extend(extension.get(contrib_point_name))
             # noinspection PyTypeChecker
             contributions_map[contrib_point_name] = contributions
         self._contributions = contributions_map
@@ -52,16 +50,15 @@ class ExtensionContext:
         extensions: list[Extension] = []
         for ext_ref in extension_refs:
             try:
-                module_name, attr_name = ext_ref.rsplit(".", maxsplit=2)
+                module_name, attr_name = ext_ref.rsplit(".", maxsplit=1)
             except (ValueError, AttributeError):
-                raise TypeError(f"contribution syntax error: {ext_ref!r}")
+                raise ValueError(f"contribution syntax error: {ext_ref!r}")
             module = importlib.import_module(module_name)
             extension = getattr(module, attr_name)
             if not isinstance(extension, Extension):
                 raise TypeError(
-                    f"extension {ext_ref!r} must refer to an"
-                    f" instance of {Extension.__qualname__!r},"
-                    f" but was {type(extension).__qualname__!r}"
+                    f"extension reference {ext_ref!r} is not referring to an"
+                    f" instance of chartlets.Extension"
                 )
             extensions.append(extension)
         return ExtensionContext(app_ctx, extensions)

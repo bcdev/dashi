@@ -12,6 +12,8 @@ node_modules
 __pycache__
 # mkdocs
 site
+# pytest --cov
+.coverage
 
 # Editor directories and files
 .vscode/*
