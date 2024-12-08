@@ -2,17 +2,23 @@ from dataclasses import dataclass
 from typing import Any
 import warnings
 
+from chartlets import Component
+
+
 # Respect that "altair" is an optional dependency.
+class AltairDummy:
+    # noinspection PyPep8Naming
+    @property
+    def Chart(self):
+        warnings.warn("you must install 'altair' to use the VegaChart component")
+        return int
+
+
 try:
     # noinspection PyUnresolvedReferences
     import altair
-
-    AltairChart = altair.Chart
 except ImportError:
-    warnings.warn("you must install 'altair' to use the VegaChart component")
-    AltairChart = type(None)
-
-from chartlets import Component
+    altair = AltairDummy()
 
 
 @dataclass(frozen=True)
@@ -27,7 +33,7 @@ class VegaChart(Component):
     theme: str | None = None
     """The name of a [Vega theme](https://vega.github.io/vega-themes/)."""
 
-    chart: AltairChart | None = None
+    chart: altair.Chart | None = None
     """The [Vega Altair chart](https://altair-viz.github.io/gallery/index.html)."""
 
     def to_dict(self) -> dict[str, Any]:

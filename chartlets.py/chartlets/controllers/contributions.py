@@ -1,5 +1,6 @@
 from chartlets.extensioncontext import ExtensionContext
 from chartlets.response import Response
+from chartlets.util.assertions import assert_is_not_none
 
 
 def get_contributions(ext_ctx: ExtensionContext | None) -> Response:
@@ -13,9 +14,7 @@ def get_contributions(ext_ctx: ExtensionContext | None) -> Response:
         On success, the response is a dictionary that represents
         a JSON-serialized component tree.
     """
-    if ext_ctx is None:
-        return Response.failed(404, f"no contributions configured")
-
+    assert_is_not_none("ext_ctx", ext_ctx)
     extensions = ext_ctx.extensions
     contributions = ext_ctx.contributions
     return Response.success(

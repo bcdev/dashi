@@ -2,6 +2,8 @@ from typing import Any
 
 from chartlets.extensioncontext import ExtensionContext
 from chartlets.response import Response
+from chartlets.util.assertions import assert_is_instance_of
+from chartlets.util.assertions import assert_is_not_none
 
 
 # POST /chartlets/callback
@@ -20,8 +22,8 @@ def get_callback_results(
         On success, the response is a list of state-change requests
         grouped by contributions.
     """
-    if ext_ctx is None:
-        return Response.failed(404, f"no contributions configured")
+    assert_is_not_none("ext_ctx", ext_ctx)
+    assert_is_instance_of("data", data, dict)
 
     # TODO: validate data
     callback_requests: list[dict] = data.get("callbackRequests") or []

@@ -2,6 +2,9 @@ from typing import Any
 
 from chartlets.extensioncontext import ExtensionContext
 from chartlets.response import Response
+from chartlets.util.assertions import assert_is_not_none
+from chartlets.util.assertions import assert_is_not_empty
+from chartlets.util.assertions import assert_is_instance_of
 
 
 def get_layout(
@@ -25,8 +28,10 @@ def get_layout(
         On success, the response is a dictionary that represents
         a JSON-serialized component tree.
     """
-    if ext_ctx is None:
-        return Response.failed(404, f"no contributions configured")
+    assert_is_not_none("ext_ctx", ext_ctx)
+    assert_is_not_empty("contrib_point_name", contrib_point_name)
+    assert_is_instance_of("contrib_index", contrib_index, int)
+    assert_is_instance_of("data", data, dict)
 
     # TODO: validate data
     input_values = data.get("inputValues") or []
@@ -38,16 +43,20 @@ def get_layout(
             404, f"contribution point {contrib_point_name!r} not found"
         )
 
-    contrib_ref = f"{contrib_point_name}[{contrib_index}]"
-
     try:
         contribution = contributions[contrib_index]
     except IndexError:
-        return Response.failed(404, f"contribution {contrib_ref!r} not found")
+        return Response.failed(
+            404,
+            (
+                f"index range of contribution point {contrib_point_name!r} is"
+                f" 0 to {len(contributions) - 1}, got {contrib_index}"
+            ),
+        )
 
     callback = contribution.layout_callback
     if callback is None:
-        return Response.failed(400, f"contribution {contrib_ref!r} has no layout")
+        return Response.failed(400, f"contribution {contribution.name!r} has no layout")
 
     component = callback.invoke(ext_ctx.app_ctx, input_values)
 
