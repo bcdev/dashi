@@ -31,19 +31,18 @@ export function Select({
   onChange,
 }: SelectProps) {
   const handleChange = (event: SelectChangeEvent) => {
-    if (!id) {
-      return;
+    if (id) {
+      let newValue: string | number = event.target.value;
+      if (typeof value == "number") {
+        newValue = Number.parseInt(newValue);
+      }
+      onChange({
+        componentType: type,
+        id: id,
+        property: "value",
+        value: newValue,
+      });
     }
-    let newValue: string | number = event.target.value;
-    if (typeof value == "number") {
-      newValue = Number.parseInt(newValue);
-    }
-    return onChange({
-      componentType: type,
-      id: id,
-      property: "value",
-      value: newValue,
-    });
   };
   return (
     <MuiFormControl variant="filled" size="small" style={style}>

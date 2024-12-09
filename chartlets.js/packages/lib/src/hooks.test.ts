@@ -90,10 +90,30 @@ describe("useComponentChangeHandlers", () => {
     const { result } = renderHook(() =>
       useComponentChangeHandlers("panels", 3),
     );
+    const [handleChange0, handleChange1, handleChange2] = result.current;
+    expect(typeof handleChange0).toEqual("function");
+    expect(typeof handleChange1).toEqual("function");
+    expect(typeof handleChange2).toEqual("function");
     act(() =>
-      result.current[0]({
+      handleChange0({
         componentType: "button",
-        id: "btn",
+        id: "btn1",
+        property: "clicked",
+        value: true,
+      }),
+    );
+    act(() =>
+      handleChange1({
+        componentType: "button",
+        id: "btn2",
+        property: "clicked",
+        value: true,
+      }),
+    );
+    act(() =>
+      handleChange2({
+        componentType: "button",
+        id: "btn3",
         property: "clicked",
         value: true,
       }),

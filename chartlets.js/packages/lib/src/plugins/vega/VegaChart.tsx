@@ -24,7 +24,6 @@ export function VegaChart({
 }: VegaChartProps) {
   const signalListeners = useSignalListeners(chart, type, id, onChange);
   const vegaTheme = useVegaTheme(theme);
-  console.info("---> vegaTheme:", vegaTheme);
   if (chart) {
     return (
       <VegaLite

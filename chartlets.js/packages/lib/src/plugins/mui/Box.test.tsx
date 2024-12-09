@@ -9,6 +9,8 @@ describe("Box", () => {
     render(
       <Box id="bx" type={"Box"} children={["Hallo!"]} onChange={onChange} />,
     );
+    // to inspect rendered component, do:
+    // expect(document.querySelector("#bx")).toEqual({});
     expect(screen.getByText("Hallo!")).not.toBeUndefined();
   });
 });

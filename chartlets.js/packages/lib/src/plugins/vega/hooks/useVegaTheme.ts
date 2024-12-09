@@ -7,8 +7,8 @@ export type VegaTheme = keyof Omit<typeof vegaThemes, "version">;
 const isVegaTheme = (key?: string): key is VegaTheme =>
   !!key && key in vegaThemes;
 
-const isSystemThemeDark = () =>
-  window.matchMedia("(prefers-color-scheme: dark)");
+const isSystemThemeDark = (): boolean =>
+  window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 export function useVegaTheme(
   theme: VegaTheme | "default" | "system" | undefined,
