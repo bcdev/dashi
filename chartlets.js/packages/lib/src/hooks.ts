@@ -1,6 +1,6 @@
 import type { StoreState } from "@/types/state/store";
 import { store } from "@/store";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import type { ContributionState } from "@/types/state/contribution";
 import type {
   ComponentChangeEvent,
@@ -28,31 +28,29 @@ export const useContributionsResult = () => useStore(selectContributionsResult);
 export const useContributionsRecord = () => useStore(selectContributionsRecord);
 export const useThemeMode = () => useStore(selectThemeMode);
 
-export function makeContributionsHook<S extends object = object>(
-  contribPoint: string,
-): () => ContributionState<S>[] {
-  return () => {
-    const selectContributions = (state: StoreState) =>
-      state.contributionsRecord[contribPoint];
-    const contributions = useStore(selectContributions);
-    return useMemo(() => {
-      return (contributions || []) as ContributionState<S>[];
-    }, [contributions]);
-  };
-}
-
 /**
  * A hook that retrieves the contributions for the given contribution
  * point given by `contribPoint`.
  *
+ * A stable empty array is returned if there are no contributions or
+ * the contribution point does not exist.
+ *
  * @param contribPoint Contribution point name.
  * @typeParam S Type of the container state.
+ * @returns Array of contributions.
  */
 export function useContributions<S extends object = object>(
   contribPoint: string,
 ): ContributionState<S>[] {
-  const contributionsRecord = useContributionsRecord();
-  return contributionsRecord[contribPoint] as ContributionState<S>[];
+  const selectContributions = useCallback(
+    (state: StoreState) => state.contributionsRecord[contribPoint],
+    [contribPoint],
+  );
+  const contributions = useStore(selectContributions);
+  return useMemo(
+    () => (contributions || []) as ContributionState<S>[],
+    [contributions],
+  );
 }
 
 /**
@@ -60,9 +58,13 @@ export function useContributions<S extends object = object>(
  * component change handlers of type `ComponentChangeHandler` for
  * the contribution point given by `contribPoint`.
  *
+ * A stable empty array is returned if there are no contributions or
+ * the contribution point does not exist.
+ *
  * @param contribPoint Contribution point name.
  * @param numContribs Number of contributions. This should be the length
  *   of the array of contributions you get using the `useContributions` hook.
+ * @returns Array of component change handlers
  */
 export function useComponentChangeHandlers(
   contribPoint: string,

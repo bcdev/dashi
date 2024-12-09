@@ -59,13 +59,13 @@ export default defineConfig({
     },
   },
   test: {
+    globals: true,
     environment: "jsdom",
-    onConsoleLog: (/*_log: string, _type: "stdout" | "stderr"*/):
-      | false
-      | void => {
+    setupFiles: "vitest.setup.ts",
+    onConsoleLog: (_log: string, _type: "stdout" | "stderr"): false | void => {
       const logLevel = process.env.VITE_LOG_LEVEL;
       if (!logLevel || logLevel === "OFF") {
-        return false;
+        //return false;
       }
     },
   },
