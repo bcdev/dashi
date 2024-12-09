@@ -1,3 +1,4 @@
+import inspect
 from typing import Any
 
 from chartlets.contribution import Contribution
@@ -18,7 +19,18 @@ class Extension:
             item_type: The type of items that can be added
                 to the new contribution point.
         """
+        if not inspect.isclass(item_type) or not issubclass(item_type, Contribution):
+            message = "item_type must be a class derived from chartlets.Contribution"
+            raise TypeError(
+                f"{message}, but was {item_type.__name__}"
+                if hasattr(item_type, "__name__")
+                else message
+            )
         cls._contrib_points[item_type] = name
+
+    @classmethod
+    def reset_contrib_points(cls):
+        cls._contrib_points = {}
 
     @classmethod
     def get_contrib_point_names(cls) -> tuple[str, ...]:
@@ -35,8 +47,7 @@ class Extension:
     def __init__(self, name: str, version: str = "0.0.0"):
         self.name = name
         self.version = version
-        for contrib_point_name in self.get_contrib_point_names():
-            setattr(self, contrib_point_name, [])
+        self._contributions: dict[str, list[Contribution]] = {}
 
     def add(self, contribution: Contribution):
         """Add a contribution to this extension.
@@ -53,8 +64,13 @@ class Extension:
                 f"unrecognized contribution of type {contrib_type.__qualname__}"
             )
         contribution.extension = self.name
-        contributions: list[Contribution] = getattr(self, contrib_point_name)
-        contributions.append(contribution)
+        if contrib_point_name in self._contributions:
+            self._contributions[contrib_point_name].append(contribution)
+        else:
+            self._contributions[contrib_point_name] = [contribution]
+
+    def get(self, contrib_point_name: str) -> list[Contribution]:
+        return self._contributions.get(contrib_point_name, [])
 
     def to_dict(self) -> dict[str, Any]:
         """Convert this extension into a JSON-serializable dictionary.
@@ -64,9 +80,5 @@ class Extension:
         return dict(
             name=self.name,
             version=self.version,
-            contributes=[
-                contrib_point_name
-                for contrib_point_name in self.get_contrib_point_names()
-                if getattr(self, contrib_point_name)
-            ],
+            contributes=sorted(self._contributions.keys()),
         )

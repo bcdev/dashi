@@ -19,7 +19,6 @@ class Contribution(ABC):
         initial_state: contribution specific attribute values.
     """
 
-    # noinspection PyShadowingBuiltins
     def __init__(self, name: str, **initial_state: Any):
         self.name = name
         self.initial_state = initial_state

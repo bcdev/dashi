@@ -97,7 +97,7 @@ class InputTest(make_base(), unittest.TestCase):
     channel_cls = Input
 
     def test_component_empty_property(self):
-        with pytest.raises(ValueError, match="value for 'property' must be given"):
+        with pytest.raises(ValueError, match="value for 'property' must not be empty"):
             self.channel_cls("dataset_select", "")
 
 
@@ -105,7 +105,7 @@ class StateTest(make_base(), unittest.TestCase):
     channel_cls = State
 
     def test_component_empty_property(self):
-        with pytest.raises(ValueError, match="value for 'property' must be given"):
+        with pytest.raises(ValueError, match="value for 'property' must not be empty"):
             self.channel_cls("dataset_select", "")
 
 

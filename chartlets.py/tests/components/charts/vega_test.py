@@ -1,8 +1,11 @@
+import unittest
+
 import pandas as pd
 import altair as alt
+import pytest
 
 from chartlets.components import VegaChart
-
+from chartlets.components.charts.vega import AltairDummy
 
 from tests.component_test import make_base
 
@@ -57,3 +60,14 @@ class VegaChartTest(make_base(VegaChart)):
             self.cls(id="plot", style={"width": 100}),
             {"type": "VegaChart", "id": "plot", "style": {"width": 100}},
         )
+
+
+class AltairDummyTest(unittest.TestCase):
+    def test_dummy(self):
+        altair = AltairDummy()
+        with pytest.warns(UserWarning) as wr:
+            self.assertEqual(int, altair.Chart)
+            self.assertEqual(
+                ["you must install 'altair' to use the VegaChart component"],
+                [f"{w.message}" for w in wr.list],
+            )

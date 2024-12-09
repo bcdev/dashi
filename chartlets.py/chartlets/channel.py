@@ -2,7 +2,7 @@ from abc import ABC
 from typing import Any
 
 from .util.assertions import (
-    assert_is_given,
+    assert_is_not_empty,
     assert_is_instance_of,
     assert_is_one_of,
 )
@@ -26,13 +26,13 @@ class Channel(ABC):
             return dict(id=self.id, property=self.property)
 
     def _validate_params(self, id_: Any, property: Any) -> tuple[str, str | None]:
-        assert_is_given("id", id_)
+        assert_is_not_empty("id", id_)
         assert_is_instance_of("id", id_, str)
         id: str = id_
         if id.startswith("@"):
             # Other states than component states
             assert_is_one_of("id", id, ("@app", "@container"))
-            assert_is_given("property", property)
+            assert_is_not_empty("property", property)
             assert_is_instance_of("property", property, str)
         else:
             # Component state
@@ -44,7 +44,7 @@ class Channel(ABC):
                 pass
             else:
                 # Components must have valid properties
-                assert_is_given("property", property)
+                assert_is_not_empty("property", property)
                 assert_is_instance_of("property", property, str)
         return id, property
 

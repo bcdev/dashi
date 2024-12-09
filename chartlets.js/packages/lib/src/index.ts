@@ -28,7 +28,6 @@ export {
   useContributionsRecord,
   useContributions,
   useComponentChangeHandlers,
-  makeContributionsHook,
   useThemeMode,
 } from "@/hooks";
 

@@ -1,21 +1,19 @@
 from chartlets.extensioncontext import ExtensionContext
 from chartlets.response import Response
+from chartlets.util.assertions import assert_is_instance_of
 
 
-def get_contributions(ext_ctx: ExtensionContext | None) -> Response:
+def get_contributions(ext_ctx: ExtensionContext) -> Response:
     """Generate the response for the endpoint `GET /chartlets/contributions`.
 
     Args:
-        ext_ctx: Extension context. If `None`,
-            the function returns a 404 error response.
+        ext_ctx: Extension context.
     Returns:
         A `Response` object.
         On success, the response is a dictionary that represents
         a JSON-serialized component tree.
     """
-    if ext_ctx is None:
-        return Response.failed(404, f"no contributions configured")
-
+    assert_is_instance_of("ext_ctx", ext_ctx, ExtensionContext)
     extensions = ext_ctx.extensions
     contributions = ext_ctx.contributions
     return Response.success(
