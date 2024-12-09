@@ -1,9 +1,17 @@
-import { vi, describe, it, expect } from "vitest";
+import {
+  vi,
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterEach,
+  type Mock,
+} from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useVegaTheme } from "./useVegaTheme";
 
 describe("useVegaTheme", () => {
-  let matchMediaMock: jest.Mock;
+  let matchMediaMock: Mock;
 
   // Base mock for matchMedia
   const baseMock = {
@@ -38,7 +46,7 @@ describe("useVegaTheme", () => {
     const media = isDark
       ? "(prefers-color-scheme: dark)"
       : "(prefers-color-scheme: light)";
-    matchMediaMock.mockImplementation((query) => ({
+    matchMediaMock.mockImplementation((query: string) => ({
       ...baseMock,
       media,
       matches: query === media,
