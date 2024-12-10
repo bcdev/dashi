@@ -4,7 +4,6 @@ import dts from "vite-plugin-dts";
 import { resolve } from "node:path";
 import { globSync } from "glob";
 
-// @ts-ignore
 import manifest from "./package.json";
 
 function findFiles(root: string, pattern: string): string[] {
