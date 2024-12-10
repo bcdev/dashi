@@ -13,12 +13,9 @@ export { initializeContributions } from "@/actions/initializeContributions";
 export { handleComponentChange } from "@/actions/handleComponentChange";
 export { updateContributionContainer } from "@/actions/updateContributionContainer";
 
-// Component registry
-export type { Registry } from "@/component/Registry";
-
 // React components
-export { Component, type ComponentProps } from "@/component/Component";
-export { Children } from "@/component/Children";
+export { Component, type ComponentProps } from "@/components/Component";
+export { Children, type ChildrenProps } from "@/components/Children";
 
 // React hooks
 export {

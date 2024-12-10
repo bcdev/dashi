@@ -2,7 +2,7 @@ import type { ComponentType } from "react";
 
 import type { ApiOptions } from "@/types/api";
 import type { LoggingOptions } from "@/actions/helpers/configureLogging";
-import type { ComponentProps } from "@/component/Component";
+import type { ComponentProps } from "@/components/Component";
 import { isObject } from "@/utils/isObject";
 import { isFunction } from "@/utils/isFunction";
 

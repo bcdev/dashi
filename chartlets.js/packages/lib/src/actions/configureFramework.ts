@@ -4,7 +4,7 @@ import type {
   FrameworkOptions,
   PluginLike,
 } from "@/types/state/options";
-import { registry } from "@/component/Registry";
+import { registry } from "@/components/registry";
 import { isPromise } from "@/utils/isPromise";
 import { isFunction } from "@/utils/isFunction";
 import { isObject } from "@/utils/isObject";

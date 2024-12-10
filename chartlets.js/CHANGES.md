@@ -4,6 +4,11 @@
   Using monorepo layout for `chartlets.js` with workspaces `lib` and `demo`
   that host the packages for `chartlets` and `chartlets-demo`.
 
+* Other code reorganisations:
+  - moved `component/Registry` into `store` 
+  - renamed module `component` into `components` 
+  - no longer exposing `Registry` type
+
 * Chartlets now allows for plugins that can provide individual component 
   implementations.
   The Vega-based chart and MUI components are now optional and have been 
