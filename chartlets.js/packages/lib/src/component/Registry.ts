@@ -33,6 +33,12 @@ export interface Registry {
   lookup(type: string): ComponentType<ComponentProps> | undefined;
 
   /**
+   * Clears the registry.
+   * For testing only.
+   */
+  clear(): void;
+
+  /**
    * Get the type names of all registered components.
    */
   types: string[];
@@ -56,6 +62,10 @@ export class RegistryImpl implements Registry {
 
   lookup(type: string): ComponentType<ComponentProps> | undefined {
     return this.components.get(type);
+  }
+
+  clear() {
+    this.components.clear();
   }
 
   get types(): string[] {

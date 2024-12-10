@@ -50,4 +50,17 @@ describe("Test that RegistryImpl", () => {
     expect(registry.lookup("C")).toBeUndefined();
     expect(registry.types).toEqual([]);
   });
+
+  it("clears", () => {
+    const registry = new RegistryImpl();
+    const A = () => void 0;
+    const B = () => void 0;
+    const C = () => void 0;
+    registry.register("A", A);
+    registry.register("B", B);
+    registry.register("C", C);
+    expect(registry.types.length).toBe(3);
+    registry.clear();
+    expect(registry.types).toEqual([]);
+  });
 });
