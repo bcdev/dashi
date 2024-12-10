@@ -4,6 +4,7 @@ import dts from "vite-plugin-dts";
 import { resolve } from "node:path";
 import { globSync } from "glob";
 
+// @ts-ignore
 import manifest from "./package.json";
 
 function findFiles(root: string, pattern: string): string[] {
@@ -19,6 +20,7 @@ const externalModules = [
 
 const externalFiles = [...findFiles("src", "**/*.test.*")];
 
+// noinspection JSUnusedGlobalSymbols
 export default defineConfig({
   plugins: [
     react(),
@@ -65,7 +67,7 @@ export default defineConfig({
     onConsoleLog: (_log: string, _type: "stdout" | "stderr"): false | void => {
       const logLevel = process.env.VITE_LOG_LEVEL;
       if (!logLevel || logLevel === "OFF") {
-        //return false;
+        return false;
       }
     },
   },
