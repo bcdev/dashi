@@ -1,6 +1,12 @@
 import { describe, it, expect } from "vitest";
 
-import { equalObjPaths, getValue, setValue, normalizeObjPath } from "./objPath";
+import {
+  equalObjPaths,
+  getValue,
+  setValue,
+  normalizeObjPath,
+  formatObjPath,
+} from "./objPath";
 
 describe("Test that getValue()", () => {
   it("works on 0th level", () => {
@@ -19,6 +25,12 @@ describe("Test that getValue()", () => {
     expect(getValue(obj, ["a", "1"])).toEqual(2);
     expect(getValue(obj, ["a", 2])).toEqual(3);
     expect(getValue(obj, ["b", "c"])).toEqual("x");
+  });
+
+  it("ignores missing props", () => {
+    const obj = { a: [1, 2, 3], b: { c: "x" } };
+    expect(getValue(obj, ["c", 6, "d"])).toBeUndefined();
+    expect(getValue(obj, ["b", "c", "d", "e"])).toBeUndefined();
   });
 });
 
@@ -96,6 +108,16 @@ describe("Test that normalizeObjPath()", () => {
     expect(normalizeObjPath("colors")).toEqual(["colors"]);
     expect(normalizeObjPath("colors.6")).toEqual(["colors", 6]);
     expect(normalizeObjPath("colors.6.red")).toEqual(["colors", 6, "red"]);
+  });
+});
+
+describe("Test that formatObjPath()", () => {
+  it("works", () => {
+    expect(formatObjPath(undefined)).toEqual("");
+    expect(formatObjPath([])).toEqual("");
+    expect(formatObjPath(["a", 3, "c"])).toEqual("a.3.c");
+    expect(formatObjPath("a.b.3")).toEqual("a.b.3");
+    expect(formatObjPath(6)).toEqual("6");
   });
 });
 

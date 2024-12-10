@@ -2,14 +2,6 @@ import { type CSSProperties } from "react";
 import { isObject } from "@/utils/isObject";
 import { isString } from "@/utils/isString";
 
-export type ComponentType =
-  | "Box"
-  | "Button"
-  | "Checkbox"
-  | "Plot"
-  | "Select"
-  | "Typography";
-
 export type ComponentNode =
   | ComponentState
   | string
@@ -38,7 +30,14 @@ export interface ContainerState extends ComponentState {
 }
 
 export function isComponentState(object: unknown): object is ComponentState {
-  return isObject(object) && isString(object.type);
+  return (
+    isObject(object) &&
+    isString(object.type) &&
+    // objects that are not created from classes
+    object.constructor.name === "Object" &&
+    // not React elements
+    !object["$$typeof"]
+  );
 }
 
 export function isContainerState(object: unknown): object is ContainerState {
