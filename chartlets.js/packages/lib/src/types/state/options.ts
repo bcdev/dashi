@@ -3,6 +3,8 @@ import type { ComponentType } from "react";
 import type { ApiOptions } from "@/types/api";
 import type { LoggingOptions } from "@/actions/helpers/configureLogging";
 import type { ComponentProps } from "@/component/Component";
+import { isObject } from "@/utils/isObject";
+import { isFunction } from "@/utils/isFunction";
 
 /**
  * The host store represents an interface to the state of
@@ -52,10 +54,14 @@ export interface MutableHostStore extends HostStore {
   set: (property: string, value: unknown) => void;
 }
 
-export function isMutableHostStore(
-  hostStore: HostStore | undefined,
-): hostStore is MutableHostStore {
-  return !!hostStore && typeof hostStore.set === "function";
+export function isHostStore(value: unknown): value is HostStore {
+  return (
+    isObject(value) && isFunction(value.get) && isFunction(value.subscribe)
+  );
+}
+
+export function isMutableHostStore(value: unknown): value is MutableHostStore {
+  return isHostStore(value) && isFunction(value.set);
 }
 
 /**
