@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { RegistryImpl } from "@/component/Registry";
+import { RegistryImpl } from "@/components/registry";
 
 describe("Test that RegistryImpl", () => {
   it("works", () => {

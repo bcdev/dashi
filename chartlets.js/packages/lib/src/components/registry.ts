@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 
-import type { ComponentProps } from "@/component/Component";
+import type { ComponentProps } from "@/components/Component";
 
 /**
  * A registry for Chartlets components.

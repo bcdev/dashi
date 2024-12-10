@@ -1,5 +1,5 @@
 import { type ComponentChangeHandler } from "@/types/state/event";
-import { registry } from "@/component/Registry";
+import { registry } from "@/components/registry";
 
 export interface ComponentProps {
   type: string;

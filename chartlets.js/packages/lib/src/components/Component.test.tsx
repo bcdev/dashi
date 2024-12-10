@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Component, type ComponentProps } from "./Component";
-import { registry } from "@/component/Registry";
+import { registry } from "@/components/registry";
 import type { FC } from "react";
 
 describe("Component", () => {
