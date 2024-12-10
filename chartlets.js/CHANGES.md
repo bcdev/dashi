@@ -38,6 +38,7 @@
   - using `return` object with `schema` property for callback return values
 
 * New (MUI) components
+  - `LinearProgress`
   - `Switch`
 
 ## Version 0.0.29 (from 2024/11/26)
