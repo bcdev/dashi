@@ -13,15 +13,18 @@ type SignalHandler = (signalName: string, signalValue: unknown) => void;
  * only interested in extracting the handlers, the following
  * properties are required.
  */
-type SelectionParameter = { name: string; select: { on: string } };
+type SelectionParameter = {
+  name: string;
+  select: "point" | "interval" | { type: "point" | "interval"; on: string };
+};
 
 const isSelectionParameter = (param: unknown): param is SelectionParameter =>
   isObject(param) &&
-  "name" in param &&
-  "select" in param &&
-  isObject(param.select) &&
-  param.select?.on !== null &&
-  isString(param.select.on);
+  (param.select === "point" ||
+    param.select === "interval" ||
+    (isObject(param.select) &&
+      (param.select.type === "point" || param.select.type === "interval") &&
+      isString(param.select.on)));
 
 export function useSignalListeners(
   chart: TopLevelSpec | null | undefined,
@@ -36,16 +39,23 @@ export function useSignalListeners(
    * have so that we can create those listeners with the `name` specified in
    * the event-listener object.
    */
-  const signalNames = useMemo((): Record<string, string> => {
-    const signalNames: Record<string, string> = {};
+  const signalNames = useMemo(() => {
+    const signalNames: [string, string][] = [];
     if (!chart || !chart.params) {
       return signalNames;
     }
     return chart.params
       .filter(isSelectionParameter)
-      .reduce((paramNames, param) => {
-        paramNames[param.select.on] = param.name;
-        return paramNames;
+      .reduce((signalNames, param) => {
+        // https://vega.github.io/vega-lite/docs/parameter.html#select
+        if (param.select === "point") {
+          signalNames.push(["click", param.name]);
+        } else if (param.select === "interval") {
+          signalNames.push(["drag", param.name]);
+        } else {
+          signalNames.push([param.select.on, param.name]);
+        }
+        return signalNames;
       }, signalNames);
   }, [chart]);
 
@@ -74,10 +84,11 @@ export function useSignalListeners(
      */
     const signalHandlers: Record<string, SignalHandler> = {
       click: handleClickSignal,
+      drag: handleClickSignal,
     };
 
     const signalListeners: Record<string, SignalHandler> = {};
-    Object.entries(signalNames).forEach(([event, signalName]) => {
+    signalNames.forEach(([event, signalName]) => {
       if (signalHandlers[event]) {
         signalListeners[signalName] = signalHandlers[event];
       } else {
