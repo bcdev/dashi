@@ -18,8 +18,8 @@ describe("Children", () => {
     // Note, the following 3 lines test that document is empty
     // but there is always one empty "div" in it.
     expect(document.body.firstElementChild).not.toBe(null);
-    expect(document.body.firstElementChild.tagName).toBe("DIV");
-    expect(document.body.firstElementChild.firstElementChild).toBe(null);
+    expect(document.body.firstElementChild!.tagName).toBe("DIV");
+    expect(document.body.firstElementChild!.firstElementChild).toBe(null);
   }
 
   it("should not render undefined nodes", () => {
@@ -33,13 +33,13 @@ describe("Children", () => {
   });
 
   it("should render all child types", () => {
-    const Div: FC<ComponentProps & { text: string }> = ({ text }) => (
-      <div>{text}</div>
-    );
-    registry.register("Div", Div);
+    interface DivProps extends ComponentProps {
+      text: string;
+    }
+    const Div: FC<DivProps> = ({ text }) => <div>{text}</div>;
+    registry.register("Div", Div as FC<ComponentProps>);
     const divProps = {
       type: "Div",
-      id: "root",
       text: "Hello",
       onChange: () => {},
     };

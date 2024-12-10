@@ -27,10 +27,11 @@ describe("Component", () => {
   });
 
   it("should render a known component", () => {
-    const Div: FC<ComponentProps & { text: string }> = ({ text }) => (
-      <div>{text}</div>
-    );
-    registry.register("Div", Div);
+    interface DivProps extends ComponentProps {
+      text: string;
+    }
+    const Div: FC<DivProps> = ({ text }) => <div>{text}</div>;
+    registry.register("Div", Div as FC<ComponentProps>);
     const divProps = {
       type: "Div",
       id: "root",

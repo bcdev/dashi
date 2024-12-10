@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Box } from "./Box";
 import type { ComponentChangeHandler } from "@/types/state/event";
+import { Box } from "./Box";
 
 describe("Box", () => {
   it("should render the Box component", () => {

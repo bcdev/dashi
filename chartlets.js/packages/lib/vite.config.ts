@@ -63,6 +63,9 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "vitest.setup.ts",
+    coverage: {
+      provider: "istanbul",
+    },
     onConsoleLog: (_log: string, _type: "stdout" | "stderr"): false | void => {
       const logLevel = process.env.VITE_LOG_LEVEL;
       if (!logLevel || logLevel === "OFF") {
