@@ -12,7 +12,7 @@ import {
 } from "@/types/state/component";
 import { formatObjPath, getValue, type ObjPathLike } from "@/utils/objPath";
 import { isObject } from "@/utils/isObject";
-import type { HostStore } from "@/types/state/options";
+import type { HostStore } from "@/types/state/host";
 
 export function getInputValues(
   inputs: Input[],

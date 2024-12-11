@@ -1,9 +1,10 @@
 import { store } from "@/store";
+import type { FrameworkOptions } from "@/types/state/options";
 import type {
   ComponentRegistration,
-  FrameworkOptions,
+  Plugin,
   PluginLike,
-} from "@/types/state/options";
+} from "@/types/state/plugin";
 import { registry } from "@/components/registry";
 import { isPromise } from "@/utils/isPromise";
 import { isFunction } from "@/utils/isFunction";
@@ -11,7 +12,8 @@ import { isObject } from "@/utils/isObject";
 import { handleHostStoreChange } from "./handleHostStoreChange";
 import { configureLogging } from "./helpers/configureLogging";
 
-export function configureFramework(options: FrameworkOptions) {
+export function configureFramework(options?: FrameworkOptions) {
+  options = options || {};
   if (options.logging) {
     configureLogging(options.logging);
   }
@@ -26,16 +28,18 @@ export function configureFramework(options: FrameworkOptions) {
   }
 }
 
-function resolvePlugin(plugin: PluginLike) {
+export function resolvePlugin(plugin: PluginLike): Promise<Plugin | undefined> {
   if (isPromise<PluginLike>(plugin)) {
-    plugin.then(resolvePlugin);
+    return plugin.then(resolvePlugin);
   } else if (isFunction(plugin)) {
-    resolvePlugin(plugin());
+    return resolvePlugin(plugin());
   } else if (isObject(plugin) && plugin.components) {
     (plugin.components as ComponentRegistration[]).forEach(
       ([name, component]) => {
         registry.register(name, component);
       },
     );
+    return Promise.resolve(plugin as Plugin);
   }
+  return Promise.resolve(undefined);
 }

@@ -29,10 +29,6 @@ export {
 } from "@/hooks";
 
 // Application interface
-export type {
-  FrameworkOptions,
-  HostStore,
-  MutableHostStore,
-  Plugin,
-  PluginLike,
-} from "@/types/state/options";
+export type { HostStore, MutableHostStore } from "@/types/state/host";
+export type { Plugin, PluginLike } from "@/types/state/plugin";
+export type { FrameworkOptions } from "@/types/state/options";

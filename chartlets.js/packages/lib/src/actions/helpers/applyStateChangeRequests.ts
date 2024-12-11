@@ -15,10 +15,7 @@ import {
   normalizeObjPath,
   setValue,
 } from "@/utils/objPath";
-import {
-  isMutableHostStore,
-  type MutableHostStore,
-} from "@/types/state/options";
+import { isMutableHostStore, type MutableHostStore } from "@/types/state/host";
 import {
   isHostChannel,
   isComponentChannel,

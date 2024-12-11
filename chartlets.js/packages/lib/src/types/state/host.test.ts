@@ -4,7 +4,7 @@ import {
   type MutableHostStore,
   isHostStore,
   isMutableHostStore,
-} from "./options";
+} from "./host";
 
 const hostStore: HostStore = {
   get: (name: string) => name,
