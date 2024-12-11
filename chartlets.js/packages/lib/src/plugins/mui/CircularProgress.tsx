@@ -10,13 +10,13 @@ interface CircularProgressState extends ComponentState {
 
 interface CircularProgressProps extends ComponentProps, CircularProgressState {}
 
-export function CircularProgress({
+export const CircularProgress = ({
   id,
   style,
   size,
   value,
   variant,
-}: CircularProgressProps) {
+}: CircularProgressProps) => {
   return (
     <MuiCircularProgress
       id={id}
@@ -26,4 +26,4 @@ export function CircularProgress({
       variant={variant}
     />
   );
-}
+};

@@ -10,13 +10,13 @@ interface LinearProgressState extends ComponentState {
 
 interface LinearProgressProps extends ComponentProps, LinearProgressState {}
 
-export function LinearProgress({
+export const LinearProgress = ({
   id,
   style,
   value,
   variant,
-}: LinearProgressProps) {
+}: LinearProgressProps) => {
   return (
     <MuiLinearProgress id={id} style={style} value={value} variant={variant} />
   );
-}
+};

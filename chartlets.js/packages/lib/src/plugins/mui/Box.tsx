@@ -10,17 +10,17 @@ interface BoxState extends ComponentState {
 
 interface BoxProps extends ComponentProps, BoxState {}
 
-export function Box({
+export const Box = ({
   id,
   style,
   color,
   component,
   children: nodes,
   onChange,
-}: BoxProps) {
+}: BoxProps) => {
   return (
     <MuiBox id={id} style={style} color={color} component={component || "div"}>
       <Children nodes={nodes} onChange={onChange} />
     </MuiBox>
   );
-}
+};

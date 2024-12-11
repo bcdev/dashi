@@ -13,7 +13,7 @@ interface TypographyState extends ComponentState {
 
 interface TypographyProps extends ComponentProps, TypographyState {}
 
-export function Typography({
+export const Typography = ({
   id,
   style,
   align,
@@ -22,7 +22,7 @@ export function Typography({
   variant,
   children: nodes,
   onChange,
-}: TypographyProps) {
+}: TypographyProps) => {
   return (
     <MuiTypography
       id={id}
@@ -35,4 +35,4 @@ export function Typography({
       <Children nodes={nodes} onChange={onChange} />
     </MuiTypography>
   );
-}
+};
