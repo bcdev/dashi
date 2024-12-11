@@ -1,4 +1,3 @@
-import { store } from "@/store";
 import type {
   CallbackRef,
   CallbackRequest,
@@ -10,8 +9,8 @@ import { getInputValues } from "@/actions/helpers/getInputValues";
 import { formatObjPath } from "@/utils/objPath";
 import { invokeCallbacks } from "@/actions/helpers/invokeCallbacks";
 import type { ContributionState } from "@/types/state/contribution";
-import type { HostStore } from "@/types/state/options";
-import type { store } from "@/store";
+import type { HostStore } from "@/types/state/host";
+import { store } from "@/store";
 
 /**
  * A reference to a property of an input of a callback of a contribution.

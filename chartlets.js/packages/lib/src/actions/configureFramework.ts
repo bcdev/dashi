@@ -1,9 +1,10 @@
 import { store } from "@/store";
+import type { FrameworkOptions } from "@/types/state/options";
 import type {
   ComponentRegistration,
-  FrameworkOptions,
+  Plugin,
   PluginLike,
-} from "@/types/state/options";
+} from "@/types/state/plugin";
 import { registry } from "@/components/registry";
 import { isPromise } from "@/utils/isPromise";
 import { isFunction } from "@/utils/isFunction";
@@ -38,7 +39,7 @@ export function resolvePlugin(plugin: PluginLike): Promise<Plugin | undefined> {
         registry.register(name, component);
       },
     );
-    return Promise.resolve(plugin);
+    return Promise.resolve(plugin as Plugin);
   }
   return Promise.resolve(undefined);
 }

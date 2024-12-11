@@ -1,11 +1,13 @@
+import type { ComponentType, FC } from "react";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { configureFramework, resolvePlugin } from "./configureFramework";
 import { store } from "@/store";
 import { registry } from "@/components/registry";
-import { ComponentProps } from "@/components/Component";
-import { FC } from "react";
+import type { HostStore } from "@/types/state/host";
+import type { Plugin } from "@/types/state/plugin";
+import type { ComponentProps } from "@/components/Component";
 
-function getComponents() {
+function getComponents(): [string, ComponentType<ComponentProps>][] {
   interface DivProps extends ComponentProps {
     text: string;
   }
@@ -40,7 +42,7 @@ describe("configureFramework", () => {
 
   it("should subscribe to host store", () => {
     const listeners = [];
-    const hostStore = {
+    const hostStore: HostStore = {
       get: (_key: string) => null,
       subscribe: (l: () => void) => {
         listeners.push(l);
@@ -71,7 +73,7 @@ describe("resolvePlugin", () => {
   });
 
   it("should resolve a object", async () => {
-    const pluginObj = { components: getComponents() };
+    const pluginObj: Plugin = { components: getComponents() };
     expect(registry.types.length).toBe(0);
     const result = await resolvePlugin(pluginObj);
     expect(result).toBe(pluginObj);
@@ -98,7 +100,7 @@ describe("resolvePlugin", () => {
 
   it("should resolve undefined", async () => {
     expect(registry.types.length).toBe(0);
-    const result = await resolvePlugin(undefined);
+    const result = await resolvePlugin(undefined as unknown as Plugin);
     expect(result).toBe(undefined);
     expect(registry.types.length).toBe(0);
   });
