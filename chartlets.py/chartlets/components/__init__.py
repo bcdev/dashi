@@ -8,4 +8,5 @@ from .progress import LinearProgress
 from .progress import LinearProgressWithLabel
 from .charts.vega import VegaChart
 from .select import Select
+from .switch import Switch
 from .typography import Typography
