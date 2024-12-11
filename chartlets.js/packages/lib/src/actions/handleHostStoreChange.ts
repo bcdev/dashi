@@ -11,6 +11,7 @@ import { formatObjPath } from "@/utils/objPath";
 import { invokeCallbacks } from "@/actions/helpers/invokeCallbacks";
 import type { ContributionState } from "@/types/state/contribution";
 import type { HostStore } from "@/types/state/options";
+import type { store } from "@/store";
 
 /**
  * A reference to a property of an input of a callback of a contribution.
@@ -23,12 +24,16 @@ export interface PropertyRef extends ContribRef, CallbackRef, InputRef {
 export function handleHostStoreChange() {
   const { extensions, configuration, contributionsRecord } = store.getState();
   const { hostStore } = configuration;
-  if (!hostStore || extensions.length === 0) {
-    // Exit if no host store configured or
-    // there are no extensions (yet)
+  if (!hostStore) {
+    // Exit if no host store configured.
+    // Actually, we should not come here.
     return;
   }
   synchronizeThemeMode(hostStore);
+  if (extensions.length === 0) {
+    // Exit if there are no extensions (yet)
+    return;
+  }
   const propertyRefs = getHostStorePropertyRefs();
   if (!propertyRefs || propertyRefs.length === 0) {
     // Exit if there are is nothing to be changed
