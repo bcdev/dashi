@@ -23,6 +23,7 @@ export interface ComponentState {
   disabled?: boolean;
   label?: string;
   color?: string;
+  tooltip?: string;
 }
 
 export interface ContainerState extends ComponentState {

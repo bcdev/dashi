@@ -5,6 +5,7 @@ import MuiSelect, { type SelectChangeEvent } from "@mui/material/Select";
 
 import type { ComponentState, ComponentProps } from "@/index";
 import { isString } from "@/utils/isString";
+import { Tooltip } from "./Tooltip";
 
 export type SelectOption =
   | string
@@ -27,6 +28,7 @@ export function Select({
   options,
   disabled,
   style,
+  tooltip,
   label,
   onChange,
 }: SelectProps) {
@@ -45,24 +47,26 @@ export function Select({
     }
   };
   return (
-    <MuiFormControl variant="filled" size="small" style={style}>
-      {label && <MuiInputLabel id={`${id}-label`}>{label}</MuiInputLabel>}
-      <MuiSelect
-        labelId={`${id}-label`}
-        id={id}
-        name={name}
-        value={`${value}`}
-        disabled={disabled}
-        onChange={handleChange}
-      >
-        {Array.isArray(options) &&
-          options.map(normalizeSelectOption).map(([value, text], index) => (
-            <MuiMenuItem key={index} value={value}>
-              {text}
-            </MuiMenuItem>
-          ))}
-      </MuiSelect>
-    </MuiFormControl>
+    <Tooltip title={tooltip}>
+      <MuiFormControl variant="filled" size="small" style={style}>
+        {label && <MuiInputLabel id={`${id}-label`}>{label}</MuiInputLabel>}
+        <MuiSelect
+          labelId={`${id}-label`}
+          id={id}
+          name={name}
+          value={`${value}`}
+          disabled={disabled}
+          onChange={handleChange}
+        >
+          {Array.isArray(options) &&
+            options.map(normalizeSelectOption).map(([value, text], index) => (
+              <MuiMenuItem key={index} value={value}>
+                {text}
+              </MuiMenuItem>
+            ))}
+        </MuiSelect>
+      </MuiFormControl>
+    </Tooltip>
   );
 }
 
