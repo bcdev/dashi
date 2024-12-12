@@ -41,6 +41,8 @@
   - `LinearProgress`
   - `Switch`
 
+* Supporting `tooltip` property for interactive MUI components.
+
 ## Version 0.0.29 (from 2024/11/26)
 
 * Resolved warnings that appeared when using Vega charts.
