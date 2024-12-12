@@ -21,10 +21,11 @@ jobs:
           shell: bash -l {0}
           run: |
             cd chartlets.py 
-            pytest
+            pytest --cov=chartlets.py --cov-report=xml
 
         - name: Upload coverage reports to Codecov
           uses: codecov/codecov-action@v4
           with:
+            directory: chartlets.py/
             verbose: true
             token: ${{ secrets.CODECOV_TOKEN }}
