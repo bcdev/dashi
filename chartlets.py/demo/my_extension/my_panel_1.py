@@ -22,6 +22,7 @@ def render_panel(ctx: Context) -> Component:
         label="Dataset",
         options=[(i, f"DS #{i + 1}") for i in range(len(ctx.datasets))],
         style={"flexGrow": 0, "minWidth": 120},
+        tooltip="Select the test dataset to be used"
     )
     control_group = Box(
         style={

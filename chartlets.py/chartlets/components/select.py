@@ -17,3 +17,7 @@ class Select(Component):
     """The options given as a list of number or text values or a list
     of (value, label) pairs.
     """
+
+    tooltip: str | None = None
+    """Tooltip title. Optional."""
+

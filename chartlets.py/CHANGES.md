@@ -16,6 +16,10 @@
   - using `schema` instead of `type` property for callback arguments
   - using `return` object with `schema` property for callback return values
 
+* Added `tooltip` property to interactive components.
+
+* New components
+  - `Switch`
 
 ## Version 0.0.29 (from 2024/11/26)
 
