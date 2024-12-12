@@ -16,6 +16,9 @@
   - using `schema` instead of `type` property for callback arguments
   - using `return` object with `schema` property for callback return values
 
+* New (MUI) components:
+  - `Tabs`
+  
 
 ## Version 0.0.29 (from 2024/11/26)
 
