@@ -5,6 +5,7 @@ import { Checkbox } from "./Checkbox";
 import { CircularProgress } from "./CircularProgress";
 import { IconButton } from "./IconButton";
 import { Select } from "./Select";
+import { Switch } from "./Switch";
 import { Typography } from "./Typography";
 
 export default function mui(): Plugin {
@@ -16,6 +17,7 @@ export default function mui(): Plugin {
       ["CircularProgress", CircularProgress],
       ["IconButton", IconButton],
       ["Select", Select],
+      ["Switch", Switch],
       ["Typography", Typography],
     ],
   };
