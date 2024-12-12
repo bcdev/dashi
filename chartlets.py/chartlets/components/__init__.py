@@ -9,5 +9,6 @@ from .progress import LinearProgressWithLabel
 from .charts.vega import VegaChart
 from .select import Select
 from .switch import Switch
+from .tabs import Tab
 from .tabs import Tabs
 from .typography import Typography

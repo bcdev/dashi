@@ -40,6 +40,7 @@
 * New (MUI) components
   - `LinearProgress`
   - `Switch`
+  - `Tabs`
 
 ## Version 0.0.29 (from 2024/11/26)
 

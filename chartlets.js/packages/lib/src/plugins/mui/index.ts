@@ -6,6 +6,7 @@ import { CircularProgress } from "./CircularProgress";
 import { IconButton } from "./IconButton";
 import { Select } from "./Select";
 import { Switch } from "./Switch";
+import { Tabs } from "./Tabs";
 import { Typography } from "./Typography";
 
 export default function mui(): Plugin {
@@ -18,6 +19,7 @@ export default function mui(): Plugin {
       ["IconButton", IconButton],
       ["Select", Select],
       ["Switch", Switch],
+      ["Tabs", Tabs],
       ["Typography", Typography],
     ],
   };
