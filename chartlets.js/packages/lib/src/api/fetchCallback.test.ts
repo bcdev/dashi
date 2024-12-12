@@ -7,9 +7,9 @@ import {
   afterEach,
   type Mock,
 } from "vitest";
-import { fetchContributions } from "./fetchContributions";
+import { fetchCallback } from "./fetchCallback";
 
-describe("fetchContributions", () => {
+describe("fetchCallback", () => {
   beforeEach(() => {
     // Mock the global fetch function
     globalThis.fetch = vi.fn();
@@ -23,10 +23,15 @@ describe("fetchContributions", () => {
   it("should return expected data on success", async () => {
     // Define a mock response
     const expectedResult = {
-      extensions: [{ name: "e0", version: "1", contributes: ["panels"] }],
-      contributions: {
-        panels: [{ name: "p0", extension: "e0", layout: {} }],
-      },
+      contribPoint: "panels",
+      contribIndex: 0,
+      stateChanges: [
+        {
+          id: "checkbox0",
+          property: "value",
+          value: true,
+        },
+      ],
     };
     const mockResponse = {
       ok: true,
@@ -41,7 +46,7 @@ describe("fetchContributions", () => {
     (globalThis.fetch as Mock).mockResolvedValue(mockResponse);
 
     // Call fetch
-    const response = await fetchContributions({
+    const response = await fetchCallback([], {
       serverUrl: "https://chartlets-test",
       endpointName: "api",
     });
@@ -50,23 +55,11 @@ describe("fetchContributions", () => {
     expect(fetch).toHaveBeenCalledOnce();
     expect(response).toEqual({
       status: "ok",
-      data: {
-        extensions: [{ name: "e0", version: "1", contributes: ["panels"] }],
-        contributions: {
-          panels: [
-            {
-              name: "p0",
-              extension: "e0",
-              layout: { inputs: [], outputs: [] },
-              callbacks: [],
-            },
-          ],
-        },
-      },
+      data: expectedResult,
     });
   });
 
-  it("should return error for bad responses", async () => {
+  it("should return error for bad API responses", async () => {
     // Define a mock response
     const mockResponse = {
       ok: true,
@@ -79,7 +72,7 @@ describe("fetchContributions", () => {
     (globalThis.fetch as Mock).mockResolvedValue(mockResponse);
 
     // Call fetch
-    const response = await fetchContributions({
+    const response = await fetchCallback([], {
       serverUrl: "https://chartlets-test",
       endpointName: "api",
     });
@@ -88,8 +81,7 @@ describe("fetchContributions", () => {
     expect(response).toEqual({
       status: "failed",
       error: {
-        message:
-          "unexpected response from https://chartlets-test/api/contributions",
+        message: "unexpected response from https://chartlets-test/api/callback",
       },
     });
   });

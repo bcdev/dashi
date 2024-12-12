@@ -7,9 +7,9 @@ import {
   afterEach,
   type Mock,
 } from "vitest";
-import { fetchContributions } from "./fetchContributions";
+import { fetchLayout } from "./fetchLayout";
 
-describe("fetchContributions", () => {
+describe("fetchLayout", () => {
   beforeEach(() => {
     // Mock the global fetch function
     globalThis.fetch = vi.fn();
@@ -23,10 +23,8 @@ describe("fetchContributions", () => {
   it("should return expected data on success", async () => {
     // Define a mock response
     const expectedResult = {
-      extensions: [{ name: "e0", version: "1", contributes: ["panels"] }],
-      contributions: {
-        panels: [{ name: "p0", extension: "e0", layout: {} }],
-      },
+      type: "Button",
+      text: "Click me!",
     };
     const mockResponse = {
       ok: true,
@@ -41,7 +39,7 @@ describe("fetchContributions", () => {
     (globalThis.fetch as Mock).mockResolvedValue(mockResponse);
 
     // Call fetch
-    const response = await fetchContributions({
+    const response = await fetchLayout("panels", 0, [], {
       serverUrl: "https://chartlets-test",
       endpointName: "api",
     });
@@ -50,19 +48,7 @@ describe("fetchContributions", () => {
     expect(fetch).toHaveBeenCalledOnce();
     expect(response).toEqual({
       status: "ok",
-      data: {
-        extensions: [{ name: "e0", version: "1", contributes: ["panels"] }],
-        contributions: {
-          panels: [
-            {
-              name: "p0",
-              extension: "e0",
-              layout: { inputs: [], outputs: [] },
-              callbacks: [],
-            },
-          ],
-        },
-      },
+      data: expectedResult,
     });
   });
 
@@ -79,7 +65,7 @@ describe("fetchContributions", () => {
     (globalThis.fetch as Mock).mockResolvedValue(mockResponse);
 
     // Call fetch
-    const response = await fetchContributions({
+    const response = await fetchLayout("panels", 0, [], {
       serverUrl: "https://chartlets-test",
       endpointName: "api",
     });
@@ -89,7 +75,7 @@ describe("fetchContributions", () => {
       status: "failed",
       error: {
         message:
-          "unexpected response from https://chartlets-test/api/contributions",
+          "unexpected response from https://chartlets-test/api/layout/panels/0",
       },
     });
   });
