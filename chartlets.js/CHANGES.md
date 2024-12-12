@@ -39,6 +39,7 @@
 
 * New (MUI) components
   - `LinearProgress`
+  - `Switch`
 
 * Supporting `tooltip` property for interactive MUI components.
 
