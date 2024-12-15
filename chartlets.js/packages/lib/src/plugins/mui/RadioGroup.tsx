@@ -16,7 +16,6 @@ interface RadioState extends ComponentState {
 }
 
 interface RadioGroupState extends ComponentState {
-  type: "RadioGroup";
   children?: RadioState[];
   label?: string;
   row?: boolean;
