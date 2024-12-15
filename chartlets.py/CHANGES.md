@@ -20,6 +20,7 @@
 
 * New components
   - `Switch`
+  - `RadioGroup` and `Radio`
 
 ## Version 0.0.29 (from 2024/11/26)
 
