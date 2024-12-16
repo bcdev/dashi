@@ -1,6 +1,7 @@
 # Chartlets 
 
 [![CI](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml)
+[![codecov](https://codecov.io/gh/bcdev/chartlets/graph/badge.svg?token=zJBPMFvnpg&flags=backend)](https://codecov.io/gh/bcdev/chartlets)
 [![PyPI](https://img.shields.io/pypi/v/chartlets)](https://pypi.org/project/chartlets/)
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
