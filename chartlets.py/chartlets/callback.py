@@ -2,11 +2,12 @@ import inspect
 import types
 from typing import Any, Callable
 
-from chartlets.channel import (
+from .channel import (
     Input,
     Output,
     State,
 )
+from .util.logger import LOGGER
 
 
 class Callback:
@@ -20,7 +21,7 @@ class Callback:
     def from_decorator(
         cls,
         decorator_name: str,
-        decorator_args: tuple[Any, ...],
+        decorator_args: tuple | list,
         function: Any,
         states_only: bool = False,
     ) -> "Callback":
@@ -104,9 +105,7 @@ class Callback:
             "function": {
                 "name": self.function.__qualname__,
                 "parameters": [_parameter_to_dict(p) for p in parameters],
-                "returnType": _annotation_to_json_schema(
-                    self.signature.return_annotation
-                ),
+                "return": _return_to_dict(self.signature.return_annotation),
             }
         }
         if self.inputs:
@@ -128,11 +127,10 @@ class Callback:
                 f" expected {num_inputs},"
                 f" but got {num_values}"
             )
-            if delta > 0:
-                values = (*values, *(delta * (None,)))
-                print(f"WARNING: {message}")  # TODO use logging
-            else:
+            if delta < 0:
                 raise TypeError(message)
+            LOGGER.warning(message)
+            values = (*values, *(delta * (None,)))
 
         param_names = self.param_names[1:]
         args = [context]
@@ -152,59 +150,77 @@ def _parameter_to_dict(parameter: inspect.Parameter) -> dict[str, Any]:
     empty = inspect.Parameter.empty
     d = {"name": parameter.name}
     if parameter.annotation is not empty:
-        d |= {"type": _annotation_to_json_schema(parameter.annotation)}
+        d |= {"schema": annotation_to_json_schema(parameter.annotation)}
     if parameter.default is not empty:
         d |= {"default": parameter.default}
     return d
 
 
-_scalar_types = {
-    "None": "null",
-    "NoneType": "null",
-    "bool": "boolean",
-    "int": "integer",
-    "float": "number",
-    "str": "string",
-    "object": "object",
+def _return_to_dict(return_annotation: Any) -> dict[str, Any]:
+    return {"schema": annotation_to_json_schema(return_annotation)}
+
+
+_basic_types = {
+    None: "null",
+    type(None): "null",
+    bool: "boolean",
+    int: "integer",
+    float: "number",
+    str: "string",
+    list: "array",
+    tuple: "array",
+    dict: "object",
 }
 
-_object_types = {"Component": "Component", "Chart": "Chart"}
 
+def annotation_to_json_schema(annotation: Any) -> dict:
+    from chartlets import Component
 
-def _annotation_to_json_schema(annotation: Any) -> dict:
-    if isinstance(annotation, types.UnionType):
-        return {"type": list(map(_annotation_to_json_schema, annotation.__args__))}
+    if annotation is Any:
+        return {}
+    elif annotation in _basic_types:
+        return {"type": _basic_types[annotation]}
+    elif isinstance(annotation, types.UnionType):
+        assert annotation.__args__ and len(annotation.__args__) > 1
+        type_list = list(map(annotation_to_json_schema, annotation.__args__))
+        type_name_list = [
+            t["type"]
+            for t in type_list
+            if isinstance(t.get("type"), str) and len(t) == 1
+        ]
+        if len(type_list) == len(type_name_list):
+            return {"type": type_name_list}
+        else:
+            return {"oneOf": type_list}
     elif isinstance(annotation, types.GenericAlias):
+        assert annotation.__args__
         if annotation.__origin__ is tuple:
             return {
                 "type": "array",
-                "items": list(map(_annotation_to_json_schema, annotation.__args__)),
+                "items": list(map(annotation_to_json_schema, annotation.__args__)),
             }
         elif annotation.__origin__ is list:
-            if annotation.__args__:
-                return {
-                    "type": "array",
-                    "items": _annotation_to_json_schema(annotation.__args__[0]),
-                }
+            assert annotation.__args__ and len(annotation.__args__) == 1
+            items_schema = annotation_to_json_schema(annotation.__args__[0])
+            if items_schema == {}:
+                return {"type": "array"}
             else:
-                return {
-                    "type": "array",
-                }
-    elif issubclass(annotation, list):
-        try:
-            return {"type": "array"}
-        except KeyError:
-            pass
-    else:
-        type_name = (
-            annotation.__name__ if hasattr(annotation, "__name__") else str(annotation)
-        )
-        try:
-            return {"type": _scalar_types[type_name]}
-        except KeyError:
-            pass
-        try:
-            return {"type": "object", "class": _object_types[type_name]}
-        except KeyError:
-            pass
+                return {"type": "array", "items": items_schema}
+        elif annotation.__origin__ is dict:
+            assert annotation.__args__
+            assert len(annotation.__args__) == 2
+            if annotation.__args__[0] is str:
+                value_schema = annotation_to_json_schema(annotation.__args__[1])
+                if value_schema == {}:
+                    return {"type": "object"}
+                else:
+                    return {"type": "object", "additionalProperties": value_schema}
+    elif (
+        inspect.isclass(annotation)
+        and "." not in annotation.__qualname__
+        and callable(getattr(annotation, "to_dict", None))
+    ):
+        # Note, for Component classes it is actually possible to generate the object schema
+        return {"type": "object", "class": annotation.__qualname__}
+
     raise TypeError(f"unsupported type annotation: {annotation}")

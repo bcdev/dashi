@@ -19,7 +19,6 @@ class Contribution(ABC):
         initial_state: contribution specific attribute values.
     """
 
-    # noinspection PyShadowingBuiltins
     def __init__(self, name: str, **initial_state: Any):
         self.name = name
         self.initial_state = initial_state
@@ -123,9 +122,7 @@ class Contribution(ABC):
 
         def decorator(function: Callable) -> Callable:
             self.callbacks.append(
-                Callback.from_decorator(
-                    "callback", args, function, states_only=False
-                )
+                Callback.from_decorator("callback", args, function, states_only=False)
             )
             return function
 

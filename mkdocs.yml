@@ -15,13 +15,14 @@ plugins:
 
 nav:
   - Home: index.md
-  - Demo: demo.md
-  - Usage: usage.md
+  - Providers Guide: guide/providers.md
+  - Contributors Guide: guide/contributors.md
   - Python API:
     - Components: api/components.md
     - Contribution: api/contribution.md
     - Extension: api/extension.md
     - Controllers: api/controllers.md
+  - Demo: demo.md
   - About: about.md
 
 theme:

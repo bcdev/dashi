@@ -1,5 +1,11 @@
 # Chartlets
 
+[![CI](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml)
+[![npm](https://badge.fury.io/js/chartlets.svg)](https://npmjs.org/package/chartlets)
+
+[![CI](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/chartlets)](https://pypi.org/project/chartlets/)
+
 Chartlets is a software framework that allows websites developed with
 React to be extended by server-side UI contributions programmed in Python 
 or other programming languages. 
@@ -11,10 +17,11 @@ Please see the [Documentation](https://bcdev.github.io/chartlets/) for more info
 
 ## Features
 
-- Enhance your React web application by UI-contributions programmed in Python
-- Enhance your (Python) web API to serve server-side UI-contributions.
-- Uses [Material UI](https://mui.com/material-ui/) components and 
-  [Vega-Lite](https://vega.github.io/vega-lite/) charts.
+- Enhance your React web application by UI-contributions programmed in Python.
+- Enhance your Python REST server to publish server-side UI-contributions.
+- Support your favorite charting library or UI component library by plugins.
+- Use provided plugins for [Vega-Lite](https://vega.github.io/vega-lite/) charts and [Material UI](https://mui.com/material-ui/)
+  components.
 
 ## License
 

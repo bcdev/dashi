@@ -6,6 +6,11 @@ from .progress import CircularProgress
 from .progress import CircularProgressWithLabel
 from .progress import LinearProgress
 from .progress import LinearProgressWithLabel
-from .plot import Plot
+from .charts.vega import VegaChart
+from .radiogroup import Radio
+from .radiogroup import RadioGroup
 from .select import Select
+from .switch import Switch
+from .tabs import Tab
+from .tabs import Tabs
 from .typography import Typography

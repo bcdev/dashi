@@ -28,6 +28,11 @@ class Button(Component):
     One "contained" | "outlined" | "text". Defaults to "text".
     """
 
+    tooltip: str | None = None
+    """Tooltip title. Optional."""
+
+
+
 @dataclass(frozen=True)
 class IconButton(Component):
     """Icon buttons are commonly found in app bars and toolbars.
@@ -50,4 +55,6 @@ class IconButton(Component):
     One "contained" | "outlined" | "text". Defaults to "text".
     """
 
+    tooltip: str | None = None
+    """Tooltip title. Optional."""
 

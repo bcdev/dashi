@@ -17,22 +17,46 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: Install dependencies
+      - name: Install common dependencies
         run: |
           cd chartlets.js 
           npm install 
 
-      - name: Linter
+      - name: Lib lint
         run: |
-          cd chartlets.js  
+          cd chartlets.js/packages/lib  
           npm run lint
 
-      - name: Run frontend tests
+      - name: Lib tests
         run: |
-          cd chartlets.js  
+          cd chartlets.js/packages/lib  
           npm run test
 
-      - name: Build frontend application
+      - name: Lib coverage
         run: |
-          cd chartlets.js  
+          cd chartlets.js/packages/lib  
+          npm run coverage
+
+      - name: Upload coverage reports for lib to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: true
+          directory: chartlets.js/packages/lib/coverage/
+          flags: frontend
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Lib build
+        run: |
+          cd chartlets.js/packages/lib  
+          npm run build
+
+      - name: Demo lint
+        run: |
+          cd chartlets.js/packages/demo  
+          npm run lint
+
+      - name: Demo build
+        run: |
+          cd chartlets.js/packages/demo  
           npm run build

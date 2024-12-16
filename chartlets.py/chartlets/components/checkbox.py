@@ -13,3 +13,7 @@ class Checkbox(Component):
 
     label: str = ""
     """The checkbox label."""
+
+    tooltip: str | None = None
+    """Tooltip title. Optional."""
+
