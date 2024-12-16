@@ -1,4 +1,4 @@
-name: Package and Publish
+name: Package and Publish to PyPi
 
 on:
   release:
@@ -36,14 +36,19 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
         
-    - name: Test with pytest
+    - name: Run unit tests
+      shell: bash -l {0}
       run: |
-        pytest --cov=chartlets
-        
+        pytest --cov=chartlets --cov-report=xml
+
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      uses: codecov/codecov-action@v4
+      with:
+        fail_ci_if_error: true
+        directory: chartlets.py/
+        flags: backend
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
 
   PyPi-Deploy:
     name: Publish Python Package to PyPI
@@ -77,57 +82,3 @@ jobs:
         password: ${{ secrets.PYPI_API_TOKEN }}
         packages_dir: chartlets.py/dist
         verbose: true
-
-  npm-tests:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x, 20.x]
-        # See supported Node.js release schedule at
-        # https://nodejs.org/en/about/releases/
-    defaults:
-      run:
-        working-directory: chartlets.js
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: chartlets.js/package-lock.json
-          
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
-      - run: npm run test
-  
-  npm-Deploy:
-    name: Publish TS-React Package to npmjs
-    runs-on: ubuntu-latest
-    needs: npm-tests
-    defaults:
-      run:
-        working-directory: chartlets.js
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.x'
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'npm'
-          cache-dependency-path: chartlets.js/package-lock.json
-          
-      - run: npm ci
-      - run: |
-          cd packages/lib
-          npm run build
-      - run: |
-          cd packages/lib
-          npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
