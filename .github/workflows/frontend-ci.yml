@@ -32,6 +32,18 @@ jobs:
           cd chartlets.js/packages/lib  
           npm run test
 
+      - name: Lib coverage
+        run: |
+          cd chartlets.js/packages/lib  
+          npm run coverage
+
+      - name: Upload coverage reports for lib to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: chartlets.js/packages/lib/
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Lib build
         run: |
           cd chartlets.js/packages/lib  

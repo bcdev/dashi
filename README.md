@@ -1,5 +1,11 @@
 # Chartlets
 
+[![CI](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml)
+[![npm](https://badge.fury.io/js/chartlets.svg)](https://npmjs.org/package/chartlets)
+
+[![CI](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/chartlets)](https://pypi.org/project/chartlets/)
+
 Chartlets is a software framework that allows websites developed with
 React to be extended by server-side UI contributions programmed in Python 
 or other programming languages. 
