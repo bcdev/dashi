@@ -1,11 +1,11 @@
 # Chartlets
 
 [![CI](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/frontend-ci.yml)
-[![codecov](https://codecov.io/gh/bcdev/chartlets/graph/badge.svg?token=zJBPMFvnpg)](https://codecov.io/gh/bcdev/chartlets/chartlets.js/packages/lib)
+[![codecov](https://codecov.io/gh/bcdev/chartlets/graph/badge.svg?token=zJBPMFvnpg&flags=frontend)](https://codecov.io/gh/bcdev/chartlets)
 [![npm](https://badge.fury.io/js/chartlets.svg)](https://npmjs.org/package/chartlets)
 
 [![CI](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/bcdev/chartlets/actions/workflows/backend-ci.yml)
-[![codecov](https://codecov.io/gh/bcdev/chartlets/graph/badge.svg?token=zJBPMFvnpg)](https://codecov.io/gh/bcdev/chartlets/chartlets.py/chartlets)
+[![codecov](https://codecov.io/gh/bcdev/chartlets/graph/badge.svg?token=zJBPMFvnpg&flags=backend)](https://codecov.io/gh/bcdev/chartlets)
 [![PyPI](https://img.shields.io/pypi/v/chartlets)](https://pypi.org/project/chartlets/)
 
 Chartlets is a software framework that allows websites developed with
