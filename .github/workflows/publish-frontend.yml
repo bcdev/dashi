@@ -1,0 +1,92 @@
+name: Package and Publish to NPM
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  npm-tests-lib:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          node-version: [16.x, 18.x, 20.x]
+          # See supported Node.js release schedule at
+          # https://nodejs.org/en/about/releases/
+      defaults:
+        run:
+          working-directory: chartlets.js/packages/lib
+  
+      steps:
+        - uses: actions/checkout@v3
+        - name: Use Node.js ${{ matrix.node-version }}
+          uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.node-version }}
+            cache: 'npm'
+            cache-dependency-path: chartlets.js/package-lock.json
+            
+        - run: npm ci
+        - run: npm run lint
+        - run: npm run test
+        
+        - run: npm run coverage
+        - name: Upload coverage reports for lib to Codecov
+          uses: codecov/codecov-action@v4
+          with:
+            fail_ci_if_error: true
+            directory: coverage/
+            flags: frontend
+            verbose: true
+            token: ${{ secrets.CODECOV_TOKEN }}
+            
+        - run: npm run build
+        
+  npm-tests-demo:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          node-version: [16.x, 18.x, 20.x]
+          # See supported Node.js release schedule at
+          # https://nodejs.org/en/about/releases/
+      defaults:
+        run:
+          working-directory: chartlets.js/packages/demo
+  
+      steps:
+        - uses: actions/checkout@v3
+        - name: Use Node.js ${{ matrix.node-version }}
+          uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.node-version }}
+            cache: 'npm'
+            cache-dependency-path: chartlets.js/package-lock.json
+            
+        - run: npm ci
+        - run: npm run lint
+        - run: npm run build
+    
+  npm-deploy:
+    name: Publish TS-React Package to npmjs
+    runs-on: ubuntu-latest
+    needs: [npm-tests-lib, npm-tests-demo]
+    defaults:
+      run:
+        working-directory: chartlets.js/packages/lib
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+          cache-dependency-path: chartlets.js/package-lock.json
+          
+      - run: npm ci
+      - run: npm run build
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -4,6 +4,11 @@ on:
   push:
     paths:
       - chartlets.js/**
+    branches:
+      - main
+  pull_request:
+    paths:
+        - chartlets.js/**
 
 jobs:       
   frontend:
@@ -40,7 +45,9 @@ jobs:
       - name: Upload coverage reports for lib to Codecov
         uses: codecov/codecov-action@v4
         with:
-          directory: chartlets.js/packages/lib/
+          fail_ci_if_error: true
+          directory: chartlets.js/packages/lib/coverage/
+          flags: frontend
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
