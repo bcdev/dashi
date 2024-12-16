@@ -7,6 +7,7 @@ import { IconButton } from "./IconButton";
 import { RadioGroup } from "./RadioGroup";
 import { Select } from "./Select";
 import { Switch } from "./Switch";
+import { Tabs } from "./Tabs";
 import { Typography } from "./Typography";
 
 export default function mui(): Plugin {
@@ -20,6 +21,7 @@ export default function mui(): Plugin {
       ["RadioGroup", RadioGroup],
       ["Select", Select],
       ["Switch", Switch],
+      ["Tabs", Tabs],
       ["Typography", Typography],
     ],
   };

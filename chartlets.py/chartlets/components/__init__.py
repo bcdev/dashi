@@ -11,4 +11,6 @@ from .radiogroup import Radio
 from .radiogroup import RadioGroup
 from .select import Select
 from .switch import Switch
+from .tabs import Tab
+from .tabs import Tabs
 from .typography import Typography
