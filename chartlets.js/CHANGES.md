@@ -39,8 +39,11 @@
 
 * New (MUI) components
   - `LinearProgress`
+  - `RadioGroup` and `Radio`
   - `Switch`
   - `Tabs`
+
+* Supporting `tooltip` property for interactive MUI components.
 
 ## Version 0.0.29 (from 2024/11/26)
 

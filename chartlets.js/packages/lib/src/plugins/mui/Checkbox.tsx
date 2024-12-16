@@ -4,6 +4,7 @@ import MuiFormControl from "@mui/material/FormControl";
 import MuiFormControlLabel from "@mui/material/FormControlLabel";
 
 import type { ComponentState, ComponentProps } from "@/index";
+import { Tooltip } from "@mui/material";
 
 interface CheckboxState extends ComponentState {
   label?: string;
@@ -19,6 +20,7 @@ export function Checkbox({
   value,
   disabled,
   style,
+  tooltip,
   label,
   onChange,
 }: CheckboxProps) {
@@ -33,19 +35,21 @@ export function Checkbox({
     }
   };
   return (
-    <MuiFormControl variant="filled" size="small" style={style}>
-      <MuiFormControlLabel
-        label={label}
-        control={
-          <MuiCheckbox
-            id={id}
-            name={name}
-            checked={Boolean(value)}
-            disabled={disabled}
-            onChange={handleChange}
-          />
-        }
-      />
-    </MuiFormControl>
+    <Tooltip title={tooltip}>
+      <MuiFormControl variant="filled" size="small" style={style}>
+        <MuiFormControlLabel
+          label={label}
+          control={
+            <MuiCheckbox
+              id={id}
+              name={name}
+              checked={Boolean(value)}
+              disabled={disabled}
+              onChange={handleChange}
+            />
+          }
+        />
+      </MuiFormControl>
+    </Tooltip>
   );
 }

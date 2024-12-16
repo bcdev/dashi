@@ -7,6 +7,8 @@ from .progress import CircularProgressWithLabel
 from .progress import LinearProgress
 from .progress import LinearProgressWithLabel
 from .charts.vega import VegaChart
+from .radiogroup import Radio
+from .radiogroup import RadioGroup
 from .select import Select
 from .switch import Switch
 from .tabs import Tab

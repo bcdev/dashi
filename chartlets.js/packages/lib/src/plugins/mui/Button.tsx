@@ -3,6 +3,7 @@ import MuiButton from "@mui/material/Button";
 import MuiIcon from "@mui/material/Icon";
 
 import type { ComponentState, ComponentProps } from "@/index";
+import { Tooltip } from "./Tooltip";
 
 interface ButtonState extends ComponentState {
   text?: string;
@@ -45,18 +46,20 @@ export function Button({
     }
   };
   return (
-    <MuiButton
-      id={id}
-      name={name}
-      style={style}
-      variant={variant}
-      color={color}
-      disabled={disabled}
-      startIcon={startIcon && <MuiIcon>{startIcon}</MuiIcon>}
-      endIcon={endIcon && <MuiIcon>{endIcon}</MuiIcon>}
-      onClick={handleClick}
-    >
-      {text}
-    </MuiButton>
+    <Tooltip>
+      <MuiButton
+        id={id}
+        name={name}
+        style={style}
+        variant={variant}
+        color={color}
+        disabled={disabled}
+        startIcon={startIcon && <MuiIcon>{startIcon}</MuiIcon>}
+        endIcon={endIcon && <MuiIcon>{endIcon}</MuiIcon>}
+        onClick={handleClick}
+      >
+        {text}
+      </MuiButton>
+    </Tooltip>
   );
 }
