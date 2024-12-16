@@ -11,19 +11,12 @@ interface SliderProps extends ComponentProps, SliderState {
   defaultValue: number;
 }
 
-export const Slider = ({
-  id,
-  style,
-  defaultValue,
-  component,
-  // onChange,
-}: SliderProps) => {
+export const Slider = ({ id, style, defaultValue, component }: SliderProps) => {
   return (
     <MuiSlider
       id={id}
       style={style}
       defaultValue={defaultValue}
-      // onChange={onChange}
       component={component || "div"}
     ></MuiSlider>
   );
