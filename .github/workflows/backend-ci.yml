@@ -26,7 +26,7 @@ jobs:
         - name: Upload coverage reports to Codecov
           uses: codecov/codecov-action@v4
           with:
-            directory: chartlets.py/coverage/
+            directory: chartlets.py/
             flags: backend
             verbose: true
             token: ${{ secrets.CODECOV_TOKEN }}
