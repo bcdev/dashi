@@ -7,7 +7,7 @@ from chartlets import Component
 @dataclass(frozen=True)
 class Slider(Component):
     """Sliders allow users to make selections from a range of values along a
-    bar."""
+    bar.<Test for CI>"""
 
     aria_label: str | None = None
     """The label of the slider."""
