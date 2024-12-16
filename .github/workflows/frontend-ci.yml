@@ -40,13 +40,14 @@ jobs:
       - name: Upload coverage reports for lib to Codecov
         uses: codecov/codecov-action@v4
         with:
-          directory: chartlets.js/packages/lib/
+          directory: chartlets.js/packages/lib/coverage/
+          flags: frontend
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Lib build
         run: |
-          cd chartlets.js/packages/lib  
+          cd chartlets.js/packages/lib/  
           npm run build
 
       - name: Demo lint
