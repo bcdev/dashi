@@ -27,5 +27,6 @@ jobs:
           uses: codecov/codecov-action@v4
           with:
             directory: chartlets.py/
+            flags: backend
             verbose: true
             token: ${{ secrets.CODECOV_TOKEN }}
