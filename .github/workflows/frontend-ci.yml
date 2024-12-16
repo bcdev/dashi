@@ -4,6 +4,11 @@ on:
   push:
     paths:
       - chartlets.js/**
+    branches:
+      - main
+  pull_request:
+    paths:
+        - chartlets.js/**
 
 jobs:       
   frontend:
