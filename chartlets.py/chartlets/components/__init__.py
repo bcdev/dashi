@@ -10,7 +10,7 @@ from .progress import LinearProgressWithLabel
 from .radiogroup import Radio
 from .radiogroup import RadioGroup
 from .select import Select
-from .slider import Slider
+# from .slider import Slider
 from .switch import Switch
 from .tabs import Tab
 from .tabs import Tabs
