@@ -1,4 +1,4 @@
-name: Package and Publish to PyPi
+name: Package and Publish
 
 on:
   release:
@@ -36,16 +36,21 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
         
-    - name: Test with pytest
+    - name: Run unit tests
+      shell: bash -l {0}
       run: |
-        pytest --cov=chartlets
-        
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        pytest --cov=chartlets --cov-report=xml
 
-  PyPi-deploy:
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        fail_ci_if_error: true
+        directory: chartlets.py/
+        flags: backend
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
+
+  PyPi-Deploy:
     name: Publish Python Package to PyPI
     runs-on: ubuntu-latest
     needs: python-tests
