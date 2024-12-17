@@ -4,6 +4,11 @@ on:
   push:
     paths:
       - chartlets.py/**
+    branches:
+      - main
+  pull_request:
+    paths:
+        - chartlets.py/**
       
 jobs:
   backend:
