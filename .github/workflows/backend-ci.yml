@@ -1,11 +1,6 @@
 name: Backend CI workflow
 
-on: 
-  push:
-    paths:
-      - chartlets.py/**
-    branches:
-      - main
+on:
   pull_request:
     paths:
         - chartlets.py/**
