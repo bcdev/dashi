@@ -17,7 +17,7 @@ class Slider(Component):
     colors
     """
 
-    defaultValue: [int] | int | None = None
+    defaultValue: list[int] | int | None = None
     """The default value. Use when the component is not controlled. If used 
     as an array, it will create multiple sliding points on the bar
     """
