@@ -1,0 +1,88 @@
+name: Merge to main workflow
+
+on: 
+  push:
+    branches:
+      - main
+      
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git-checkout chartlets
+        uses: actions/checkout@v4
+        
+      - name: Set up Micromamba
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: chartlets.py/environment.yml
+          
+      - name: Run unit tests
+        shell: bash -l {0}
+        run: |
+          cd chartlets.py 
+          pytest --cov=chartlets --cov-report=xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: true
+          directory: chartlets.py/
+          flags: backend
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git-checkout chartlets
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install common dependencies
+        run: |
+          cd chartlets.js 
+          npm install 
+
+      - name: Lib lint
+        run: |
+          cd chartlets.js/packages/lib  
+          npm run lint
+
+      - name: Lib tests
+        run: |
+          cd chartlets.js/packages/lib  
+          npm run test
+
+      - name: Lib coverage
+        run: |
+          cd chartlets.js/packages/lib  
+          npm run coverage
+
+      - name: Upload coverage reports for lib to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: true
+          directory: chartlets.js/packages/lib/coverage/
+          flags: frontend
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Lib build
+        run: |
+          cd chartlets.js/packages/lib  
+          npm run build
+
+      - name: Demo lint
+        run: |
+          cd chartlets.js/packages/demo  
+          npm run lint
+
+      - name: Demo build
+        run: |
+          cd chartlets.js/packages/demo  
+          npm run build
