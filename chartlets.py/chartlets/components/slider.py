@@ -79,7 +79,7 @@ class Slider(Component):
     `false`: the track will render without a bar.
     """
 
-    value: bool | None = None
+    value: list[int] | int | None = None
     """The value of the slider. For ranged sliders, provide an array with two 
     values.
     """
