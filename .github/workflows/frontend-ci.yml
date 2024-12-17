@@ -1,11 +1,6 @@
 name: Frontend CI workflow
 
-on: 
-  push:
-    paths:
-      - chartlets.js/**
-    branches:
-      - main
+on:
   pull_request:
     paths:
         - chartlets.js/**
