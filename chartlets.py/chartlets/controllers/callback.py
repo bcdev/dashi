@@ -6,9 +6,7 @@ from chartlets.util.assertions import assert_is_instance_of
 from ._helpers import get_contribution
 
 
-def get_callback_results(
-    ext_ctx: ExtensionContext, data: dict[str, Any]
-) -> Response:
+def get_callback_results(ext_ctx: ExtensionContext, data: dict[str, Any]) -> Response:
     """Generate the response for the endpoint `POST /chartlets/callback`.
 
     Args:

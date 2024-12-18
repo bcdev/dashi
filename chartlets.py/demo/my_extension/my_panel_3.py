@@ -26,7 +26,7 @@ def render_panel(
         id="opaque",
         value=opaque,
         label="Opaque",
-        tooltip="Select whether the color is opaque"
+        tooltip="Select whether the color is opaque",
     )
 
     color_select = Select(
@@ -35,7 +35,7 @@ def render_panel(
         label="Color",
         options=COLORS,
         style={"flexGrow": 0, "minWidth": 80},
-        tooltip="Select color"
+        tooltip="Select color",
     )
 
     info_text = Typography(

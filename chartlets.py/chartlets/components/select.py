@@ -20,4 +20,3 @@ class Select(Component):
 
     tooltip: str | None = None
     """Tooltip title. Optional."""
-

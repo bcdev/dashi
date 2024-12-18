@@ -45,9 +45,7 @@ class Slider(Component):
     max: int | None = None
     """The maximum allowed value of the slider. Should not be equal to min."""
 
-    marks: (bool |
-            list[TypedDict("marks", {"value": int, "label": str})] |
-            None) = None
+    marks: bool | list[TypedDict("marks", {"value": int, "label": str})] | None = None
     """Marks indicate predetermined values to which the user can move the 
     slider. If  true the marks are spaced according the value of the step 
     prop. If an array, it should contain objects with value and an optional 
@@ -73,10 +71,10 @@ class Slider(Component):
     track: Literal["inverted", "normal"] | False | None = None
     """The track presentation:
 
-    `normal`: the track will render a bar representing the slider value.
-    `inverted`: the track will render a bar representing the remaining slider 
-    value.
-    `false`: the track will render without a bar.
+    - `normal`: the track will render a bar representing the slider value.
+    - `inverted`: the track will render a bar representing the remaining slider 
+      value.
+    - `false`: the track will render without a bar.
     """
 
     value: list[int] | int | None = None
@@ -84,10 +82,10 @@ class Slider(Component):
     values.
     """
 
-    valueLabelDisplay: Literal['auto', 'on', 'off'] | None = None
+    valueLabelDisplay: Literal["auto", "on", "off"] | None = None
     """Controls when the value label is displayed:
 
-    `auto` the value label will display when the thumb is hovered or focused.
-    `on` will display persistently.
-    `off` will never display.
+    - `auto` the value label will display when the thumb is hovered or focused.
+    - `on` will display persistently.
+    - `off` will never display.
     """

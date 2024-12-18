@@ -32,7 +32,6 @@ class Button(Component):
     """Tooltip title. Optional."""
 
 
-
 @dataclass(frozen=True)
 class IconButton(Component):
     """Icon buttons are commonly found in app bars and toolbars.
@@ -57,4 +56,3 @@ class IconButton(Component):
 
     tooltip: str | None = None
     """Tooltip title. Optional."""
-
