@@ -9,6 +9,7 @@ import { Select } from "./Select";
 import { Switch } from "./Switch";
 import { Tabs } from "./Tabs";
 import { Typography } from "./Typography";
+import { Slider } from "./Slider";
 
 export default function mui(): Plugin {
   return {
@@ -20,6 +21,7 @@ export default function mui(): Plugin {
       ["IconButton", IconButton],
       ["RadioGroup", RadioGroup],
       ["Select", Select],
+      ["Slider", Slider],
       ["Switch", Switch],
       ["Tabs", Tabs],
       ["Typography", Typography],

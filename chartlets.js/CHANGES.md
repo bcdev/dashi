@@ -42,6 +42,7 @@
   - `RadioGroup` and `Radio`
   - `Switch`
   - `Tabs`
+  - `Slider`
 
 * Supporting `tooltip` property for interactive MUI components.
 
