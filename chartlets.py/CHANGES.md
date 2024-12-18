@@ -22,6 +22,7 @@
   - `Switch`
   - `RadioGroup` and `Radio`
   - `Tabs`
+  - `Slider`
 
 ## Version 0.0.29 (from 2024/11/26)
 
