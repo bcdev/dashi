@@ -28,7 +28,7 @@ def render_panel(
         label="Variable",
         options=[(v, v) for v in variable_names],
         style={"flexGrow": 0, "minWidth": 120},
-        tooltip="Select the variable of the test dataset to be used"
+        tooltip="Select the variable of the test dataset to be used",
     )
     control_group = Box(
         style={

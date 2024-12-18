@@ -16,4 +16,3 @@ class Checkbox(Component):
 
     tooltip: str | None = None
     """Tooltip title. Optional."""
-
