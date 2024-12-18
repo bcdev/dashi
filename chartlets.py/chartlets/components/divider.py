@@ -9,9 +9,6 @@ class Divider(Container):
     unobtrusive line for grouping elements to reinforce visual hierarchy.
     """
 
-    label: str | None = None
-    """The text label."""
-
     orientation: str | None = None
     """The orientation. Can be `horizontal` (default) or `vertical`."""
 

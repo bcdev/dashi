@@ -3,6 +3,7 @@ import { Box } from "./Box";
 import { Button } from "./Button";
 import { Checkbox } from "./Checkbox";
 import { CircularProgress } from "./CircularProgress";
+import { Divider } from "./Divider";
 import { IconButton } from "./IconButton";
 import { RadioGroup } from "./RadioGroup";
 import { Select } from "./Select";
@@ -18,6 +19,7 @@ export default function mui(): Plugin {
       ["Button", Button],
       ["Checkbox", Checkbox],
       ["CircularProgress", CircularProgress],
+      ["Divider", Divider],
       ["IconButton", IconButton],
       ["RadioGroup", RadioGroup],
       ["Select", Select],

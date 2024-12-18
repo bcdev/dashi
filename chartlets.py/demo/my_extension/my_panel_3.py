@@ -42,6 +42,8 @@ def render_panel(
         id="info_text", children=update_info_text(ctx, dataset_id, opaque, color)
     )
 
+    divider = Divider(style={"paddingTop": "10px", "paddingBottom": "10px"})
+
     return Box(
         style={
             "display": "flex",
@@ -50,7 +52,7 @@ def render_panel(
             "height": "100%",
             "gap": "6px",
         },
-        children=[opaque_checkbox, color_select, Divider(), info_text],
+        children=[opaque_checkbox, color_select, divider, info_text],
     )
 
 
