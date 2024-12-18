@@ -19,11 +19,12 @@
 * Added `tooltip` property to interactive components.
 
 * New components
-  - `Switch`
+  - `Divider`
   - `RadioGroup` and `Radio`
-  - `Tabs`
+  - `Switch`
   - `Slider`
-
+  - `Tabs` and `Tab`
+ 
 ## Version 0.0.29 (from 2024/11/26)
 
 * Fixed a bug that prevents using annotations of type `dict` or `dict[str, T]`.
