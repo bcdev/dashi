@@ -1,5 +1,5 @@
 from chartlets import Component, Input, State, Output
-from chartlets.components import Box, Select, Checkbox, Typography
+from chartlets.components import Box, Divider, Select, Checkbox, Typography
 
 from server.context import Context
 from server.panel import Panel
@@ -42,6 +42,8 @@ def render_panel(
         id="info_text", children=update_info_text(ctx, dataset_id, opaque, color)
     )
 
+    divider = Divider(style={"paddingTop": "10px", "paddingBottom": "10px"})
+
     return Box(
         style={
             "display": "flex",
@@ -50,7 +52,7 @@ def render_panel(
             "height": "100%",
             "gap": "6px",
         },
-        children=[opaque_checkbox, color_select, info_text],
+        children=[opaque_checkbox, color_select, divider, info_text],
     )
 
 

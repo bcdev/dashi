@@ -38,6 +38,7 @@
   - using `return` object with `schema` property for callback return values
 
 * New (MUI) components
+  - `Divider`
   - `LinearProgress`
   - `RadioGroup` and `Radio`
   - `Switch`
