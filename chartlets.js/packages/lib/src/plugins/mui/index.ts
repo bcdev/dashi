@@ -4,6 +4,7 @@ import { Button } from "./Button";
 import { Checkbox } from "./Checkbox";
 import { CircularProgress } from "./CircularProgress";
 import { IconButton } from "./IconButton";
+import { LinearProgress } from "./LinearProgress";
 import { RadioGroup } from "./RadioGroup";
 import { Select } from "./Select";
 import { Switch } from "./Switch";
@@ -19,6 +20,7 @@ export default function mui(): Plugin {
       ["Checkbox", Checkbox],
       ["CircularProgress", CircularProgress],
       ["IconButton", IconButton],
+      ["LinearProgress", LinearProgress],
       ["RadioGroup", RadioGroup],
       ["Select", Select],
       ["Slider", Slider],
