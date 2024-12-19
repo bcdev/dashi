@@ -56,12 +56,13 @@
   },
   "dependencies": {
     "microdiff": "^1.4",
-    "zustand": "^5.0"
+    "zustand": "^5.0",
+    "@mui/x-data-grid": "^7.23.2"
   },
   "peerDependencies": {
-    "@mui/material": ">=6",
-    "react": ">=18",
-    "react-dom": ">=18",
+    "@mui/material": "^6.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-vega": ">=7",
     "vega-themes": ">=2"
   },
