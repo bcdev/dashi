@@ -18,6 +18,7 @@ describe("Table", () => {
         rows={mockRows}
         type="Table"
         id="tableId"
+        ariaLabel="Test Table"
         onChange={() => {}}
         paginationModel={paginationModel}
         pageSizeOptions={[10, 25, 50]}
@@ -25,6 +26,9 @@ describe("Table", () => {
     );
     expect(screen.getByRole("grid")).toBeInTheDocument();
     expect(screen.getByText("MockRow")).toBeInTheDocument();
+
+    const grid = screen.getByTestId("data-grid-test-id");
+    expect(grid).toHaveAttribute("aria-label", "Test Table");
   });
 
   it("should handle row click", () => {
@@ -65,10 +69,19 @@ describe("Table", () => {
         loading={true}
       />,
     );
-    expect(screen.getByTestId("data-grid-test-id")).toHaveAttribute(
-      "aria-label",
-      "Test Table",
-    );
+
+    const gridRole = screen.getByTestId("data-grid-test-id");
+
+    // Check density
+    expect(gridRole).toHaveClass("MuiDataGrid-root--densityCompact");
+
+    // Check loading
+    expect(screen.getByRole("progressbar")).toBeInTheDocument();
+
+    // Check checkboxSelection
+    expect(
+      screen.getByRole("columnheader", { name: /select/i }),
+    ).toBeInTheDocument();
   });
 
   it("should not render if no columns are provided", () => {
