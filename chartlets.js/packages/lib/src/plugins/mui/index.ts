@@ -11,6 +11,7 @@ import { Switch } from "./Switch";
 import { Tabs } from "./Tabs";
 import { Typography } from "./Typography";
 import { Slider } from "./Slider";
+import { Table } from "@/plugins/mui/Table";
 
 export default function mui(): Plugin {
   return {
@@ -25,6 +26,7 @@ export default function mui(): Plugin {
       ["Select", Select],
       ["Slider", Slider],
       ["Switch", Switch],
+      ["Table", Table],
       ["Tabs", Tabs],
       ["Typography", Typography],
     ],

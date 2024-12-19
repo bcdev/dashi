@@ -22,7 +22,6 @@ interface SliderState extends ComponentState {
   track?: "inverted" | "normal" | false;
   value?: number | number[];
   valueLabelDisplay?: "auto" | "on" | "off";
-  ["data-testid"]?: string;
 }
 
 interface SliderProps extends ComponentProps, SliderState {}
@@ -46,13 +45,7 @@ export const Slider = ({
   value,
   valueLabelDisplay,
   onChange,
-  ...props
 }: SliderProps) => {
-  // We need to drop children prop because we want to access the data-testid for
-  // tests and slider does not accept children components
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { children: _, ...sliderProps } = props;
-
   const handleSlide = (
     _event: Event,
     value: number | number[],
@@ -69,7 +62,6 @@ export const Slider = ({
   };
   return (
     <MuiSlider
-      {...sliderProps}
       id={id}
       defaultValue={defaultValue}
       aria-label={ariaLabel}
@@ -87,6 +79,7 @@ export const Slider = ({
       value={value ?? 0}
       valueLabelDisplay={valueLabelDisplay}
       onChange={handleSlide}
+      data-testid="slider-test-id"
     />
   );
 };
