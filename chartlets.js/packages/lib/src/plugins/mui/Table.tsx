@@ -80,10 +80,9 @@ export const Table = ({
 
   const handleClick = (
     params: GridRowParams,
-    event: MuiEvent,
-    details: GridCallbackDetails,
+    _event: MuiEvent,
+    _details: GridCallbackDetails,
   ) => {
-    console.log(params, event, details, id);
     if (id) {
       if (onChange) {
         onChange({
