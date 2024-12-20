@@ -1,4 +1,4 @@
-from chartlets.components.table import Table
+from chartlets.components import Table
 from tests.component_test import make_base
 
 
