@@ -11,6 +11,7 @@ import { Switch } from "./Switch";
 import { Tabs } from "./Tabs";
 import { Typography } from "./Typography";
 import { Slider } from "./Slider";
+import { Dialog } from "@/plugins/mui/Dialog";
 
 export default function mui(): Plugin {
   return {
@@ -19,6 +20,7 @@ export default function mui(): Plugin {
       ["Button", Button],
       ["Checkbox", Checkbox],
       ["CircularProgress", CircularProgress],
+      ["Dialog", Dialog],
       ["IconButton", IconButton],
       ["LinearProgress", LinearProgress],
       ["RadioGroup", RadioGroup],
