@@ -4,7 +4,7 @@ from chartlets.components import Box, Slider, Typography
 from server.context import Context
 from server.panel import Panel
 
-from chartlets.components.charts.table import Table
+from chartlets.components.table import Table
 
 panel = Panel(__name__, title="Panel D")
 
