@@ -2,7 +2,7 @@ import { type MouseEvent } from "react";
 import MuiButton from "@mui/material/Button";
 import MuiIcon from "@mui/material/Icon";
 
-import type { ComponentState, ComponentProps } from "@/index";
+import type { ComponentProps, ComponentState } from "@/index";
 import { Tooltip } from "./Tooltip";
 
 interface ButtonState extends ComponentState {
@@ -20,7 +20,7 @@ interface ButtonState extends ComponentState {
     | "warning";
 }
 
-interface ButtonProps extends ComponentProps, ButtonState {}
+export interface ButtonProps extends ComponentProps, ButtonState {}
 
 export function Button({
   type,
@@ -33,6 +33,7 @@ export function Button({
   text,
   startIcon,
   endIcon,
+  tooltip,
   onChange,
 }: ButtonProps) {
   const handleClick = (_event: MouseEvent<HTMLButtonElement>) => {
@@ -46,7 +47,7 @@ export function Button({
     }
   };
   return (
-    <Tooltip>
+    <Tooltip title={tooltip}>
       <MuiButton
         id={id}
         name={name}
