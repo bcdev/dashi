@@ -84,14 +84,12 @@ export const Table = ({
     _details: GridCallbackDetails,
   ) => {
     if (id) {
-      if (onChange) {
-        onChange({
-          componentType: type,
-          id: id,
-          property: "value",
-          value: params.row,
-        });
-      }
+      onChange({
+        componentType: type,
+        id: id,
+        property: "value",
+        value: params.row,
+      });
     }
   };
 
