@@ -28,27 +28,6 @@ describe("Slider", () => {
     expect(slider.getAttribute("value")).toEqual("50");
   });
 
-  it("should render the Slider component", () => {
-    render(
-      <Slider
-        id="slider"
-        type={"Slider"}
-        min={0}
-        max={100}
-        value={50}
-        onChange={() => {}}
-      />,
-    );
-
-    const slider = screen.getByRole("slider");
-    expect(slider).toBeDefined();
-
-    expect(slider.getAttribute("aria-orientation")).toEqual("horizontal");
-    expect(slider.getAttribute("min")).toEqual("0");
-    expect(slider.getAttribute("max")).toEqual("100");
-    expect(slider.getAttribute("value")).toEqual("50");
-  });
-
   it("should fire 'value' property", () => {
     const { recordedEvents, onChange } = createChangeHandler();
 
@@ -63,19 +42,18 @@ describe("Slider", () => {
       return (
         <Slider
           type={"Slider"}
-          data-testid="sliderId"
           id="sliderId"
           aria-label={"slider"}
           min={0}
           max={1000}
-          onChange={handleChange} // Use the local handleChange
-          value={sliderValue} // Connect the value
+          onChange={handleChange}
+          value={sliderValue}
         />
       );
     };
 
     render(<TestSlider />);
-    const slider = screen.getByTestId("sliderId");
+    const slider = screen.getByTestId("slider-test-id");
     expect(slider).toBeInTheDocument();
     expect(screen.getByRole("slider")).toHaveValue("60");
 
